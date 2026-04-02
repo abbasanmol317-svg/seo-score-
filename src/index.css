@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --animate-spin-slow: spin 8s linear infinite;
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-bounce-slow: bounce 3s infinite;
+  --animate-shimmer: shimmer 2s linear infinite;
+
+  @keyframes shimmer {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100%); }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 font-sans antialiased;
+  }
+}
+
+.markdown-body {
+  @apply prose prose-slate dark:prose-invert max-w-none;
+}
+
+.markdown-body h1 { @apply text-2xl font-bold mb-4 dark:text-slate-100; }
+.markdown-body h2 { @apply text-xl font-semibold mb-3 mt-6 dark:text-slate-200; }
+.markdown-body h3 { @apply text-lg font-semibold mb-2 mt-4 dark:text-slate-300; }
+.markdown-body p { @apply mb-4 leading-relaxed dark:text-slate-400; }
+.markdown-body ul { @apply list-disc pl-6 mb-4 dark:text-slate-400; }
+.markdown-body ol { @apply list-decimal pl-6 mb-4 dark:text-slate-400; }
+.markdown-body li { @apply mb-1; }
+.markdown-body code { @apply bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded font-mono text-sm dark:text-indigo-300; }
+.markdown-body pre { @apply bg-slate-900 dark:bg-black text-slate-50 p-4 rounded-lg overflow-x-auto mb-4 font-mono text-sm border dark:border-slate-800; }
+.markdown-body blockquote { @apply border-l-4 border-slate-300 dark:border-slate-700 pl-4 italic mb-4 dark:text-slate-500; }
+.markdown-body table { @apply w-full border-collapse mb-4; }
+.markdown-body th, .markdown-body td { @apply border border-slate-200 dark:border-slate-800 p-2 text-left; }
+.markdown-body th { @apply bg-slate-50 dark:bg-slate-900/50 font-semibold; }
+
+/* Custom Status Badges */
+.status-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium uppercase tracking-wider;
+}
+.status-good {
+  @apply bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 border border-green-200 dark:border-green-800;
+}
+.status-average {
+  @apply bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-400 border border-orange-200 dark:border-orange-800;
+}
+.status-poor {
+  @apply bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400 border border-red-200 dark:border-red-800;
+}
