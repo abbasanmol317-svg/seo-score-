@@ -29,7 +29,7 @@ export default function About() {
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Our Mission</h2>
           <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
             At SEO Score, we believe that high-quality SEO analysis should be accessible to everyone. 
-            By leveraging the power of Google's Gemini AI, we've built a suite of 19 professional tools 
+            By leveraging the power of Google's Gemini AI, we've built a suite of {TOOLS.length} professional tools 
             that provide deep insights, actionable recommendations, and technical audits in seconds.
           </p>
         </section>

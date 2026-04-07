@@ -120,8 +120,11 @@ export default function ToolSearch({ className, onSelect, autoFocus }: ToolSearc
                 results.map((tool, index) => {
                   const ToolIcon = (Icons as any)[tool.icon] || Icons.Zap;
                   return (
-                    <button
+                    <motion.button
                       key={tool.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.03 }}
                       onClick={() => handleSelect(tool.id)}
                       className={cn(
                         "w-full flex items-center gap-3 p-3 rounded-xl transition-all group text-left",
@@ -145,7 +148,7 @@ export default function ToolSearch({ className, onSelect, autoFocus }: ToolSearc
                         <div className="text-[10px] text-slate-400 dark:text-slate-500 truncate">{tool.category}</div>
                       </div>
                       <Icons.ChevronRight size={14} className="text-slate-300 dark:text-slate-600 group-hover:translate-x-0.5 transition-transform" />
-                    </button>
+                    </motion.button>
                   );
                 })
               ) : (
