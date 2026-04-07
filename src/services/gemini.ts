@@ -9,7 +9,7 @@ export type ToolId =
   | 'broken-links' | 'seo-audit' | 'mobile-friendly' | 'bulk-url'
   | 'keyword-research' | 'content-optimizer' | 'hashtag-generator'
   | 'meta-tag' | 'serp-preview' | 'og-preview' | 'schema-markup' | 'image-alt-text'
-  | 'sitemap-robots' | 'compare-websites' | 'seo-chat' | 'seo-dashboard';
+  | 'sitemap-robots' | 'compare-websites' | 'seo-chat' | 'seo-dashboard' | 'on-page-checklist';
 
 export interface Tool {
   id: ToolId;
@@ -28,7 +28,7 @@ export const TOOLS: Tool[] = [
     name: 'Website SEO',
     description: 'Analyze any website for SEO improvements.',
     category: 'SEO Analysis',
-    icon: 'Globe',
+    icon: 'ScanSearch',
     keywords: 'website,seo,analytics',
     prompt: `Analyze the SEO of this website. 
     Format your response as a professional SEO Report with these EXACT sections:
@@ -55,7 +55,7 @@ export const TOOLS: Tool[] = [
     name: 'YouTube SEO',
     description: 'Check and optimize YouTube video SEO.',
     category: 'SEO Analysis',
-    icon: 'Youtube',
+    icon: 'PlayCircle',
     keywords: 'youtube,video,marketing',
     prompt: `Analyze the SEO for this YouTube video or topic. 
     Format your response as a YouTube Optimization Guide with these sections:
@@ -83,7 +83,7 @@ export const TOOLS: Tool[] = [
     name: 'Site Speed Checker',
     description: 'AI-simulated page load speed analysis.',
     category: 'SEO Analysis',
-    icon: 'Zap',
+    icon: 'Gauge',
     keywords: 'speed,fast,performance',
     prompt: `Simulate a page speed analysis for this URL.
     Format as a Speed Report with these sections:
@@ -110,7 +110,7 @@ export const TOOLS: Tool[] = [
     name: 'Backlink Checker',
     description: 'Analyze backlink profile and quality.',
     category: 'SEO Analysis',
-    icon: 'Link',
+    icon: 'Network',
     keywords: 'links,network,backlinks',
     prompt: `Analyze the backlink profile for this domain.
     Format as a Backlink Audit with these sections:
@@ -144,7 +144,7 @@ export const TOOLS: Tool[] = [
     name: 'Broken Link Checker',
     description: 'Scan for potential broken links and fixes.',
     category: 'SEO Analysis',
-    icon: 'Unlink',
+    icon: 'LinkOff',
     keywords: 'broken,link,error',
     prompt: `Provide a broken link strategy.
     Format as a Link Health Report with these sections:
@@ -166,7 +166,7 @@ export const TOOLS: Tool[] = [
     name: 'SEO Audit Checklist',
     description: 'Complete SEO audit for your site.',
     category: 'SEO Analysis',
-    icon: 'ClipboardCheck',
+    icon: 'SearchCode',
     keywords: 'audit,checklist,seo',
     prompt: `Generate a complete SEO Audit Checklist.
     Format as a Checklist with these sections:
@@ -190,11 +190,42 @@ export const TOOLS: Tool[] = [
     placeholder: 'Enter website URL for a full audit (e.g., https://mybrand.com)'
   },
   {
+    id: 'on-page-checklist',
+    name: 'On-Page SEO Checklist',
+    description: 'Optimize individual pages with a detailed on-page checklist.',
+    category: 'SEO Analysis',
+    icon: 'ClipboardCheck',
+    keywords: 'on-page,checklist,optimization,content',
+    prompt: `Generate a detailed On-Page SEO Checklist for this page or topic.
+    Format as a Checklist with these EXACT sections:
+    ## 📝 Page Summary
+    (Brief overview of the page's current optimization state)
+    
+    ## 🏷️ Title & Meta Tags
+    (Checklist items for Title Tag and Meta Description with [GOOD/AVERAGE/POOR])
+    
+    ## 🏗️ Header Structure (H1-H6)
+    (Checklist items for heading hierarchy and keyword placement with [GOOD/AVERAGE/POOR])
+    
+    ## 🔑 Keyword Optimization
+    (Checklist items for primary/secondary keyword usage and density with [GOOD/AVERAGE/POOR])
+    
+    ## 🔗 Internal & External Linking
+    (Checklist items for link quality and anchor text with [GOOD/AVERAGE/POOR])
+    
+    ## 🖼️ Image & Media SEO
+    (Checklist items for alt text and file names with [GOOD/AVERAGE/POOR])
+    
+    ## 🏁 Top 3 Optimization Fixes
+    (The most critical things to fix first)`,
+    placeholder: 'Enter page URL or content topic (e.g., https://example.com/blog-post or "Best Yoga Mats")'
+  },
+  {
     id: 'mobile-friendly',
     name: 'Mobile-Friendly Test',
     description: 'Check mobile responsiveness and UX.',
     category: 'SEO Analysis',
-    icon: 'Smartphone',
+    icon: 'TabletSmartphone',
     keywords: 'mobile,responsive,phone',
     prompt: `Evaluate mobile-friendliness.
     Format as a Mobile UX Audit with these sections:
@@ -216,7 +247,7 @@ export const TOOLS: Tool[] = [
     name: 'Bulk URL Analysis',
     description: 'Analyze up to 10 URLs at once.',
     category: 'SEO Analysis',
-    icon: 'Layers',
+    icon: 'ListChecks',
     keywords: 'bulk,data,list',
     prompt: `Analyze these URLs for SEO consistency.
     Format as a Comparison Table with these sections:
@@ -235,7 +266,7 @@ export const TOOLS: Tool[] = [
     name: 'Keyword Research',
     description: 'Find high/medium/low competition keywords.',
     category: 'Content & Keywords',
-    icon: 'Search',
+    icon: 'KeyRound',
     keywords: 'search,keywords,research',
     prompt: `Perform keyword research.
     Format as a Keyword Strategy with these sections:
@@ -257,7 +288,7 @@ export const TOOLS: Tool[] = [
     name: 'Content Optimizer',
     description: 'Analyze and improve content quality.',
     category: 'Content & Keywords',
-    icon: 'FileText',
+    icon: 'PenTool',
     keywords: 'content,writing,optimization',
     prompt: `Analyze this content for SEO.
     Format as a Content Audit with these sections:
@@ -297,7 +328,7 @@ export const TOOLS: Tool[] = [
     name: 'Hashtag Generator',
     description: 'Generate hashtags for YT, IG, TikTok.',
     category: 'Content & Keywords',
-    icon: 'Hash',
+    icon: 'Tag',
     keywords: 'hashtag,social,trending',
     prompt: `Generate hashtags.
     Format as a Hashtag Kit with these sections:
@@ -319,7 +350,7 @@ export const TOOLS: Tool[] = [
     name: 'Meta Tag Generator',
     description: 'Generate SEO-friendly meta tags.',
     category: 'Generators',
-    icon: 'Code',
+    icon: 'ScrollText',
     keywords: 'code,meta,tags',
     prompt: `Generate SEO meta tags.
     Format as a Meta Tag Kit with these sections:
@@ -341,7 +372,7 @@ export const TOOLS: Tool[] = [
     name: 'SERP Preview',
     description: 'Google search result preview tool.',
     category: 'Generators',
-    icon: 'Eye',
+    icon: 'MonitorPlay',
     keywords: 'preview,google,serp',
     prompt: `Generate a SERP preview.
     Format as a Preview Report with these sections:
@@ -382,7 +413,7 @@ export const TOOLS: Tool[] = [
     name: 'Schema Markup Generator',
     description: 'Generate JSON-LD structured data.',
     category: 'Generators',
-    icon: 'Braces',
+    icon: 'CodeXml',
     keywords: 'schema,json,structured',
     prompt: `Generate JSON-LD Schema.
     Format as a Schema Kit with these sections:
@@ -404,7 +435,7 @@ export const TOOLS: Tool[] = [
     name: 'Image Alt Text Generator',
     description: 'Generate descriptive alt text for images to improve accessibility and SEO.',
     category: 'Generators',
-    icon: 'Image',
+    icon: 'ImageDown',
     keywords: 'image,alt,accessibility,seo,generator',
     prompt: `Generate descriptive and SEO-friendly alt text for an image.
     Format your response as an Alt Text Kit with these sections:
@@ -435,7 +466,7 @@ export const TOOLS: Tool[] = [
     name: 'Sitemap & Robots.txt',
     description: 'Generate sitemap and robots.txt files.',
     category: 'Generators',
-    icon: 'FileCode',
+    icon: 'FileSymlink',
     keywords: 'sitemap,robots,technical',
     prompt: `Generate robots.txt and sitemap.
     Format as a Technical File Kit with these sections:
@@ -457,7 +488,7 @@ export const TOOLS: Tool[] = [
     name: 'Compare Websites',
     description: 'Compare your site vs competitors.',
     category: 'Compare',
-    icon: 'ArrowLeftRight',
+    icon: 'GitCompare',
     keywords: 'compare,competitor,versus',
     prompt: `Compare two websites.
     Format as a Competitive Analysis with these sections:
@@ -482,7 +513,7 @@ export const TOOLS: Tool[] = [
     name: 'AI SEO Chat',
     description: 'Ask any SEO related questions.',
     category: 'AI Assistant',
-    icon: 'MessageSquare',
+    icon: 'MessageCircleMore',
     keywords: 'chat,ai,assistant',
     prompt: `You are an expert SEO consultant. 
     Always format your answers with these sections:
@@ -504,7 +535,7 @@ export const TOOLS: Tool[] = [
     name: 'SEO Dashboard',
     description: 'View your analysis history and trends.',
     category: 'Insights',
-    icon: 'LayoutDashboard',
+    icon: 'LayoutGrid',
     keywords: 'dashboard,stats,insights',
     prompt: '',
     placeholder: ''
@@ -540,6 +571,10 @@ export async function runTool(toolId: ToolId, input: string) {
     console.error("Gemini API Error:", error);
     
     // Handle specific error cases
+    if (error.status === 503 || error.message?.includes('503') || error.message?.includes('high demand')) {
+      throw new Error("AI service is temporarily overloaded (503). This is usually temporary. Please wait a few seconds and try again.");
+    }
+    
     if (error.status === 500 || error.message?.includes('500')) {
       throw new Error("AI request failed (500): The model might be overloaded or the input is causing an issue. Try again in a moment.");
     }

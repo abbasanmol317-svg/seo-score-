@@ -242,9 +242,9 @@ export default function ToolPage() {
   const ToolComponent = getToolComponent(tool.id);
   const IconComponent = (Icons as any)[tool.icon] || Icons.HelpCircle;
 
-  const seoTitle = `Best AI Tool for ${tool.name} 2026 | AI SEO Score Suite`;
-  const seoDescription = `Discover the best AI tool for ${tool.name.toLowerCase()} in 2026. This professional ${tool.category.toLowerCase()} tool is powered by Google Gemini AI to help you analyze, optimize, and dominate search engine rankings.`;
-  const seoKeywords = `${tool.name}, best AI tool for ${tool.name.toLowerCase()}, SEO tool 2026, AI SEO analysis, ${tool.category}, search engine optimization, Google Gemini SEO, professional SEO suite`;
+  const seoTitle = `${tool.name} | Free AI SEO Tool 2026 | SEO Score Suite`;
+  const seoDescription = `Optimize your website with our free ${tool.name.toLowerCase()} tool. Powered by Google Gemini AI, this professional ${tool.category.toLowerCase()} tool provides deep insights and actionable recommendations for search engine success.`;
+  const seoKeywords = `${tool.name.toLowerCase()}, free SEO tool, AI SEO analysis, ${tool.category.toLowerCase()}, search engine optimization, Google Gemini AI, SEO Score Suite, technical SEO`;
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
@@ -255,26 +255,26 @@ export default function ToolPage() {
         <link rel="canonical" href={`https://seo-score-suite.com/tool/${tool.id}`} />
       </Helmet>
 
-      <div className="px-4 py-8 sm:py-12 flex flex-col gap-8 max-w-5xl mx-auto lg:mx-0 lg:pl-8 xl:pl-12">
+      <div className="px-4 py-6 sm:py-12 flex flex-col gap-6 sm:gap-8 max-w-5xl mx-auto lg:mx-0 lg:pl-8 xl:pl-12">
         <div className="flex-grow">
-          <div className="flex flex-col gap-2 mb-8">
-            <nav className={cn("flex items-center gap-2 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest", isGeneratingPDF && "hidden")}>
+          <div className="flex flex-col gap-2 mb-6 sm:mb-8">
+            <nav className={cn("flex flex-wrap items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest", isGeneratingPDF && "hidden")}>
               <Link to="/" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Dashboard</Link>
               <Icons.ChevronRight size={10} />
-              <span className="text-slate-300 dark:text-slate-700">{tool.category}</span>
+              <span className="text-slate-300 dark:text-slate-700 truncate max-w-[80px] sm:max-w-none">{tool.category}</span>
               <Icons.ChevronRight size={10} />
-              <span className="text-indigo-600 dark:text-indigo-400">{tool.name}</span>
+              <span className="text-indigo-600 dark:text-indigo-400 truncate max-w-[100px] sm:max-w-none">{tool.name}</span>
             </nav>
-            <div className={cn("flex items-center gap-4", isGeneratingPDF && "hidden")}>
-              <Link to="/" className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-600 dark:text-slate-400">
-                <Icons.ChevronLeft size={24} />
+            <div className={cn("flex items-center gap-3 sm:gap-4", isGeneratingPDF && "hidden")}>
+              <Link to="/" className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-600 dark:text-slate-400 shrink-0">
+                <Icons.ChevronLeft size={20} className="sm:w-6 sm:h-6" />
               </Link>
-              <div className="p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl text-indigo-600 dark:text-indigo-400">
-                <IconComponent size={28} />
+              <div className="p-2.5 sm:p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl text-indigo-600 dark:text-indigo-400 shrink-0">
+                <IconComponent size={24} className="sm:w-7 sm:h-7" />
               </div>
-              <div>
-                <h1 className="text-3xl font-bold text-slate-900 dark:text-white">{tool.name}</h1>
-                <p className="text-slate-500 dark:text-slate-400">{tool.description}</p>
+              <div className="min-w-0">
+                <h1 className="text-xl sm:text-3xl font-bold text-slate-900 dark:text-white truncate">{tool.name}</h1>
+                <p className="text-xs sm:text-base text-slate-500 dark:text-slate-400 line-clamp-1">{tool.description}</p>
               </div>
             </div>
           </div>
@@ -310,19 +310,19 @@ export default function ToolPage() {
             history={history}
           />
 
-          <div className={cn("mt-20 p-8 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-slate-200 dark:border-slate-800", isGeneratingPDF && "hidden")}>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">About our {tool.name} tool</h2>
-            <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+          <div className={cn("mt-12 sm:mt-20 p-6 sm:p-8 bg-slate-50 dark:bg-slate-900/50 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800", isGeneratingPDF && "hidden")}>
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4">About our {tool.name} tool</h2>
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
               {seoDescription}
             </p>
           </div>
 
-          <div className={cn("mt-20 pt-12 border-t border-slate-200 dark:border-slate-800", isGeneratingPDF && "hidden")}>
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-8 flex items-center gap-3">
-              <Icons.Sparkles className="text-indigo-600" />
+          <div className={cn("mt-12 sm:mt-20 pt-8 sm:pt-12 border-t border-slate-200 dark:border-slate-800", isGeneratingPDF && "hidden")}>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-6 sm:mb-8 flex items-center gap-3">
+              <Icons.Sparkles className="text-indigo-600" size={20} />
               Related SEO Tools
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {TOOLS
                 .filter(t => t.id !== tool.id && (t.category === tool.category || Math.random() > 0.7))
                 .slice(0, 3)

@@ -46,13 +46,13 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
           animate={{ opacity: 1, y: 0 }}
           className="relative group max-w-4xl mx-auto"
         >
-          <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-[3rem] blur-2xl opacity-20 group-hover:opacity-50 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
-          <div className="relative bg-white dark:bg-slate-900 p-4 rounded-[2.5rem] shadow-2xl border border-slate-200/60 dark:border-slate-800 backdrop-blur-xl">
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-4 p-2">
+          <div className="absolute -inset-2 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-2xl sm:rounded-[3rem] blur-2xl opacity-20 group-hover:opacity-50 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
+          <div className="relative bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl sm:rounded-[2.5rem] shadow-2xl border border-slate-200/60 dark:border-slate-800 backdrop-blur-xl">
+            <div className="flex flex-col gap-3 sm:gap-4">
+              <div className="flex flex-col gap-3 sm:gap-4 p-1 sm:p-2">
                 <div className="relative w-full">
-                  <div className="absolute left-6 top-8 -translate-y-1/2 text-indigo-500 dark:text-indigo-400 pointer-events-none transition-transform group-hover:scale-110 duration-300">
-                    <Icons.Search size={32} strokeWidth={3} />
+                  <div className="absolute left-4 sm:left-6 top-6 sm:top-8 -translate-y-1/2 text-indigo-500 dark:text-indigo-400 pointer-events-none transition-transform group-hover:scale-110 duration-300">
+                    <Icons.Search size={24} className="sm:w-8 sm:h-8" strokeWidth={3} />
                   </div>
                   <textarea
                     value={input}
@@ -63,19 +63,19 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
                       }
                     }}
                     placeholder={tool.placeholder}
-                    className="w-full min-h-[120px] max-h-[500px] py-6 sm:py-8 pl-14 sm:pl-18 pr-6 sm:pr-8 bg-slate-50/50 dark:bg-slate-800/50 rounded-3xl border-2 border-transparent focus:border-indigo-200 dark:focus:border-indigo-800 focus:bg-white dark:focus:bg-slate-800 focus:ring-8 focus:ring-indigo-500/5 text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all resize-none shadow-inner"
+                    className="w-full min-h-[100px] sm:min-h-[120px] max-h-[500px] py-4 sm:py-8 pl-12 sm:pl-18 pr-4 sm:pr-8 bg-slate-50/50 dark:bg-slate-800/50 rounded-xl sm:rounded-3xl border-2 border-transparent focus:border-indigo-200 dark:focus:border-indigo-800 focus:bg-white dark:focus:bg-slate-800 focus:ring-8 focus:ring-indigo-500/5 text-lg sm:text-2xl font-bold text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all resize-none shadow-inner"
                     rows={1}
                   />
                 </div>
-                <div className="flex items-center justify-between gap-4 px-2">
+                <div className="flex items-center justify-between gap-3 sm:gap-4 px-1 sm:px-2">
                   <div className="flex items-center gap-2">
                     <button 
                       onClick={handleClear}
-                      className="p-4 text-slate-400 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-2xl transition-all active:scale-90 flex items-center gap-2 font-bold text-sm"
+                      className="p-3 sm:p-4 text-slate-400 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-xl sm:rounded-2xl transition-all active:scale-90 flex items-center gap-2 font-bold text-xs sm:text-sm"
                       title="Clear Input"
                     >
-                      <Icons.Trash2 size={20} />
-                      <span className="hidden sm:inline">Clear</span>
+                      <Icons.Trash2 size={18} className="sm:w-5 sm:h-5" />
+                      <span className="hidden xs:inline">Clear</span>
                     </button>
                   </div>
                   <motion.button
@@ -84,7 +84,7 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
                     whileHover={!loading && input.trim() ? { scale: 1.02, y: -4 } : {}}
                     whileTap={!loading && input.trim() ? { scale: 0.98, y: 0 } : {}}
                     className={cn(
-                      "flex-grow sm:flex-none py-6 px-12 rounded-2xl font-black text-xl flex items-center justify-center gap-4 transition-all shadow-2xl relative overflow-hidden group/btn",
+                      "flex-grow sm:flex-none py-4 sm:py-6 px-6 sm:px-12 rounded-xl sm:rounded-2xl font-black text-base sm:text-xl flex items-center justify-center gap-3 sm:gap-4 transition-all shadow-2xl relative overflow-hidden group/btn",
                       loading || !input.trim() 
                         ? "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed shadow-none" 
                         : "bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-500/40 dark:shadow-indigo-900/60"
@@ -92,38 +92,38 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:animate-shimmer" />
                     {loading ? (
-                      <Icons.Loader2 className="animate-spin" size={28} />
+                      <Icons.Loader2 className="animate-spin sm:w-7 sm:h-7" size={20} />
                     ) : (
-                      <Icons.Zap size={28} fill="currentColor" className="animate-pulse" />
+                      <Icons.Zap size={20} className="sm:w-7 sm:h-7 animate-pulse" fill="currentColor" />
                     )}
                     <span className="whitespace-nowrap tracking-tight">
                       {loading ? 'Analyzing...' : 'Run Analysis'}
                     </span>
                     {!loading && input.trim() && (
-                      <Icons.ChevronRight size={20} className="group-hover/btn:translate-x-1 transition-transform" />
+                      <Icons.ChevronRight size={16} className="sm:w-5 sm:h-5 group-hover/btn:translate-x-1 transition-transform" />
                     )}
                   </motion.button>
                 </div>
               </div>
-              <div className="px-6 py-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/30 dark:bg-slate-900/30 rounded-b-[1.5rem]">
-                <div className="flex items-center gap-6">
-                  <span className="text-[11px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
-                    <div className="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 rounded text-slate-600 dark:text-slate-400 font-mono">CMD</div>
-                    <Icons.Plus size={10} />
-                    <div className="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 rounded text-slate-600 dark:text-slate-400 font-mono">ENTER</div>
-                    <span className="ml-1">TO RUN</span>
+              <div className="px-4 sm:px-6 py-2 sm:py-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/30 dark:bg-slate-900/30 rounded-b-xl sm:rounded-b-[1.5rem]">
+                <div className="flex items-center gap-4 sm:gap-6">
+                  <span className="text-[9px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-1 sm:gap-2">
+                    <div className="px-1 py-0.5 sm:px-1.5 sm:py-0.5 bg-slate-200 dark:bg-slate-800 rounded text-slate-600 dark:text-slate-400 font-mono">CMD</div>
+                    <Icons.Plus size={8} className="sm:w-2.5 sm:h-2.5" />
+                    <div className="px-1 py-0.5 sm:px-1.5 sm:py-0.5 bg-slate-200 dark:bg-slate-800 rounded text-slate-600 dark:text-slate-400 font-mono">ENTER</div>
+                    <span className="ml-1 hidden xs:inline">TO RUN</span>
                   </span>
                 </div>
                 {input.length > 0 && (
-                  <div className="flex items-center gap-3">
-                    <div className="h-1 w-24 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="h-1 w-16 sm:w-24 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-indigo-500 dark:bg-indigo-400 transition-all duration-300" 
                         style={{ width: `${Math.min(100, (input.length / 500) * 100)}%` }}
                       />
                     </div>
-                    <span className="text-[11px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-                      {input.length} chars
+                    <span className="text-[9px] sm:text-[11px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                      {input.length} <span className="hidden xs:inline">chars</span>
                     </span>
                   </div>
                 )}
@@ -140,41 +140,41 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
                 className="mt-8 relative group/error"
               >
                 <div className="absolute -inset-1 bg-gradient-to-r from-rose-500 to-orange-500 rounded-3xl blur opacity-20 group-hover/error:opacity-30 transition duration-500"></div>
-                <div className="relative bg-white dark:bg-slate-900 border border-rose-100 dark:border-rose-900/30 rounded-3xl shadow-xl overflow-hidden">
+                <div className="relative bg-white dark:bg-slate-900 border border-rose-100 dark:border-rose-900/30 rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden">
                   <div className="flex flex-col md:flex-row">
-                    <div className="bg-rose-50 dark:bg-rose-900/20 p-6 flex items-center justify-center md:w-24">
-                      <div className="w-12 h-12 bg-rose-500 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-rose-500/20 animate-bounce-slow">
-                        <Icons.AlertTriangle size={24} strokeWidth={2.5} />
+                    <div className="bg-rose-50 dark:bg-rose-900/20 p-4 sm:p-6 flex items-center justify-center md:w-24">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-rose-500 text-white rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-rose-500/20 animate-bounce-slow">
+                        <Icons.AlertTriangle size={20} className="sm:w-6 sm:h-6" strokeWidth={2.5} />
                       </div>
                     </div>
-                    <div className="p-8 flex-grow">
+                    <div className="p-6 sm:p-8 flex-grow">
                       <div className="flex items-start justify-between mb-4">
                         <div>
-                          <h3 className="text-xl font-black text-slate-900 dark:text-white mb-1">Analysis Failed</h3>
-                          <p className="text-rose-600 dark:text-rose-400 font-bold text-sm uppercase tracking-wider">Error Detected</p>
+                          <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white mb-1">Analysis Failed</h3>
+                          <p className="text-rose-600 dark:text-rose-400 font-bold text-xs sm:text-sm uppercase tracking-wider">Error Detected</p>
                         </div>
                         <button 
                           onClick={handleClear}
                           className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-slate-400"
                         >
-                          <Icons.X size={20} />
+                          <Icons.X size={18} className="sm:w-5 sm:h-5" />
                         </button>
                       </div>
                       
-                      <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl mb-6 border border-slate-100 dark:border-slate-800">
-                        <p className="text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
+                      <div className="bg-slate-50 dark:bg-slate-800/50 p-3 sm:p-4 rounded-xl sm:rounded-2xl mb-6 border border-slate-100 dark:border-slate-800">
+                        <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
                           {error}
                         </p>
                       </div>
 
                       <div className="space-y-4">
-                        <h4 className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
-                          <Icons.Lightbulb size={14} className="text-amber-500" />
+                        <h4 className="text-[10px] sm:text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                          <Icons.Lightbulb size={12} className="sm:w-3.5 sm:h-3.5 text-amber-500" />
                           Potential Solutions
                         </h4>
-                        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                           {getErrorSolutions(error).map((solution, idx) => (
-                            <li key={idx} className="flex items-start gap-3 text-sm text-slate-600 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-800/30 p-3 rounded-xl border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-colors">
+                            <li key={idx} className="flex items-start gap-2 sm:gap-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-800/30 p-2.5 sm:p-3 rounded-xl border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-colors">
                               <div className="mt-1 w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
                               {solution}
                             </li>
@@ -182,21 +182,21 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
                         </ul>
                       </div>
 
-                      <div className="mt-8 flex flex-wrap gap-4">
+                      <div className="mt-6 sm:mt-8 flex flex-wrap gap-3 sm:gap-4">
                         <motion.button 
                           onClick={handleRun}
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-indigo-500/20 transition-all"
+                          className="flex-grow sm:flex-none px-5 sm:px-6 py-2.5 sm:py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20 transition-all text-sm sm:text-base"
                         >
-                          <Icons.RefreshCw size={18} />
+                          <Icons.RefreshCw size={16} className="sm:w-[18px] sm:h-[18px]" />
                           Try Again
                         </motion.button>
                         <motion.button 
                           onClick={handleClear}
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          className="px-6 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl font-bold transition-all"
+                          className="flex-grow sm:flex-none px-5 sm:px-6 py-2.5 sm:py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl font-bold transition-all text-sm sm:text-base"
                         >
                           Clear Input
                         </motion.button>
@@ -218,24 +218,24 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.05 }}
-              className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-2xl p-16 flex flex-col items-center justify-center text-center relative overflow-hidden min-h-[400px]"
+              className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-2xl p-8 sm:p-16 flex flex-col items-center justify-center text-center relative overflow-hidden min-h-[350px] sm:min-h-[400px]"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 dark:from-indigo-900/20 via-white dark:via-slate-900 to-purple-50/50 dark:to-purple-900/20" />
-              <div className="relative z-10">
-                <div className="relative mb-12">
+              <div className="relative z-10 w-full max-w-lg">
+                <div className="relative mb-8 sm:mb-12 inline-block">
                   <div className="absolute inset-0 bg-indigo-500 blur-3xl opacity-20 animate-pulse" />
-                  <div className="relative bg-white dark:bg-slate-800 p-8 rounded-full shadow-2xl border border-indigo-100 dark:border-indigo-900 animate-bounce-slow">
-                    <Icons.Zap size={64} className="text-indigo-600 dark:text-indigo-400" fill="currentColor" />
+                  <div className="relative bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-full shadow-2xl border border-indigo-100 dark:border-indigo-900 animate-bounce-slow">
+                    <Icons.Zap size={48} className="sm:w-16 sm:h-16 text-indigo-600 dark:text-indigo-400" fill="currentColor" />
                   </div>
-                  <div className="absolute -top-2 -right-2 bg-purple-500 p-3 rounded-full text-white shadow-lg animate-spin-slow">
-                    <Icons.Sparkles size={20} />
+                  <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-purple-500 p-2 sm:p-3 rounded-full text-white shadow-lg animate-spin-slow">
+                    <Icons.Sparkles size={16} className="sm:w-5 sm:h-5" />
                   </div>
                 </div>
-                <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
+                <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white mb-3 sm:mb-4 tracking-tight">
                   {loadingMessage}
                 </h2>
-                <div className="w-full max-w-md mx-auto mb-8">
-                  <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200 dark:border-slate-700 shadow-inner">
+                <div className="w-full max-w-md mx-auto mb-6 sm:mb-8">
+                  <div className="h-1.5 sm:h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200 dark:border-slate-700 shadow-inner">
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${progress}%` }}
@@ -244,11 +244,11 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
                     />
                   </div>
                   <div className="flex justify-between mt-2 px-1">
-                    <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Progress</span>
-                    <span className="text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">{Math.round(progress)}%</span>
+                    <span className="text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Progress</span>
+                    <span className="text-[9px] sm:text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">{Math.round(progress)}%</span>
                   </div>
                 </div>
-                <p className="text-slate-500 dark:text-slate-400 font-medium max-w-sm mx-auto leading-relaxed mb-8">
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium max-w-sm mx-auto leading-relaxed mb-6 sm:mb-8">
                   Our AI is deep-diving into your request to provide the most accurate SEO insights possible.
                 </p>
 
@@ -256,17 +256,17 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   key={currentTip}
-                  className="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-2xl border border-indigo-100 dark:border-indigo-900/50 max-w-md mx-auto"
+                  className="bg-indigo-50 dark:bg-indigo-900/20 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-indigo-100 dark:border-indigo-900/50 max-w-md mx-auto"
                 >
-                  <div className="flex items-center gap-2 mb-2 justify-center">
-                    <Icons.Lightbulb size={14} className="text-indigo-600 dark:text-indigo-400" />
-                    <span className="text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">SEO Pro Tip</span>
+                  <div className="flex items-center gap-2 mb-1.5 sm:mb-2 justify-center">
+                    <Icons.Lightbulb size={12} className="sm:w-3.5 sm:h-3.5 text-indigo-600 dark:text-indigo-400" />
+                    <span className="text-[9px] sm:text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">SEO Pro Tip</span>
                   </div>
-                  <p className="text-xs font-bold text-slate-600 dark:text-slate-300 italic">
+                  <p className="text-[10px] sm:text-xs font-bold text-slate-600 dark:text-slate-300 italic">
                     "{currentTip}"
                   </p>
                 </motion.div>
-                <div className="mt-12 flex items-center justify-center gap-2">
+                <div className="mt-8 sm:mt-12 flex items-center justify-center gap-2">
                   {[0, 1, 2].map((i) => (
                     <motion.div
                       key={i}
@@ -279,7 +279,7 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
                         repeat: Infinity,
                         delay: i * 0.2,
                       }}
-                      className="w-3 h-3 bg-indigo-600 rounded-full"
+                      className="w-2 h-2 sm:w-3 sm:h-3 bg-indigo-600 rounded-full"
                     />
                   ))}
                 </div>
@@ -307,37 +307,37 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
                   </div>
                 </div>
               )}
-              <div className={cn("flex items-center justify-between print:hidden", isGeneratingPDF && "hidden")}>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white">Analysis Report</h2>
-                <div className="flex items-center gap-2 relative">
+              <div className={cn("flex flex-col sm:flex-row items-center justify-between gap-4 print:hidden", isGeneratingPDF && "hidden")}>
+                <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">Analysis Report</h2>
+                <div className="flex flex-wrap items-center justify-center gap-2 relative">
                   <button 
                     onClick={handlePrint}
-                    className="p-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 text-xs font-medium"
+                    className="p-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 text-[10px] sm:text-xs font-medium"
                   >
                     <Icons.Printer size={14} />
-                    Print
+                    <span className="hidden xs:inline">Print</span>
                   </button>
 
                   <button 
                     onClick={handleDownloadPDF}
                     disabled={isDownloading}
-                    className="p-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 text-xs font-medium disabled:opacity-50"
+                    className="p-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 text-[10px] sm:text-xs font-medium disabled:opacity-50"
                   >
                     {isDownloading ? (
                       <Icons.Loader2 size={14} className="animate-spin" />
                     ) : (
                       <Icons.Download size={14} />
                     )}
-                    PDF
+                    <span className="hidden xs:inline">PDF</span>
                   </button>
                   
                   <div className="relative">
                     <button 
                       onClick={() => setShowShareMenu(!showShareMenu)}
-                      className="p-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 text-xs font-medium"
+                      className="p-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 text-[10px] sm:text-xs font-medium"
                     >
                       <Icons.Share2 size={14} />
-                      Share
+                      <span className="hidden xs:inline">Share</span>
                     </button>
                     
                     <AnimatePresence>
@@ -429,12 +429,13 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
                 const isTechnical = titleLower.includes('code') || titleLower.includes('snippet') || titleLower.includes('markup');
                 const isLinking = titleLower.includes('linking') || titleLower.includes('internal');
                 const isCoreWebVitals = titleLower.includes('core web vitals');
+                const isChecklist = titleLower.includes('checklist') || titleLower.includes('tasks') || titleLower.includes('fixes') || titleLower.includes('optimization') || titleLower.includes('structure') || titleLower.includes('tags');
 
                 const getHeaderIcon = () => {
                   if (isScore) return <Icons.Trophy className="text-amber-500" size={22} />;
                   if (isCoreWebVitals) return <Icons.Activity className="text-indigo-500" size={22} />;
                   if (isSummary) return <Icons.FileText className="text-blue-500" size={22} />;
-                  if (isAction) return <Icons.Wrench className="text-indigo-500" size={22} />;
+                  if (isAction || isChecklist) return <Icons.ClipboardCheck className="text-indigo-500" size={22} />;
                   if (isFindings) return <Icons.Search className="text-emerald-500" size={22} />;
                   if (isTechnical) return <Icons.Code className="text-purple-500" size={22} />;
                   if (isLinking) return <Icons.Link className="text-blue-600" size={22} />;
@@ -445,7 +446,7 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
                   if (isScore) return "border-l-amber-500";
                   if (isCoreWebVitals) return "border-l-indigo-500";
                   if (isSummary) return "border-l-blue-500";
-                  if (isAction) return "border-l-indigo-500";
+                  if (isAction || isChecklist) return "border-l-indigo-500";
                   if (isFindings) return "border-l-emerald-500";
                   if (isTechnical) return "border-l-purple-500";
                   if (isLinking) return "border-l-blue-600";
@@ -458,29 +459,29 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     whileHover={{ 
-                      y: -4,
-                      scale: 1.002,
+                      y: -2,
+                      scale: 1.001,
                       transition: { duration: 0.2, ease: "easeOut" }
                     }}
                     transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
                     className={cn(
-                      "bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 border-l-4 overflow-hidden print:shadow-none print:border-slate-100 group transition-all duration-300 hover:shadow-xl hover:shadow-indigo-100/30 dark:hover:shadow-indigo-900/20 hover:border-indigo-200 dark:hover:border-indigo-800",
+                      "bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 border-l-4 overflow-hidden print:shadow-none print:border-slate-100 group transition-all duration-300 hover:shadow-xl hover:shadow-indigo-100/30 dark:hover:shadow-indigo-900/20 hover:border-indigo-200 dark:hover:border-indigo-800",
                       getAccentColor(),
                       isScore && "bg-gradient-to-br from-white to-amber-50/30 dark:from-slate-900 dark:to-amber-900/10 border-amber-200 dark:border-amber-800 border-l-amber-500"
                     )}
                   >
                     <div className={cn(
-                      "px-6 sm:px-8 py-4 sm:py-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between transition-colors duration-300",
+                      "px-5 sm:px-8 py-3 sm:py-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between transition-colors duration-300",
                       isScore ? "bg-amber-50/50 dark:bg-amber-900/20 group-hover:bg-amber-100/40 dark:group-hover:bg-amber-900/30" : "bg-slate-50/50 dark:bg-slate-800/50 group-hover:bg-white dark:group-hover:bg-slate-800"
                     )}>
                       <h2 className={cn(
-                        "text-lg sm:text-xl font-extrabold flex items-center gap-3 tracking-tight",
+                        "text-base sm:text-xl font-extrabold flex items-center gap-2 sm:gap-3 tracking-tight",
                         isScore ? "text-amber-900 dark:text-amber-100" : "text-slate-900 dark:text-slate-100"
                       )}>
-                        <div className="transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                        <div className="transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 shrink-0">
                           {getHeaderIcon()}
                         </div>
-                        {title}
+                        <span className="truncate">{title}</span>
                       </h2>
                       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <button 
@@ -541,9 +542,9 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
                               return (
                                 <li className={cn(
                                   "mb-4 text-slate-600 dark:text-slate-400 flex items-start gap-3 sm:gap-4",
-                                  isAction && "p-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm hover:border-indigo-200 dark:hover:border-indigo-900 hover:bg-indigo-50/30 dark:hover:bg-indigo-900/20 transition-all duration-300"
+                                  (isAction || isChecklist) && "p-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm hover:border-indigo-200 dark:hover:border-indigo-900 hover:bg-indigo-50/30 dark:hover:bg-indigo-900/20 transition-all duration-300"
                                 )}>
-                                  {isAction ? (
+                                  {(isAction || isChecklist) ? (
                                     <div className="mt-1 p-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded-lg shrink-0">
                                       <Icons.CheckCircle2 size={16} />
                                     </div>
@@ -570,7 +571,7 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
                             th: ({ children }) => <th className="bg-slate-50/80 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 p-3 sm:p-4 text-[10px] sm:text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-left">{children}</th>,
                             h3: ({ children }) => <h3 className="text-lg sm:text-xl font-extrabold text-slate-800 dark:text-slate-100 mt-8 mb-4 flex items-center gap-2">{children}</h3>,
                             strong: ({ children }) => <strong className="font-bold text-slate-900 dark:text-white">{children}</strong>,
-                            ul: ({ children }) => <ul className={cn("mb-8", isAction ? "space-y-3" : "space-y-2")}>{children}</ul>,
+                            ul: ({ children }) => <ul className={cn("mb-8", (isAction || isChecklist) ? "space-y-3" : "space-y-2")}>{children}</ul>,
                             code: ({ children, className, ...props }) => {
                               const match = /language-(\w+)/.exec(className || '');
                               const codeString = String(children).replace(/\n$/, '');
@@ -624,24 +625,24 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
               )}
 
               {/* Bottom Action Bar */}
-              <div className={cn("flex flex-wrap items-center justify-center gap-4 py-8 border-t border-slate-100 dark:border-slate-800 print:hidden", isGeneratingPDF && "hidden")}>
+              <div className={cn("flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 py-8 border-t border-slate-100 dark:border-slate-800 print:hidden", isGeneratingPDF && "hidden")}>
                 <button 
                   onClick={handlePrint}
-                  className="px-8 py-4 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all font-black text-sm uppercase tracking-widest flex items-center gap-3 shadow-lg active:scale-95"
+                  className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl sm:rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all font-black text-xs sm:text-sm uppercase tracking-widest flex items-center justify-center gap-2 sm:gap-3 shadow-lg active:scale-95"
                 >
-                  <Icons.Printer size={20} />
+                  <Icons.Printer size={18} className="sm:w-5 sm:h-5" />
                   Print Full Report
                 </button>
 
                 <button 
                   onClick={handleDownloadPDF}
                   disabled={isDownloading}
-                  className="px-8 py-4 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all font-black text-sm uppercase tracking-widest flex items-center gap-3 shadow-lg active:scale-95 disabled:opacity-50"
+                  className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl sm:rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all font-black text-xs sm:text-sm uppercase tracking-widest flex items-center justify-center gap-2 sm:gap-3 shadow-lg active:scale-95 disabled:opacity-50"
                 >
                   {isDownloading ? (
-                    <Icons.Loader2 size={20} className="animate-spin" />
+                    <Icons.Loader2 size={18} className="sm:w-5 sm:h-5 animate-spin" />
                   ) : (
-                    <Icons.Download size={20} />
+                    <Icons.Download size={18} className="sm:w-5 sm:h-5" />
                   )}
                   Download PDF
                 </button>
@@ -649,12 +650,12 @@ export const GenericToolUI: React.FC<ToolComponentProps> = ({
                 <button 
                   onClick={handleCopy}
                   className={cn(
-                    "px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center gap-3 shadow-xl transition-all active:scale-95",
+                    "w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-xs sm:text-sm uppercase tracking-widest flex items-center justify-center gap-2 sm:gap-3 shadow-xl transition-all active:scale-95",
                     copied ? "bg-emerald-500 text-white shadow-emerald-200 dark:shadow-emerald-900/40" : "bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-200 dark:shadow-indigo-900/40"
                   )}
                 >
-                  {copied ? <Icons.Check size={20} /> : <Icons.Copy size={20} />}
-                  {copied ? "Copied to Clipboard!" : "Copy Full Report"}
+                  {copied ? <Icons.Check size={18} className="sm:w-5 sm:h-5" /> : <Icons.Copy size={18} className="sm:w-5 sm:h-5" />}
+                  {copied ? "Copied!" : "Copy Full Report"}
                 </button>
               </div>
 

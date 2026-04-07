@@ -36,11 +36,11 @@ export const getErrorSolutions = (error: string) => {
       'Try refreshing the page and running the analysis again.'
     ];
   }
-  if (err.includes('rate limit') || err.includes('429') || err.includes('quota')) {
+  if (err.includes('rate limit') || err.includes('429') || err.includes('quota') || err.includes('503') || err.includes('overloaded')) {
     return [
       'The AI service is currently experiencing high demand or quota limits.',
-      'Wait for a few minutes before trying again.',
-      'Consider using a different tool or reducing the input size.'
+      'This is usually temporary (503). Wait for 10-20 seconds and try again.',
+      'If you are on a free tier, you might have hit the rate limit.'
     ];
   }
   if (err.includes('network') || err.includes('fetch') || err.includes('failed to fetch')) {

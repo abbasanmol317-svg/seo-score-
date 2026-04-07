@@ -18,9 +18,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const root = window.document.documentElement;
+    console.log('Applying theme:', theme);
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
     localStorage.setItem('theme', theme);
+    console.log('Root classes:', root.className);
   }, [theme]);
 
   const toggleTheme = () => {

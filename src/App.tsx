@@ -1,21 +1,32 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import * as Icons from 'lucide-react';
-import Dashboard from './pages/Dashboard';
-import ToolPage from './pages/ToolPage';
-import About from './pages/About';
-import Blog from './pages/Blog';
-import Privacy from './pages/Privacy';
-import FAQ from './pages/FAQ';
 import { TOOLS } from './services/gemini';
 import { cn } from './lib/utils';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 
-import { HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider, Helmet } from 'react-helmet-async';
 import ToolSearch from './components/ToolSearch';
 import Onboarding from './components/Onboarding';
 import Sidebar from './components/Sidebar';
+
+// Lazy load pages for better performance
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const ToolPage = lazy(() => import('./pages/ToolPage'));
+const About = lazy(() => import('./pages/About'));
+const Blog = lazy(() => import('./pages/Blog'));
+const Privacy = lazy(() => import('./pages/Privacy'));
+const FAQ = lazy(() => import('./pages/FAQ'));
+
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-[60vh]">
+    <div className="relative">
+      <div className="w-12 h-12 border-4 border-indigo-200 dark:border-indigo-900 rounded-full animate-spin"></div>
+      <div className="absolute top-0 left-0 w-12 h-12 border-4 border-indigo-600 rounded-full animate-spin border-t-transparent"></div>
+    </div>
+  </div>
+);
 
 function NavHeader() {
   const location = useLocation();
@@ -68,9 +79,9 @@ function NavHeader() {
               <Icons.Menu size={20} />
             </button>
 
-            <Link to="/" className="flex items-center gap-2.5 text-indigo-600 font-bold text-xl group shrink-0">
+            <Link to="/" className="flex items-center gap-2 text-indigo-600 font-bold text-lg sm:text-xl group shrink-0">
               <div className="bg-indigo-600 p-1.5 rounded-lg text-white shadow-lg shadow-indigo-100 group-hover:scale-110 transition-transform">
-                <Icons.Zap size={20} fill="currentColor" />
+                <Icons.Zap size={18} className="sm:w-5 sm:h-5" fill="currentColor" />
               </div>
               <span className="hidden xs:inline tracking-tight">SEO Score</span>
             </Link>
@@ -108,17 +119,17 @@ function NavHeader() {
           <div className="flex items-center gap-2 sm:gap-4">
             <button
               onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
-              className="lg:hidden p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+              className="lg:hidden p-2 sm:p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
               aria-label="Search tools"
             >
-              <Icons.Search size={18} />
+              <Icons.Search size={16} className="sm:w-[18px] sm:h-[18px]" />
             </button>
             <button
               onClick={toggleTheme}
-              className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+              className="p-2 sm:p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
               aria-label="Toggle dark mode"
             >
-              {theme === 'light' ? <Icons.Moon size={18} /> : <Icons.Sun size={18} />}
+              {theme === 'light' ? <Icons.Moon size={16} className="sm:w-[18px] sm:h-[18px]" /> : <Icons.Sun size={16} className="sm:w-[18px] sm:h-[18px]" />}
             </button>
             <Link 
               to="/tool/seo-dashboard" 
@@ -197,68 +208,70 @@ function AnimatedRoutes() {
   
   return (
     <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-          >
-            <Dashboard />
-          </motion.div>
-        } />
-        <Route path="/tool/:id" element={
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-          >
-            <ToolPage />
-          </motion.div>
-        } />
-        <Route path="/about" element={
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <About />
-          </motion.div>
-        } />
-        <Route path="/blog" element={
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <Blog />
-          </motion.div>
-        } />
-        <Route path="/privacy" element={
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <Privacy />
-          </motion.div>
-        } />
-        <Route path="/faq" element={
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.3 }}
-          >
-            <FAQ />
-          </motion.div>
-        } />
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            >
+              <Dashboard />
+            </motion.div>
+          } />
+          <Route path="/tool/:id" element={
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            >
+              <ToolPage />
+            </motion.div>
+          } />
+          <Route path="/about" element={
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <About />
+            </motion.div>
+          } />
+          <Route path="/blog" element={
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Blog />
+            </motion.div>
+          } />
+          <Route path="/privacy" element={
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Privacy />
+            </motion.div>
+          } />
+          <Route path="/faq" element={
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.3 }}
+            >
+              <FAQ />
+            </motion.div>
+          } />
+        </Routes>
+      </Suspense>
     </AnimatePresence>
   );
 }
@@ -266,6 +279,10 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <HelmetProvider>
+      <Helmet>
+        <title>SEO Score Suite | Free AI-Powered SEO Analysis Tools</title>
+        <meta name="description" content="Optimize your website with SEO Score Suite. Free AI-powered tools for technical audits, keyword research, and content optimization using Google Gemini AI." />
+      </Helmet>
       <ThemeProvider>
         <Onboarding />
         <Router>

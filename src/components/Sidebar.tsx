@@ -57,13 +57,13 @@ export default function Sidebar({ onClose, isMobile }: SidebarProps) {
         : cn("hidden lg:flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 h-[calc(100vh-64px)] sticky top-16 overflow-y-auto transition-all duration-300", sidebarWidth)
     )}>
       <div className={cn("p-6", isCollapsed && !isMobile && "px-4")}>
-        <div className={cn("flex items-center mb-8", isCollapsed && !isMobile ? "justify-center" : "justify-between")}>
+        <div className={cn("flex items-center mb-6 sm:mb-8", isCollapsed && !isMobile ? "justify-center" : "justify-between")}>
           {(!isCollapsed || isMobile) && (
             <div className="flex items-center gap-3">
-              <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/40">
-                <Icons.Zap size={20} fill="currentColor" />
+              <div className="bg-indigo-600 p-1.5 sm:p-2 rounded-lg sm:rounded-xl text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/40">
+                <Icons.Zap size={18} className="sm:w-5 sm:h-5" fill="currentColor" />
               </div>
-              <h2 className="text-lg font-black text-slate-900 dark:text-white tracking-tight uppercase tracking-[0.1em]">
+              <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight uppercase tracking-[0.1em]">
                 SEO Tools
               </h2>
             </div>
@@ -79,9 +79,10 @@ export default function Sidebar({ onClose, isMobile }: SidebarProps) {
           ) : (
             <button 
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+              className="p-2.5 -mr-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors bg-slate-50 dark:bg-slate-800 rounded-xl"
+              aria-label="Close sidebar"
             >
-              <Icons.X size={24} />
+              <Icons.X size={20} />
             </button>
           )}
         </div>

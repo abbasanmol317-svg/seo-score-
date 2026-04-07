@@ -19,6 +19,7 @@ export default function ToolSearch({ className, onSelect, autoFocus }: ToolSearc
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
 
   useEffect(() => {
     const handleKeyDownGlobal = (e: KeyboardEvent) => {
@@ -81,10 +82,10 @@ export default function ToolSearch({ className, onSelect, autoFocus }: ToolSearc
   };
 
   return (
-    <div className={cn("relative w-full max-w-md mx-4", className)} ref={searchRef}>
+    <div className={cn("relative w-full max-w-md", !isMobile && "mx-4", className)} ref={searchRef}>
       <div className="relative group">
         <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
-          <Icons.Search size={18} />
+          <Icons.Search size={16} className="sm:w-[18px] sm:h-[18px]" />
         </div>
         <input
           ref={inputRef}
@@ -95,7 +96,7 @@ export default function ToolSearch({ className, onSelect, autoFocus }: ToolSearc
           onKeyDown={handleKeyDown}
           onFocus={() => query.trim().length > 0 && setIsOpen(true)}
           placeholder="Search SEO tools..."
-          className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all dark:text-slate-200"
+          className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 sm:py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all dark:text-slate-200"
         />
         <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1">
           <div className="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-700 rounded text-[10px] font-mono text-slate-500 dark:text-slate-400 border border-slate-300 dark:border-slate-600">
@@ -112,7 +113,7 @@ export default function ToolSearch({ className, onSelect, autoFocus }: ToolSearc
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
             className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden z-[60]"
           >
-            <div className="p-2 max-h-[400px] overflow-y-auto">
+            <div className="p-2 max-h-[60vh] sm:max-h-[400px] overflow-y-auto">
               <div className="px-3 py-2 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                 Tools Found ({results.length})
               </div>
@@ -134,20 +135,21 @@ export default function ToolSearch({ className, onSelect, autoFocus }: ToolSearc
                       )}
                     >
                       <div className={cn(
-                        "p-2 rounded-lg transition-colors",
+                        "p-2 rounded-lg transition-colors shrink-0",
                         selectedIndex === index 
                           ? "bg-white dark:bg-slate-800 shadow-sm" 
                           : "bg-slate-100 dark:bg-slate-800 group-hover:bg-white dark:group-hover:bg-slate-700"
                       )}>
-                        <ToolIcon size={18} className={cn(
-                          selectedIndex === index ? "text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400"
+                        <ToolIcon size={16} className={cn(
+                          selectedIndex === index ? "text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400",
+                          "sm:w-[18px] sm:h-[18px]"
                         )} />
                       </div>
                       <div className="flex-grow min-w-0">
                         <div className="text-sm font-bold truncate">{tool.name}</div>
                         <div className="text-[10px] text-slate-400 dark:text-slate-500 truncate">{tool.category}</div>
                       </div>
-                      <Icons.ChevronRight size={14} className="text-slate-300 dark:text-slate-600 group-hover:translate-x-0.5 transition-transform" />
+                      <Icons.ChevronRight size={14} className="text-slate-300 dark:text-slate-600 group-hover:translate-x-0.5 transition-transform shrink-0" />
                     </motion.button>
                   );
                 })
@@ -163,7 +165,7 @@ export default function ToolSearch({ className, onSelect, autoFocus }: ToolSearc
             </div>
             <div className="p-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-500">
               <div className="flex items-center gap-3">
-                <span className="flex items-center gap-1"><Icons.ArrowDown size={10} /> <Icons.ArrowUp size={10} /> to navigate</span>
+                <span className="hidden sm:flex items-center gap-1"><Icons.ArrowDown size={10} /> <Icons.ArrowUp size={10} /> to navigate</span>
                 <span className="flex items-center gap-1"><Icons.CornerDownLeft size={10} /> to select</span>
               </div>
               <span className="flex items-center gap-1"><Icons.X size={10} /> to close</span>
