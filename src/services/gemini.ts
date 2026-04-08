@@ -100,9 +100,14 @@ export const TOOLS: Tool[] = [
     
     ## 🚀 Optimization Guide
     (Provide specific, actionable recommendations categorized as follows:
-    - **High Impact (High Priority)**: (e.g., Image compression, server response time) - Estimated Effort: (Low/Medium/High)
-    - **Medium Impact**: (e.g., Minifying CSS/JS, browser caching) - Estimated Effort: (Low/Medium/High)
-    - **Low Impact**: (e.g., Removing unused CSS, optimizing web fonts) - Estimated Effort: (Low/Medium/High))`,
+    - **High Impact (High Priority)**: (e.g., Image compression, server response time) [LOW_EFFORT]
+    - **Medium Impact**: (e.g., Minifying CSS/JS, browser caching) [MEDIUM_EFFORT]
+    - **Low Impact**: (e.g., Removing unused CSS, optimizing web fonts) [HIGH_EFFORT]
+    
+    Note: Use [LOW_EFFORT], [MEDIUM_EFFORT], or [HIGH_EFFORT] for each recommendation based on implementation complexity.
+    
+    ## 🛠️ Implementation Effort Summary
+    (Provide a summary list of all recommendations and their estimated effort: [LOW_EFFORT], [MEDIUM_EFFORT], or [HIGH_EFFORT]))`,
     placeholder: 'Enter website URL to test speed (e.g., https://mysite.com/blog)'
   },
   {
@@ -315,6 +320,7 @@ export const TOOLS: Tool[] = [
     - Site Speed Checker (site-speed)
     - Backlink Checker (backlinks)
     - SEO Audit Checklist (seo-audit)
+    - On-Page SEO Checklist (on-page-checklist)
     - Keyword Research Tool (keyword-research)
     - Meta Tag Generator (meta-tag)
     - Schema Markup Generator (schema-markup)
@@ -553,36 +559,66 @@ export async function runTool(toolId: ToolId, input: string) {
   const model = "gemini-3-flash-preview";
   const fullPrompt = `${tool.prompt}\n\nInput: ${input}`;
 
-  try {
-    const response = await ai.models.generateContent({
-      model,
-      contents: fullPrompt,
-      config: {
-        tools: [{ urlContext: {} }]
+  // Retry logic for 503 errors
+  let attempts = 0;
+  const maxAttempts = 2;
+
+  while (attempts < maxAttempts) {
+    try {
+      const response = await ai.models.generateContent({
+        model,
+        contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
+        config: {
+          tools: [{ urlContext: {} }]
+        }
+      });
+
+      if (!response.text) {
+        // Check if it was blocked by safety filters
+        if (response.candidates?.[0]?.finishReason === 'SAFETY') {
+          throw new Error("This request was blocked by AI safety filters. This often happens with sensitive URLs or restricted content.");
+        }
+        throw new Error("AI returned an empty response.");
       }
-    });
 
-    if (!response.text) {
-      throw new Error("AI returned an empty response.");
-    }
+      return response.text;
+    } catch (error: any) {
+      console.error(`Gemini API Error (Attempt ${attempts + 1}):`, error);
+      
+      const isRetryable = error.status === 503 || 
+                         error.message?.includes('503') || 
+                         error.message?.includes('high demand') ||
+                         error.message?.includes('overloaded');
 
-    return response.text;
-  } catch (error: any) {
-    console.error("Gemini API Error:", error);
-    
-    // Handle specific error cases
-    if (error.status === 503 || error.message?.includes('503') || error.message?.includes('high demand')) {
-      throw new Error("AI service is temporarily overloaded (503). This is usually temporary. Please wait a few seconds and try again.");
-    }
-    
-    if (error.status === 500 || error.message?.includes('500')) {
-      throw new Error("AI request failed (500): The model might be overloaded or the input is causing an issue. Try again in a moment.");
-    }
-    
-    if (error.message?.includes('API key')) {
-      throw new Error("Invalid API Key. Please check your GEMINI_API_KEY configuration.");
-    }
+      if (isRetryable && attempts < maxAttempts - 1) {
+        attempts++;
+        // Wait 2 seconds before retrying
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        continue;
+      }
 
-    throw new Error(`AI request failed: ${error.message || 'Unknown error'}`);
+      // Handle specific error cases
+      if (isRetryable) {
+        throw new Error("AI service is temporarily overloaded (503). This is usually temporary. Please wait a few seconds and try again.");
+      }
+      
+      if (error.status === 429 || error.message?.includes('429') || error.message?.includes('quota')) {
+        throw new Error("AI quota exceeded. Please wait a moment before trying again.");
+      }
+
+      if (error.status === 400 && error.message?.includes('safety')) {
+        throw new Error("Request blocked by safety filters. Try a different URL or topic.");
+      }
+
+      if (error.status === 500 || error.message?.includes('500')) {
+        throw new Error("AI request failed (500): The model might be overloaded or the input is causing an issue. Try again in a moment.");
+      }
+      
+      if (error.message?.includes('API key')) {
+        throw new Error("Invalid API Key. Please check your GEMINI_API_KEY configuration.");
+      }
+
+      throw new Error(`AI request failed: ${error.message || 'Unknown error'}`);
+    }
   }
 }

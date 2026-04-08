@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import * as Icons from 'lucide-react';
 import { ToolComponentProps } from './ToolComponentProps';
-import { GenericToolUI } from './GenericToolUI';
+import { ToolLayout } from './ToolLayout';
+import { ToolInput } from './ToolInput';
+import { ToolLoading } from './ToolLoading';
+import { ToolError } from './ToolError';
+import { ToolResult } from './ToolResult';
+import { ToolPlaceholder } from './ToolPlaceholder';
 import { cn } from '../../lib/utils';
 
 interface TutorialStep {
@@ -47,23 +52,42 @@ const SUGGESTED_QUESTIONS = [
 ];
 
 export const SEOChatUI: React.FC<ToolComponentProps> = (props) => {
-  const { input, setInput, handleRun, result, loading } = props;
+  const {
+    tool,
+    input,
+    setInput,
+    result,
+    loading,
+    error,
+    handleRun,
+    handleClear,
+    handleCopy,
+    handlePrint,
+    handleDownloadPDF,
+    isDownloading,
+    isGeneratingPDF,
+    copied,
+    showShareMenu,
+    setShowShareMenu,
+    handleShare,
+    reportRef,
+    loadingMessage,
+    progress,
+    currentTip,
+  } = props;
+
   const [showTutorial, setShowTutorial] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [hasSeenTutorial, setHasSeenTutorial] = useState(false);
 
   useEffect(() => {
     const seen = localStorage.getItem('seo_chat_tutorial_seen');
     if (!seen) {
       setShowTutorial(true);
-    } else {
-      setHasSeenTutorial(true);
     }
   }, []);
 
   const handleCompleteTutorial = () => {
     setShowTutorial(false);
-    setHasSeenTutorial(true);
     localStorage.setItem('seo_chat_tutorial_seen', 'true');
   };
 
@@ -83,11 +107,10 @@ export const SEOChatUI: React.FC<ToolComponentProps> = (props) => {
 
   const handleSuggestionClick = (q: string) => {
     setInput(q);
-    // We don't auto-run to let the user see the input first
   };
 
   return (
-    <div className="space-y-8 relative">
+    <div className="relative">
       {/* Tutorial Overlay */}
       <AnimatePresence>
         {showTutorial && (
@@ -166,7 +189,7 @@ export const SEOChatUI: React.FC<ToolComponentProps> = (props) => {
         )}
       </AnimatePresence>
 
-      <div className="flex justify-between items-center max-w-5xl mx-auto px-4">
+      <div className="flex justify-between items-center max-w-5xl mx-auto px-4 mb-4">
         <h2 className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Consultant Interface</h2>
         <button
           onClick={() => {
@@ -180,53 +203,102 @@ export const SEOChatUI: React.FC<ToolComponentProps> = (props) => {
         </button>
       </div>
 
-      <GenericToolUI {...props} />
-
-      {/* Suggested Questions Section */}
-      <div id="chat-suggestions" className="max-w-5xl mx-auto px-4">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-1.5 bg-amber-50 dark:bg-amber-900/30 rounded-lg text-amber-600 dark:text-amber-400">
-            <Icons.Lightbulb size={16} />
+      <ToolLayout
+        inputSection={
+          <div className="space-y-6">
+            <ToolInput
+              tool={tool}
+              input={input}
+              setInput={setInput}
+              handleRun={handleRun}
+              handleClear={handleClear}
+              loading={loading}
+            />
+            
+            {/* Suggested Questions Section */}
+            <div id="chat-suggestions" className="px-4">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-1.5 bg-amber-50 dark:bg-amber-900/30 rounded-lg text-amber-600 dark:text-amber-400">
+                  <Icons.Lightbulb size={16} />
+                </div>
+                <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Suggested Questions</h3>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {SUGGESTED_QUESTIONS.map((q, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleSuggestionClick(q)}
+                    className="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-bold text-slate-600 dark:text-slate-400 hover:border-indigo-200 dark:hover:border-indigo-900 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all shadow-sm"
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
-          <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Suggested Questions</h3>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {SUGGESTED_QUESTIONS.map((q, i) => (
-            <button
-              key={i}
-              onClick={() => handleSuggestionClick(q)}
-              className="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-bold text-slate-600 dark:text-slate-400 hover:border-indigo-200 dark:hover:border-indigo-900 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all shadow-sm"
-            >
-              {q}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Walkthrough Info Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto px-4 mt-12">
-        <div className="bg-indigo-50/50 dark:bg-indigo-900/10 p-6 rounded-[2rem] border border-indigo-100/50 dark:border-indigo-900/20">
-          <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-indigo-100 dark:shadow-none">
-            <Icons.Zap size={20} />
+        }
+        loading={loading}
+        loadingSection={
+          <ToolLoading
+            loadingMessage={loadingMessage}
+            progress={progress}
+            currentTip={currentTip}
+          />
+        }
+        error={error}
+        errorSection={
+          <ToolError
+            error={error || ''}
+            handleRun={handleRun}
+            handleClear={handleClear}
+          />
+        }
+        result={result}
+        resultSection={
+          <div className="space-y-12">
+            <ToolResult
+              tool={tool}
+              result={result}
+              reportRef={reportRef}
+              handlePrint={handlePrint}
+              handleDownloadPDF={handleDownloadPDF}
+              handleCopy={handleCopy}
+              handleShare={handleShare}
+              isDownloading={isDownloading}
+              isGeneratingPDF={isGeneratingPDF}
+              copied={copied}
+              showShareMenu={showShareMenu}
+              setShowShareMenu={setShowShareMenu}
+            />
+            
+            {/* Walkthrough Info Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 print:hidden">
+              <div className="bg-indigo-50/50 dark:bg-indigo-900/10 p-6 rounded-[2rem] border border-indigo-100/50 dark:border-indigo-900/20">
+                <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-indigo-100 dark:shadow-none">
+                  <Icons.Zap size={20} />
+                </div>
+                <h4 className="font-bold text-slate-900 dark:text-white mb-2">Instant Answers</h4>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Get immediate, AI-powered responses to any SEO query, from technical fixes to content strategy.</p>
+              </div>
+              <div className="bg-emerald-50/50 dark:bg-emerald-900/10 p-6 rounded-[2rem] border border-emerald-100/50 dark:border-emerald-900/20">
+                <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-emerald-100 dark:shadow-none">
+                  <Icons.CheckCircle2 size={20} />
+                </div>
+                <h4 className="font-bold text-slate-900 dark:text-white mb-2">Actionable Steps</h4>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Every response includes clear, step-by-step instructions so you know exactly what to do next.</p>
+              </div>
+              <div className="bg-amber-50/50 dark:bg-amber-900/10 p-6 rounded-[2rem] border border-amber-100/50 dark:border-amber-900/20">
+                <div className="w-10 h-10 bg-amber-600 rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-amber-100 dark:shadow-none">
+                  <Icons.ShieldCheck size={20} />
+                </div>
+                <h4 className="font-bold text-slate-900 dark:text-white mb-2">Expert Backing</h4>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Our AI is trained on the latest SEO best practices and Google algorithm guidelines for 2026.</p>
+              </div>
+            </div>
           </div>
-          <h4 className="font-bold text-slate-900 dark:text-white mb-2">Instant Answers</h4>
-          <p className="text-sm text-slate-600 dark:text-slate-400">Get immediate, AI-powered responses to any SEO query, from technical fixes to content strategy.</p>
-        </div>
-        <div className="bg-emerald-50/50 dark:bg-emerald-900/10 p-6 rounded-[2rem] border border-emerald-100/50 dark:border-emerald-900/20">
-          <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-emerald-100 dark:shadow-none">
-            <Icons.CheckCircle2 size={20} />
-          </div>
-          <h4 className="font-bold text-slate-900 dark:text-white mb-2">Actionable Steps</h4>
-          <p className="text-sm text-slate-600 dark:text-slate-400">Every response includes clear, step-by-step instructions so you know exactly what to do next.</p>
-        </div>
-        <div className="bg-amber-50/50 dark:bg-amber-900/10 p-6 rounded-[2rem] border border-amber-100/50 dark:border-amber-900/20">
-          <div className="w-10 h-10 bg-amber-600 rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-amber-100 dark:shadow-none">
-            <Icons.ShieldCheck size={20} />
-          </div>
-          <h4 className="font-bold text-slate-900 dark:text-white mb-2">Expert Backing</h4>
-          <p className="text-sm text-slate-600 dark:text-slate-400">Our AI is trained on the latest SEO best practices and Google algorithm guidelines for 2026.</p>
-        </div>
-      </div>
+        }
+        placeholderSection={<ToolPlaceholder tool={tool} />}
+      />
     </div>
   );
 };

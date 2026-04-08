@@ -67,20 +67,12 @@ export default function Blog() {
             whileHover={{ y: -8 }}
             className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden group transition-all hover:shadow-xl hover:border-indigo-200 dark:hover:border-indigo-900"
           >
-            <div className="relative h-40 sm:h-48 overflow-hidden">
-              <img 
-                src={post.image} 
-                alt={post.title} 
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
-                <span className="px-2.5 py-1 bg-indigo-600 text-white text-[8px] sm:text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg">
+            <div className="p-6 sm:p-8">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="px-2.5 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[8px] sm:text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-100 dark:border-indigo-800">
                   {post.category}
                 </span>
               </div>
-            </div>
-            <div className="p-6 sm:p-8">
               <div className="flex flex-wrap items-center gap-2 text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 mb-3 sm:mb-4">
                 <div className="flex items-center gap-1">
                   <Icons.Calendar size={12} className="sm:w-3.5 sm:h-3.5" />

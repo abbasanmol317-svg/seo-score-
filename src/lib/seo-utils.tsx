@@ -17,12 +17,30 @@ export const StatusBadge = ({ type }: { type: 'GOOD' | 'AVERAGE' | 'POOR' }) => 
   );
 };
 
+export const EffortBadge = ({ type }: { type: 'LOW' | 'MEDIUM' | 'HIGH' }) => {
+  const config = {
+    LOW: { label: 'Low Effort', icon: <Icons.Zap size={12} />, className: 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-100 dark:border-blue-800' },
+    MEDIUM: { label: 'Medium Effort', icon: <Icons.Clock size={12} />, className: 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 border-indigo-100 dark:border-indigo-800' },
+    HIGH: { label: 'High Effort', icon: <Icons.Hammer size={12} />, className: 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border-purple-100 dark:border-purple-800' },
+  };
+  const { label, icon, className } = config[type];
+  return (
+    <span className={cn("inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border shadow-sm ml-2", className)}>
+      {icon}
+      {label}
+    </span>
+  );
+};
+
 export const renderMarkdownContent = (content: string) => {
-  const parts = content.split(/(\[GOOD\]|\[AVERAGE\]|\[POOR\])/g);
+  const parts = content.split(/(\[GOOD\]|\[AVERAGE\]|\[POOR\]|\[LOW_EFFORT\]|\[MEDIUM_EFFORT\]|\[HIGH_EFFORT\])/g);
   return parts.map((part, i) => {
     if (part === '[GOOD]') return <StatusBadge key={i} type="GOOD" />;
     if (part === '[AVERAGE]') return <StatusBadge key={i} type="AVERAGE" />;
     if (part === '[POOR]') return <StatusBadge key={i} type="POOR" />;
+    if (part === '[LOW_EFFORT]') return <EffortBadge key={i} type="LOW" />;
+    if (part === '[MEDIUM_EFFORT]') return <EffortBadge key={i} type="MEDIUM" />;
+    if (part === '[HIGH_EFFORT]') return <EffortBadge key={i} type="HIGH" />;
     return part;
   });
 };
