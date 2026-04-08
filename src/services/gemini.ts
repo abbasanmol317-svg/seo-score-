@@ -319,11 +319,18 @@ export const TOOLS: Tool[] = [
     - YouTube SEO Checker (youtube-seo)
     - Site Speed Checker (site-speed)
     - Backlink Checker (backlinks)
+    - Broken Link Checker (broken-links)
     - SEO Audit Checklist (seo-audit)
     - On-Page SEO Checklist (on-page-checklist)
+    - Mobile-Friendly Test (mobile-friendly)
     - Keyword Research Tool (keyword-research)
     - Meta Tag Generator (meta-tag)
+    - SERP Preview Tool (serp-preview)
+    - OG Preview Generator (og-preview)
     - Schema Markup Generator (schema-markup)
+    - Image Alt Text Generator (image-alt-text)
+    - Sitemap & Robots.txt Generator (sitemap-robots)
+    - Compare Websites (compare-websites)
     - AI SEO Chat (seo-chat)
     
     Format as a list of suggestions.`,

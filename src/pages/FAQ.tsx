@@ -57,8 +57,8 @@ export default function FAQ() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 py-12 sm:py-20 transition-colors duration-300">
       <Helmet>
-        <title>SEO FAQ | AI-Powered Search Optimization Help | SEO Score Suite</title>
-        <meta name="description" content="Find answers to common questions about AI-powered SEO, Google Gemini analysis, and how to use SEO Score Suite to improve your website's search engine rankings." />
+        <title>SEO Score Suite FAQ | Help & Support for AI SEO Tools</title>
+        <meta name="description" content="Got questions about AI SEO? Find answers on Gemini analysis, data security, and tool usage. Get the help you need to rank higher today." />
         <meta name="keywords" content="SEO FAQ, AI SEO help, search engine optimization questions, Google Gemini SEO analysis, SEO Score Suite support" />
       </Helmet>
 

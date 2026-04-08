@@ -228,18 +228,18 @@ export const ToolResult: React.FC<ToolResultProps> = ({
             )}>
               {isScore ? (
                 <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 py-4">
-                  <div className="relative w-36 h-36 sm:w-48 sm:h-48 flex items-center justify-center rounded-full bg-white dark:bg-slate-800 border-[8px] sm:border-[12px] border-amber-100 dark:border-amber-900 shadow-2xl shadow-amber-200/50 dark:shadow-amber-900/20">
+                  <div className="relative w-28 h-28 sm:w-48 sm:h-48 flex items-center justify-center rounded-full bg-white dark:bg-slate-800 border-[6px] sm:border-[12px] border-amber-100 dark:border-amber-900 shadow-2xl shadow-amber-200/50 dark:shadow-amber-900/20">
                     <div className="text-center">
-                      <span className="text-4xl sm:text-6xl font-black text-amber-600 dark:text-amber-400 block leading-none">
+                      <span className="text-3xl sm:text-6xl font-black text-amber-600 dark:text-amber-400 block leading-none">
                         {content.match(/\d+/)?.[0] || 'N/A'}
                       </span>
-                      <span className="text-[10px] sm:text-xs font-bold text-amber-400 dark:text-amber-500 uppercase tracking-widest mt-1 block">Score</span>
+                      <span className="text-[8px] sm:text-xs font-bold text-amber-400 dark:text-amber-500 uppercase tracking-widest mt-1 block">Score</span>
                     </div>
                   </div>
                   <div className="flex-grow text-center md:text-left">
                     <ReactMarkdown
                       components={{
-                        p: ({ children }) => <p className="text-xl sm:text-2xl text-slate-800 dark:text-slate-100 font-bold leading-tight mb-4">{children}</p>
+                        p: ({ children }) => <p className="text-lg sm:text-2xl text-slate-800 dark:text-slate-100 font-bold leading-tight mb-4">{children}</p>
                       }}
                     >
                       {content.replace(/\d+/, '').trim()}

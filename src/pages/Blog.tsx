@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import * as Icons from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
 
 const BLOG_POSTS = [
   {
@@ -37,8 +38,8 @@ export default function Blog() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
       <Helmet>
-        <title>SEO Blog | AI Search Optimization Tips & Insights | SEO Score Suite</title>
-        <meta name="description" content="Stay ahead of search engine trends with the SEO Score Suite blog. Expert insights on AI-powered SEO, technical audits, content strategy, and Google Gemini optimization." />
+        <title>AI SEO Blog: Latest Search Optimization Trends & Strategies (2026)</title>
+        <meta name="description" content="Master search optimization with our AI SEO blog. Get expert tips on Gemini AI, technical audits, and content strategy. Read the latest insights now!" />
         <meta name="keywords" content="SEO blog, AI SEO tips, search engine optimization insights, Google Gemini SEO, technical SEO blog" />
       </Helmet>
       <motion.div
@@ -67,33 +68,35 @@ export default function Blog() {
             whileHover={{ y: -8 }}
             className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden group transition-all hover:shadow-xl hover:border-indigo-200 dark:hover:border-indigo-900"
           >
-            <div className="p-6 sm:p-8">
-              <div className="flex items-center gap-2 mb-4">
-                <span className="px-2.5 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[8px] sm:text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-100 dark:border-indigo-800">
-                  {post.category}
-                </span>
-              </div>
-              <div className="flex flex-wrap items-center gap-2 text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 mb-3 sm:mb-4">
-                <div className="flex items-center gap-1">
-                  <Icons.Calendar size={12} className="sm:w-3.5 sm:h-3.5" />
-                  <span>{post.date}</span>
+            <Link to={`/blog/${post.id}`} className="block h-full">
+              <div className="p-6 sm:p-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="px-2.5 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[8px] sm:text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-100 dark:border-indigo-800">
+                    {post.category}
+                  </span>
                 </div>
-                <span className="hidden sm:inline mx-1">•</span>
-                <div className="flex items-center gap-1">
-                  <Icons.User size={12} className="sm:w-3.5 sm:h-3.5" />
-                  <span>{post.author}</span>
+                <div className="flex flex-wrap items-center gap-2 text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 mb-3 sm:mb-4">
+                  <div className="flex items-center gap-1">
+                    <Icons.Calendar size={12} className="sm:w-3.5 sm:h-3.5" />
+                    <span>{post.date}</span>
+                  </div>
+                  <span className="hidden sm:inline mx-1">•</span>
+                  <div className="flex items-center gap-1">
+                    <Icons.User size={12} className="sm:w-3.5 sm:h-3.5" />
+                    <span>{post.author}</span>
+                  </div>
+                </div>
+                <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-tight">
+                  {post.title}
+                </h2>
+                <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm leading-relaxed mb-5 sm:mb-6 line-clamp-3">
+                  {post.excerpt}
+                </p>
+                <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold text-xs sm:text-sm group-hover:gap-3 transition-all">
+                  Read More <Icons.ArrowRight size={14} className="sm:w-4 sm:h-4" />
                 </div>
               </div>
-              <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-tight">
-                {post.title}
-              </h2>
-              <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm leading-relaxed mb-5 sm:mb-6 line-clamp-3">
-                {post.excerpt}
-              </p>
-              <button className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold text-xs sm:text-sm hover:gap-3 transition-all">
-                Read More <Icons.ArrowRight size={14} className="sm:w-4 sm:h-4" />
-              </button>
-            </div>
+            </Link>
           </motion.article>
         ))}
       </div>

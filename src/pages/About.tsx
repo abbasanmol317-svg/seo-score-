@@ -10,8 +10,8 @@ export default function About() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
       <Helmet>
-        <title>About SEO Score Suite | AI-Powered SEO Mission</title>
-        <meta name="description" content="Learn about SEO Score Suite, our mission to democratize search engine optimization, and how we use Google's Gemini AI to provide professional-grade SEO tools for free." />
+        <title>About SEO Score Suite | Why We Built the Best Free AI SEO Platform</title>
+        <meta name="description" content="Learn how SEO Score Suite is democratizing search intelligence with Gemini AI. Discover our mission and start using professional tools for free." />
         <meta name="keywords" content="about SEO Score Suite, AI SEO mission, free SEO tools, Google Gemini SEO, SEO democratization" />
       </Helmet>
       <motion.div
@@ -32,11 +32,9 @@ export default function About() {
 
       <div className="prose prose-sm sm:prose-base prose-slate dark:prose-invert max-w-none">
         <section className="mb-10 sm:mb-12">
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-4">Our Mission</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-4">Our Vision for 2026</h2>
           <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-            At SEO Score, we believe that high-quality SEO analysis should be accessible to everyone. 
-            By leveraging the power of Google's Gemini AI, we've built a suite of {TOOLS.length} professional tools 
-            that provide deep insights, actionable recommendations, and technical audits in seconds.
+            At SEO Score, we believe that high-quality search intelligence should not be locked behind expensive paywalls. In an era where AI is redefining how we find information, our mission is to provide every webmaster and marketer with the same advanced tools used by top-tier agencies. By harnessing Google's Gemini AI, we've developed {TOOLS.length} specialized tools that decode search algorithms with unprecedented accuracy.
           </p>
         </section>
 
@@ -45,10 +43,9 @@ export default function About() {
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl sm:rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-4 sm:mb-6">
               <Icons.Zap size={20} className="sm:w-6 sm:h-6" />
             </div>
-            <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2 sm:mb-3">AI-Powered Insights</h3>
+            <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2 sm:mb-3">Semantic AI Intelligence</h3>
             <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
-              Our tools don't just crunch numbers; they understand context. Gemini AI analyzes your content 
-              like a human expert would, but with the speed of a supercomputer.
+              We go beyond simple keyword matching. Our Gemini-powered engine performs deep semantic analysis, understanding the intent and quality of your content to provide truly human-like recommendations.
             </p>
           </div>
 

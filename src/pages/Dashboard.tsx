@@ -35,14 +35,14 @@ export default function Dashboard() {
           animate={{ opacity: 1, scale: 1 }}
           className="inline-flex items-center justify-center p-3 sm:p-4 bg-indigo-600 rounded-2xl sm:rounded-3xl text-white mb-4 sm:mb-6 shadow-xl shadow-indigo-200"
         >
-          <Icons.Zap size={32} className="sm:w-10 sm:h-10" />
+          <Icons.Sparkles size={32} className="sm:w-10 sm:h-10" />
         </motion.div>
         <motion.h1 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl md:text-6xl"
+          className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl md:text-6xl"
         >
-          <span className="block">AI-Powered</span>
+          <span className="block">Next-Gen AI</span>
           <span className="block text-indigo-600 dark:text-indigo-400">SEO Score Suite</span>
         </motion.h1>
         <motion.p 
@@ -51,7 +51,7 @@ export default function Dashboard() {
           transition={{ delay: 0.2 }}
           className="mt-3 max-w-md mx-auto text-sm sm:text-base text-slate-500 dark:text-slate-400 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl px-4"
         >
-          {TOOLS.length} professional SEO tools powered by Google Gemini. Analyze, optimize, and dominate search rankings.
+          Empower your digital growth with {TOOLS.length} professional-grade SEO tools. Engineered with Google Gemini AI for precision, speed, and actionable search intelligence.
         </motion.p>
       </header>
 
@@ -72,7 +72,7 @@ export default function Dashboard() {
             >
               <button
                 onClick={() => toggleCategory(category)}
-                className="w-full px-4 sm:px-8 py-6 sm:py-8 flex items-center justify-between group transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                className="w-full px-4 sm:px-8 py-4 sm:py-8 flex items-center justify-between group transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
               >
                 <div className="flex items-center gap-4 sm:gap-6">
                   <div className={cn(
@@ -177,16 +177,16 @@ export default function Dashboard() {
         })}
       </div>
       <div className="mt-16 sm:mt-24 p-6 sm:p-10 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[3rem] border border-slate-200 dark:border-slate-800 shadow-sm">
-        <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-4 sm:mb-6 tracking-tight">The Future of Search Engine Optimization</h2>
+        <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-4 sm:mb-6 tracking-tight">Revolutionizing Search Optimization with Gemini AI</h2>
         <div className="prose prose-sm sm:prose-base dark:prose-invert max-w-none text-slate-600 dark:text-slate-400 leading-relaxed">
           <p>
-            Welcome to the AI SEO Score Suite, the ultimate collection of professional tools designed to help you succeed in the search landscape of 2026. Our platform leverages the advanced capabilities of Google Gemini AI to provide you with deep insights, actionable recommendations, and automated analysis that traditional tools simply can't match.
+            The SEO landscape of 2026 demands more than just keyword stuffing; it requires semantic understanding and technical excellence. **SEO Score Suite** is built to bridge the gap between complex data and actionable strategy. By utilizing the latest Google Gemini AI models, we provide a level of analysis that was previously only available through expensive enterprise software.
           </p>
           <p>
-            In today's fast-paced digital world, staying ahead of search engine algorithms requires more than just basic keyword tracking. It requires a comprehensive understanding of content quality, technical performance, and user experience. Our suite of {TOOLS.length}+ tools covers every aspect of SEO, from website analysis and site speed checking to content optimization and schema markup generation.
+            Our platform is designed for digital marketers, business owners, and SEO specialists who need fast, reliable, and data-driven insights. From **Core Web Vitals** audits to **Semantic Content Optimization**, each of our {TOOLS.length}+ tools is fine-tuned to help you navigate the ever-evolving search engine algorithms.
           </p>
           <p>
-            Whether you are looking for the best AI tool for keyword research or a professional SEO audit checklist, our suite has you covered. Each tool is meticulously crafted to provide the most accurate and relevant information, helping you make data-driven decisions that lead to higher rankings and more organic traffic. Join thousands of digital professionals who trust AI SEO Score Suite to power their search engine optimization strategies.
+            Whether you're performing a deep-dive technical audit or looking for high-intent keyword opportunities, SEO Score Suite provides the precision you need to dominate the SERPs. We are committed to democratizing professional SEO tools, ensuring that every website has the chance to rank where it belongs: at the top.
           </p>
         </div>
       </div>

@@ -51,7 +51,17 @@ export default function ToolPage() {
     "Core Web Vitals are essential for a good user experience and ranking.",
     "Schema markup helps search engines understand your content better.",
     "Voice search is growing; optimize for conversational keywords.",
-    "Internal linking helps distribute link equity across your site."
+    "Internal linking helps distribute link equity across your site.",
+    "HTTPS is a confirmed ranking signal; ensure your SSL is valid.",
+    "Alt text for images improves accessibility and image search rankings.",
+    "Long-form content tends to rank higher for complex topics.",
+    "Meta descriptions don't affect rankings directly but impact CTR.",
+    "A clean URL structure helps both users and search engines.",
+    "Regularly update old content to maintain its search relevance.",
+    "Social signals may not be direct factors, but they drive traffic.",
+    "Avoid duplicate content; use canonical tags where necessary.",
+    "Optimize for 'Featured Snippets' by answering questions directly.",
+    "Local SEO is crucial for businesses with physical locations."
   ];
 
   useEffect(() => {
@@ -115,11 +125,13 @@ export default function ToolPage() {
       interval = setInterval(() => {
         setLoadingMessage(messages[i % messages.length]);
         setProgress(prev => {
-          const next = prev + (100 / (messages.length * 2));
-          return next > 98 ? 98 : next;
+          // Faster initial progress, slowing down as it nears 100
+          const increment = prev < 30 ? 8 : prev < 60 ? 4 : prev < 85 ? 2 : 0.5;
+          const next = prev + increment;
+          return next > 99 ? 99 : next;
         });
         i++;
-      }, 2000);
+      }, 1500);
 
       tipInterval = setInterval(() => {
         setCurrentTip(SEO_TIPS[Math.floor(Math.random() * SEO_TIPS.length)]);
@@ -242,8 +254,21 @@ export default function ToolPage() {
   const ToolComponent = getToolComponent(tool.id);
   const IconComponent = (Icons as any)[tool.icon] || Icons.HelpCircle;
 
-  const seoTitle = `${tool.name} | Free AI SEO Tool 2026 | SEO Score Suite`;
-  const seoDescription = `Optimize your website with our free ${tool.name.toLowerCase()} tool. Powered by Google Gemini AI, this professional ${tool.category.toLowerCase()} tool provides deep insights and actionable recommendations for search engine success.`;
+  // Optimized Meta Tags
+  let seoTitle = `${tool.name}: Best Free AI ${tool.category} Tool (2026)`;
+  let seoDescription = `Optimize your site with our free ${tool.name}. Get deep AI insights and actionable SEO fixes powered by Gemini. Run your free analysis now!`;
+
+  if (tool.id === 'meta-tag') {
+    seoTitle = `Free AI Meta Tag Generator: Create SEO Tags Instantly (2026)`;
+    seoDescription = `Generate SEO-friendly meta tags in seconds with our free AI Meta Tag Generator. Improve your CTR and search visibility with perfectly optimized titles and descriptions.`;
+  } else if (tool.id === 'keyword-research') {
+    seoTitle = `Free AI Keyword Research Tool: Find High-Volume Keywords (2026)`;
+    seoDescription = `Discover high-traffic, low-competition keywords with our free AI Keyword Research tool. Build your topical authority and dominate the SERPs today!`;
+  } else if (tool.id === 'content-optimizer') {
+    seoTitle = `AI Content Optimizer: Improve Your SEO Rankings Fast (2026)`;
+    seoDescription = `Analyze and optimize your content for search engines with our free AI Content Optimizer. Get semantic suggestions and readability fixes in seconds.`;
+  }
+
   const seoKeywords = `${tool.name.toLowerCase()}, free SEO tool, AI SEO analysis, ${tool.category.toLowerCase()}, search engine optimization, Google Gemini AI, SEO Score Suite, technical SEO`;
 
   return (
@@ -252,7 +277,7 @@ export default function ToolPage() {
         <title>{seoTitle}</title>
         <meta name="description" content={seoDescription} />
         <meta name="keywords" content={seoKeywords} />
-        <link rel="canonical" href={`https://seo-score-suite.com/tool/${tool.id}`} />
+        <link rel="canonical" href={`https://seoscore.site/tool/${tool.id}`} />
       </Helmet>
 
       <div className="px-4 py-6 sm:py-12 flex flex-col gap-6 sm:gap-8 max-w-5xl mx-auto lg:mx-0 lg:pl-8 xl:pl-12">
@@ -310,11 +335,52 @@ export default function ToolPage() {
             history={history}
           />
 
-          <div className={cn("mt-12 sm:mt-20 p-6 sm:p-8 bg-slate-50 dark:bg-slate-900/50 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800", isGeneratingPDF && "hidden")}>
-            <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4">About our {tool.name} tool</h2>
-            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
-              {seoDescription}
-            </p>
+          <div className={cn("mt-12 sm:mt-20 space-y-12", isGeneratingPDF && "hidden")}>
+            <section className="p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-4">Advanced Analysis with {tool.name}</h2>
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
+                {tool.description} This specialized tool is part of the **SEO Score Suite**, engineered to provide deep technical and semantic insights into your digital presence. By utilizing **Google Gemini AI**, we move beyond simple pattern matching to provide a holistic view of your SEO health, mimicking the analysis of a senior SEO strategist.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                    <Icons.Settings className="text-indigo-600" size={18} />
+                    How it Works
+                  </h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Simply enter your data (URL, keyword, or content) and our AI will scan it against hundreds of ranking factors. It analyzes semantic relevance, technical structure, and user experience patterns to generate a comprehensive report with actionable steps.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                    <Icons.TrendingUp className="text-indigo-600" size={18} />
+                    Key Benefits
+                  </h3>
+                  <ul className="text-sm text-slate-600 dark:text-slate-400 space-y-2">
+                    <li className="flex items-start gap-2">
+                      <Icons.CheckCircle2 className="text-emerald-500 shrink-0 mt-0.5" size={14} />
+                      Professional-grade AI analysis for free.
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Icons.CheckCircle2 className="text-emerald-500 shrink-0 mt-0.5" size={14} />
+                      Actionable recommendations to improve rankings.
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Icons.CheckCircle2 className="text-emerald-500 shrink-0 mt-0.5" size={14} />
+                      Real-time insights based on 2026 SEO trends.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            <section className="p-6 sm:p-8 bg-slate-50 dark:bg-slate-900/50 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800">
+              <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4">Why Choose Our AI-Driven {tool.name}?</h2>
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
+                In the search landscape of 2026, authority is built on technical precision and content relevance. Our {tool.name} tool is specifically tuned to identify the subtle signals that modern search engines prioritize. Whether you're optimizing for **Core Web Vitals** or **Semantic Search**, this tool provides the data-driven edge you need to outperform your competition.
+              </p>
+            </section>
           </div>
 
           <div className={cn("mt-12 sm:mt-20 pt-8 sm:pt-12 border-t border-slate-200 dark:border-slate-800", isGeneratingPDF && "hidden")}>

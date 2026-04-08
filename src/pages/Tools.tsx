@@ -1,0 +1,105 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'motion/react';
+import * as Icons from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
+import { TOOLS } from '../services/gemini';
+
+export default function Tools() {
+  const categories = Array.from(new Set(TOOLS.map(t => t.category)));
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
+      <Helmet>
+        <title>Free AI SEO Tools Directory: 20+ Professional Tools (No Signup)</title>
+        <meta name="description" content="Access 20+ professional AI SEO tools in one directory. From technical audits to keyword research, find the right tool to grow your traffic now." />
+        <meta name="keywords" content="SEO tools directory, free AI SEO tools, technical SEO suite, keyword research tools, content optimization tools" />
+        <link rel="canonical" href="https://seoscore.site/tools" />
+      </Helmet>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center mb-12 sm:mb-16"
+      >
+        <div className="inline-flex items-center justify-center p-3 sm:p-4 bg-indigo-600 rounded-2xl sm:rounded-3xl text-white mb-4 sm:mb-6 shadow-xl shadow-indigo-200 dark:shadow-indigo-900/40">
+          <Icons.LayoutGrid size={32} className="sm:w-10 sm:h-10" />
+        </div>
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl">
+          Professional <span className="text-indigo-600 dark:text-indigo-400">SEO Intelligence</span>
+        </h1>
+        <p className="mt-4 text-base sm:text-xl text-slate-500 dark:text-slate-400 px-4 max-w-2xl mx-auto">
+          Access a complete suite of AI-driven SEO tools designed for technical precision and content excellence. Powered by Google Gemini.
+        </p>
+      </motion.div>
+
+      <div className="space-y-16">
+        {categories.map((category, catIndex) => (
+          <section key={category}>
+            <div className="flex items-center gap-4 mb-8">
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight uppercase">
+                {category}
+              </h2>
+              <div className="h-px flex-grow bg-slate-200 dark:border-slate-800" />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {TOOLS.filter(t => t.category === category).map((tool, index) => {
+                const ToolIcon = (Icons as any)[tool.icon] || Icons.Zap;
+                return (
+                  <motion.div
+                    key={tool.id}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: (catIndex * 0.1) + (index * 0.05) }}
+                    whileHover={{ y: -5 }}
+                  >
+                    <Link
+                      to={`/tool/${tool.id}`}
+                      className="block h-full bg-white dark:bg-slate-900 p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-indigo-200 dark:hover:border-indigo-900 transition-all group"
+                    >
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                          <ToolIcon size={24} />
+                        </div>
+                        <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                          {tool.name}
+                        </h3>
+                      </div>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6 line-clamp-2">
+                        {tool.description}
+                      </p>
+                      <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 text-xs font-black uppercase tracking-widest group-hover:gap-3 transition-all">
+                        Launch Tool <Icons.ArrowRight size={14} />
+                      </div>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </section>
+        ))}
+      </div>
+
+      <section className="mt-20 bg-slate-900 dark:bg-indigo-950 rounded-[2.5rem] p-8 sm:p-16 text-center text-white relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+          <div className="absolute top-10 left-10 w-64 h-64 bg-indigo-500 rounded-full blur-3xl" />
+          <div className="absolute bottom-10 right-10 w-64 h-64 bg-purple-500 rounded-full blur-3xl" />
+        </div>
+        <div className="relative z-10">
+          <h2 className="text-3xl sm:text-4xl font-black mb-6">Can't find what you're looking for?</h2>
+          <p className="text-slate-300 mb-10 max-w-xl mx-auto text-lg">
+            Our AI SEO Chat can help you with custom analysis and specific search optimization questions.
+          </p>
+          <Link 
+            to="/tool/seo-chat" 
+            className="inline-flex items-center gap-3 bg-white text-slate-900 px-8 py-4 rounded-2xl font-bold hover:bg-slate-100 transition-all shadow-xl"
+          >
+            <Icons.MessageSquare size={20} />
+            Chat with AI Expert
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+}

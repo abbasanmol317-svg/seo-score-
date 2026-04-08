@@ -8,7 +8,7 @@ export default function Privacy() {
     <div className="max-w-4xl mx-auto px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
       <Helmet>
         <title>Privacy Policy | SEO Score Suite - Data Security & AI Ethics</title>
-        <meta name="description" content="Read the SEO Score Suite privacy policy. Learn how we handle your data, our commitment to security, and our ethical approach to AI-powered SEO analysis." />
+        <meta name="description" content="Read the SEO Score Suite Privacy Policy. Learn how we protect your data while providing world-class AI SEO analysis. Review our terms here." />
         <meta name="keywords" content="SEO Score Suite privacy policy, data security, AI ethics, SEO tool privacy" />
       </Helmet>
       <motion.div

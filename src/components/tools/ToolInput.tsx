@@ -44,7 +44,7 @@ export const ToolInput: React.FC<ToolInputProps> = ({
                   }
                 }}
                 placeholder={tool.placeholder}
-                className="w-full min-h-[100px] sm:min-h-[120px] max-h-[500px] py-4 sm:py-8 pl-12 sm:pl-18 pr-4 sm:pr-8 bg-slate-50/50 dark:bg-slate-800/50 rounded-xl sm:rounded-3xl border-2 border-transparent focus:border-indigo-200 dark:focus:border-indigo-800 focus:bg-white dark:focus:bg-slate-800 focus:ring-8 focus:ring-indigo-500/5 text-lg sm:text-2xl font-bold text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all resize-none shadow-inner"
+                className="w-full min-h-[80px] sm:min-h-[120px] max-h-[500px] py-4 sm:py-8 pl-10 sm:pl-18 pr-4 sm:pr-8 bg-slate-50/50 dark:bg-slate-800/50 rounded-xl sm:rounded-3xl border-2 border-transparent focus:border-indigo-200 dark:focus:border-indigo-800 focus:bg-white dark:focus:bg-slate-800 focus:ring-8 focus:ring-indigo-500/5 text-base sm:text-2xl font-bold text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all resize-none shadow-inner"
                 rows={1}
               />
             </div>
@@ -65,7 +65,7 @@ export const ToolInput: React.FC<ToolInputProps> = ({
                 whileHover={!loading && input.trim() ? { scale: 1.02, y: -4 } : {}}
                 whileTap={!loading && input.trim() ? { scale: 0.98, y: 0 } : {}}
                 className={cn(
-                  "flex-grow sm:flex-none py-4 sm:py-6 px-6 sm:px-12 rounded-xl sm:rounded-2xl font-black text-base sm:text-xl flex items-center justify-center gap-3 sm:gap-4 transition-all shadow-2xl relative overflow-hidden group/btn",
+                  "flex-grow sm:flex-none py-3 sm:py-6 px-6 sm:px-12 rounded-xl sm:rounded-2xl font-black text-sm sm:text-xl flex items-center justify-center gap-3 sm:gap-4 transition-all shadow-2xl relative overflow-hidden group/btn",
                   loading || !input.trim() 
                     ? "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed shadow-none" 
                     : "bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-500/40 dark:shadow-indigo-900/60"

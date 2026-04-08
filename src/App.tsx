@@ -18,6 +18,8 @@ const About = lazy(() => import('./pages/About'));
 const Blog = lazy(() => import('./pages/Blog'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const FAQ = lazy(() => import('./pages/FAQ'));
+const Tools = lazy(() => import('./pages/Tools'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-[60vh]">
@@ -80,8 +82,8 @@ function NavHeader() {
             </button>
 
             <Link to="/" className="flex items-center gap-2 text-indigo-600 font-bold text-lg sm:text-xl group shrink-0">
-              <div className="bg-indigo-600 p-1.5 rounded-lg text-white shadow-lg shadow-indigo-100 group-hover:scale-110 transition-transform">
-                <Icons.Zap size={18} className="sm:w-5 sm:h-5" fill="currentColor" />
+              <div className="bg-indigo-600 p-1 sm:p-1.5 rounded-lg text-white shadow-lg shadow-indigo-100 group-hover:scale-110 transition-transform">
+                <Icons.Zap size={16} className="sm:w-5 sm:h-5" fill="currentColor" />
               </div>
               <span className="hidden xs:inline tracking-tight">SEO Score</span>
             </Link>
@@ -132,40 +134,52 @@ function NavHeader() {
               {theme === 'light' ? <Icons.Moon size={16} className="sm:w-[18px] sm:h-[18px]" /> : <Icons.Sun size={16} className="sm:w-[18px] sm:h-[18px]" />}
             </button>
             <Link 
+              to="/tools" 
+              className={cn(
+                "transition-all text-sm font-bold flex items-center gap-2 px-2.5 sm:px-4 py-2 rounded-xl",
+                location.pathname === '/tools' 
+                  ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40" 
+                  : "text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30"
+              )}
+            >
+              <Icons.LayoutGrid size={18} />
+              <span className="hidden md:inline">All Tools</span>
+            </Link>
+            <Link 
               to="/tool/seo-dashboard" 
               className={cn(
-                "transition-all text-sm font-bold flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl",
+                "transition-all text-sm font-bold flex items-center gap-2 px-2.5 sm:px-4 py-2 rounded-xl",
                 toolId === 'seo-dashboard' 
                   ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40" 
                   : "text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30"
               )}
             >
               <Icons.BarChart3 size={18} />
-              <span className="hidden sm:inline">Insights</span>
+              <span className="hidden md:inline">Insights</span>
             </Link>
             <Link 
               to="/tool/seo-chat" 
               className={cn(
-                "transition-all text-sm font-bold flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl",
+                "transition-all text-sm font-bold flex items-center gap-2 px-2.5 sm:px-4 py-2 rounded-xl",
                 toolId === 'seo-chat' 
                   ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40" 
                   : "text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30"
               )}
             >
               <Icons.MessageSquare size={18} />
-              <span className="hidden sm:inline">AI Chat</span>
+              <span className="hidden md:inline">AI Chat</span>
             </Link>
             <Link 
               to="/faq" 
               className={cn(
-                "transition-all text-sm font-bold flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl",
+                "transition-all text-sm font-bold flex items-center gap-2 px-2.5 sm:px-4 py-2 rounded-xl",
                 location.pathname === '/faq' 
                   ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40" 
                   : "text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30"
               )}
             >
               <Icons.HelpCircle size={18} />
-              <span className="hidden sm:inline">FAQ</span>
+              <span className="hidden md:inline">FAQ</span>
             </Link>
           </div>
         </div>
@@ -270,6 +284,26 @@ function AnimatedRoutes() {
               <FAQ />
             </motion.div>
           } />
+          <Route path="/tools" element={
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Tools />
+            </motion.div>
+          } />
+          <Route path="/blog/:id" element={
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.3 }}
+            >
+              <BlogPost />
+            </motion.div>
+          } />
         </Routes>
       </Suspense>
     </AnimatePresence>
@@ -280,8 +314,8 @@ export default function App() {
   return (
     <HelmetProvider>
       <Helmet>
-        <title>SEO Score Suite | Free AI-Powered SEO Analysis Tools</title>
-        <meta name="description" content="Optimize your website with SEO Score Suite. Free AI-powered tools for technical audits, keyword research, and content optimization using Google Gemini AI." />
+        <title>SEO Score Suite: Best Free AI SEO Tools for 2026 (20+ Tools)</title>
+        <meta name="description" content="Boost your rankings with 20+ free AI SEO tools. Get technical audits, keyword research, and content fixes instantly. Start optimizing for free today!" />
       </Helmet>
       <ThemeProvider>
         <Onboarding />
@@ -309,6 +343,7 @@ export default function App() {
                   <div className="flex flex-wrap justify-center gap-8 md:gap-12">
                     <div className="flex flex-col gap-3">
                       <h4 className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Company</h4>
+                      <Link to="/tools" className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">All Tools</Link>
                       <Link to="/about" className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About Us</Link>
                       <Link to="/blog" className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Blog</Link>
                       <Link to="/faq" className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">FAQ</Link>

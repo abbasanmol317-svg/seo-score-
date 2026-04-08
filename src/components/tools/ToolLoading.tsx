@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import * as Icons from 'lucide-react';
 
 interface ToolLoadingProps {
@@ -52,20 +52,26 @@ export const ToolLoading: React.FC<ToolLoadingProps> = ({
           Our AI is deep-diving into your request to provide the most accurate SEO insights possible.
         </p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          key={currentTip}
-          className="bg-indigo-50 dark:bg-indigo-900/20 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-indigo-100 dark:border-indigo-900/50 max-w-md mx-auto"
-        >
-          <div className="flex items-center gap-2 mb-1.5 sm:mb-2 justify-center">
-            <Icons.Lightbulb size={12} className="sm:w-3.5 sm:h-3.5 text-indigo-600 dark:text-indigo-400" />
-            <span className="text-[9px] sm:text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">SEO Pro Tip</span>
-          </div>
-          <p className="text-[10px] sm:text-xs font-bold text-slate-600 dark:text-slate-300 italic">
-            "{currentTip}"
-          </p>
-        </motion.div>
+        <div className="h-24 sm:h-28 flex items-center justify-center">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentTip}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="bg-indigo-50 dark:bg-indigo-900/20 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-indigo-100 dark:border-indigo-900/50 max-w-md mx-auto w-full"
+            >
+              <div className="flex items-center gap-2 mb-1.5 sm:mb-2 justify-center">
+                <Icons.Lightbulb size={12} className="sm:w-3.5 sm:h-3.5 text-indigo-600 dark:text-indigo-400" />
+                <span className="text-[9px] sm:text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">SEO Pro Tip</span>
+              </div>
+              <p className="text-[10px] sm:text-xs font-bold text-slate-600 dark:text-slate-300 italic">
+                "{currentTip}"
+              </p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
         <div className="mt-8 sm:mt-12 flex items-center justify-center gap-2">
           {[0, 1, 2].map((i) => (
             <motion.div

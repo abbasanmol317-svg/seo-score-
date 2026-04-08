@@ -26,10 +26,15 @@ export default function Sidebar({ onClose, isMobile }: SidebarProps) {
   );
 
   React.useEffect(() => {
-    if (currentTool && !expandedCategories.includes(currentTool.category)) {
-      setExpandedCategories(prev => [...prev, currentTool.category]);
+    if (currentTool) {
+      if (!expandedCategories.includes(currentTool.category)) {
+        setExpandedCategories(prev => [...prev, currentTool.category]);
+      }
+      // If a tool is selected and sidebar is collapsed, we might want to keep it collapsed 
+      // but the category accordion should be "expanded" internally so it shows when uncollapsed.
+      // The request says "automatically expand the category", which we do here.
     }
-  }, [currentToolId]);
+  }, [currentToolId, currentTool]);
 
   const toggleCategory = (category: string) => {
     if (isCollapsed && !isMobile) {
@@ -91,22 +96,27 @@ export default function Sidebar({ onClose, isMobile }: SidebarProps) {
           {categories.map((category) => {
             const config = CATEGORY_CONFIG[category];
             const isExpanded = expandedCategories.includes(category);
-            const categoryTools = TOOLS.filter(t => t.category === category);
             const CategoryIcon = (Icons as any)[config.icon] || Icons.Folder;
+            const categoryTools = TOOLS.filter(t => t.category === category);
             const hasActiveTool = categoryTools.some(t => t.id === currentToolId);
+            
+            // Tooltip for collapsed state
+            const tooltipContent = isCollapsed && !isMobile 
+              ? `${category}\n• ${categoryTools.map(t => t.name).join('\n• ')}`
+              : undefined;
 
             return (
-              <div key={category} className="space-y-1">
+              <div key={category} className="relative group/category">
                 <button
                   onClick={() => toggleCategory(category)}
                   className={cn(
                     "w-full flex items-center p-3 rounded-xl transition-all group",
                     isCollapsed && !isMobile ? "justify-center" : "justify-between",
-                    (isExpanded || hasActiveTool) && (!isCollapsed || isMobile)
+                    (isExpanded || hasActiveTool)
                       ? "bg-slate-50 dark:bg-slate-800/50 text-indigo-600 dark:text-indigo-400"
                       : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200"
                   )}
-                  title={isCollapsed && !isMobile ? category : undefined}
+                  title={tooltipContent}
                 >
                   <div className="flex items-center gap-3">
                     <div className={cn(
