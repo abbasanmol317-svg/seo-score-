@@ -216,6 +216,7 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
                         </h4>
                         <button 
                           onClick={handleReadAloud}
+                          aria-label="Simulate screen reader reading alt text"
                           className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-black text-sm uppercase tracking-widest hover:opacity-90 transition-all shadow-xl active:scale-95"
                         >
                           <Icons.Volume2 size={20} />
@@ -240,12 +241,13 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
                   </div>
                 ) : (
                   <div className="space-y-6">
-                    <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border-8 border-white dark:border-slate-800 group/img">
+                    <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border-8 border-white dark:border-slate-800 group/img bg-slate-100 dark:bg-slate-900 min-h-[200px] flex items-center justify-center">
                       <img 
                         src={sampleImage} 
                         alt={currentAltText} 
                         className="w-full h-auto block transition-transform duration-700 group-hover/img:scale-105"
                         title={currentAltText}
+                        loading="lazy"
                       />
                       {/* Hover Overlay Simulation */}
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/img:opacity-100 transition-opacity duration-500 flex items-end p-6 sm:p-8">

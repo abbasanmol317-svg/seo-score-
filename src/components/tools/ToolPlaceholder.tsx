@@ -12,8 +12,8 @@ export const ToolPlaceholder: React.FC<ToolPlaceholderProps> = ({ tool }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] shadow-xl overflow-hidden"
     >
       <div className="p-8 sm:p-12 text-center">

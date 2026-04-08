@@ -18,7 +18,7 @@ export const ToolLoading: React.FC<ToolLoadingProps> = ({
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 1.05 }}
-      className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-2xl p-8 sm:p-16 flex flex-col items-center justify-center text-center relative overflow-hidden min-h-[350px] sm:min-h-[400px]"
+      className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-16 flex flex-col items-center justify-center text-center relative overflow-hidden min-h-[350px] sm:min-h-[400px]"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 dark:from-indigo-900/20 via-white dark:via-slate-900 to-purple-50/50 dark:to-purple-900/20" />
       <div className="relative z-10 w-full max-w-lg">

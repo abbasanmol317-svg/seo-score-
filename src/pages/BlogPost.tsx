@@ -158,7 +158,7 @@ export default function BlogPost() {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white dark:bg-slate-900 rounded-[2rem] sm:rounded-[3rem] border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden"
       >
-        <div className="p-6 sm:p-12 lg:p-16">
+        <div className="p-5 sm:p-12 lg:p-16">
           <div className="flex items-center gap-3 mb-6">
             <span className="px-3 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-100 dark:border-indigo-800">
               {post.category}

@@ -31,15 +31,15 @@ export default function Dashboard() {
       </Helmet>
       <header className="text-center mb-12 sm:mb-16">
         <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           className="inline-flex items-center justify-center p-3 sm:p-4 bg-indigo-600 rounded-2xl sm:rounded-3xl text-white mb-4 sm:mb-6 shadow-xl shadow-indigo-200"
         >
           <Icons.Sparkles size={32} className="sm:w-10 sm:h-10" />
         </motion.div>
         <motion.h1 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl md:text-6xl"
         >
           <span className="block">Next-Gen AI</span>
@@ -49,7 +49,7 @@ export default function Dashboard() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="mt-3 max-w-md mx-auto text-sm sm:text-base text-slate-500 dark:text-slate-400 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl px-4"
+          className="mt-3 max-w-md mx-auto text-sm sm:text-base text-slate-600 dark:text-slate-400 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl px-4"
         >
           Empower your digital growth with {TOOLS.length} professional-grade SEO tools. Engineered with Google Gemini AI for precision, speed, and actionable search intelligence.
         </motion.p>
@@ -97,7 +97,7 @@ export default function Dashboard() {
                         {categoryTools.length} tools
                       </span>
                     </div>
-                    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium line-clamp-1 sm:line-clamp-none">
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium line-clamp-1 sm:line-clamp-none">
                       {config.description}
                     </p>
                   </div>
@@ -154,10 +154,10 @@ export default function Dashboard() {
                                     {tool.name}
                                   </h3>
                                 </div>
-                                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 flex-grow leading-relaxed font-medium relative z-10">
+                                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 flex-grow leading-relaxed font-medium relative z-10">
                                   {tool.description}
                                 </p>
-                                <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-slate-50 dark:border-slate-800 flex items-center justify-between text-[8px] sm:text-[10px] font-black text-slate-400 dark:text-slate-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors uppercase tracking-widest relative z-10">
+                                <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-slate-50 dark:border-slate-800 flex items-center justify-between text-[8px] sm:text-[10px] font-black text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors uppercase tracking-widest relative z-10">
                                   <span>Launch Tool</span>
                                   <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-all">
                                     <Icons.ArrowRight size={10} className="sm:w-3 sm:h-3" />

@@ -44,6 +44,7 @@ export const ToolInput: React.FC<ToolInputProps> = ({
                   }
                 }}
                 placeholder={tool.placeholder}
+                aria-label={`${tool.name} input`}
                 className="w-full min-h-[80px] sm:min-h-[120px] max-h-[500px] py-4 sm:py-8 pl-10 sm:pl-18 pr-4 sm:pr-8 bg-slate-50/50 dark:bg-slate-800/50 rounded-xl sm:rounded-3xl border-2 border-transparent focus:border-indigo-200 dark:focus:border-indigo-800 focus:bg-white dark:focus:bg-slate-800 focus:ring-8 focus:ring-indigo-500/5 text-base sm:text-2xl font-bold text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all resize-none shadow-inner"
                 rows={1}
               />

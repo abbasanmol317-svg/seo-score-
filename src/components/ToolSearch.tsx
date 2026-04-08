@@ -96,6 +96,7 @@ export default function ToolSearch({ className, onSelect, autoFocus }: ToolSearc
           onKeyDown={handleKeyDown}
           onFocus={() => query.trim().length > 0 && setIsOpen(true)}
           placeholder="Search SEO tools..."
+          aria-label="Search SEO tools"
           className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 sm:py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all dark:text-slate-200"
         />
         <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1">

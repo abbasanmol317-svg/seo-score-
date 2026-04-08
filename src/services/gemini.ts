@@ -313,8 +313,9 @@ export const TOOLS: Tool[] = [
     (Is it optimized?)
     
     ## 🔗 Internal Linking Opportunities
-    Identify potential phrases or keywords in the content that could link to other tools within the "SEO Score Suite". 
-    Suggest anchor text and the corresponding target tool from this list:
+    Analyze the content for opportunities to link to other tools in the "SEO Score Suite". For each opportunity, suggest the most relevant anchor text and the target tool ID.
+    
+    Target Tools List:
     - Website SEO Analysis (website-seo)
     - YouTube SEO Checker (youtube-seo)
     - Site Speed Checker (site-speed)
@@ -323,7 +324,9 @@ export const TOOLS: Tool[] = [
     - SEO Audit Checklist (seo-audit)
     - On-Page SEO Checklist (on-page-checklist)
     - Mobile-Friendly Test (mobile-friendly)
+    - Bulk URL Analysis (bulk-url)
     - Keyword Research Tool (keyword-research)
+    - Hashtag Generator (hashtag-generator)
     - Meta Tag Generator (meta-tag)
     - SERP Preview Tool (serp-preview)
     - OG Preview Generator (og-preview)
@@ -333,7 +336,9 @@ export const TOOLS: Tool[] = [
     - Compare Websites (compare-websites)
     - AI SEO Chat (seo-chat)
     
-    Format as a list of suggestions.`,
+    Format as a list:
+    - [Anchor Text] -> [Tool ID]
+    - [Anchor Text] -> [Tool ID]`,
     placeholder: 'Paste your content or enter URL to optimize (e.g., "Our mission is...")'
   },
   {

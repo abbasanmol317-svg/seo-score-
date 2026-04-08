@@ -104,7 +104,7 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="max-w-4xl mx-auto mt-8 p-8 bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden group print:hidden"
+              className="max-w-4xl mx-auto mt-8 p-4 sm:p-8 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden group print:hidden"
             >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
                 <div className="flex items-center gap-3">
@@ -128,7 +128,7 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                 )}
               </div>
 
-              <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-inner relative overflow-hidden">
+              <div className="bg-white dark:bg-slate-800 p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-slate-100 dark:border-slate-700 shadow-inner relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
                   <Icons.Globe size={120} />
                 </div>

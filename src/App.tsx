@@ -62,7 +62,7 @@ function NavHeader() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 w-80 bg-white dark:bg-slate-900 z-[70] lg:hidden shadow-2xl"
+              className="fixed inset-y-0 left-0 w-[280px] max-w-[85vw] bg-white dark:bg-slate-900 z-[70] lg:hidden shadow-2xl"
             >
               <Sidebar isMobile onClose={() => setIsMobileMenuOpen(false)} />
             </motion.div>
@@ -76,7 +76,7 @@ function NavHeader() {
             <button
               onClick={() => setIsMobileMenuOpen(true)}
               className="lg:hidden p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
-              aria-label="Open menu"
+              aria-label="Open mobile menu"
             >
               <Icons.Menu size={20} />
             </button>
@@ -96,7 +96,7 @@ function NavHeader() {
                   "flex items-center gap-2.5 px-3 py-1.5 rounded-xl border transition-all",
                   !currentTool 
                     ? "bg-indigo-50 dark:bg-indigo-900/30 border-indigo-100 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 shadow-sm" 
-                    : "bg-white dark:bg-slate-800 border-transparent text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-100 dark:hover:border-slate-600 hover:text-indigo-600 dark:hover:text-indigo-400"
+                    : "bg-white dark:bg-slate-800 border-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-100 dark:hover:border-slate-600 hover:text-indigo-600 dark:hover:text-indigo-400"
                 )}
               >
                 <Icons.LayoutDashboard size={18} strokeWidth={2.5} />
@@ -128,8 +128,8 @@ function NavHeader() {
             </button>
             <button
               onClick={toggleTheme}
-              className="p-2 sm:p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
-              aria-label="Toggle dark mode"
+              className="p-2 sm:p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+              aria-label={theme === 'light' ? "Switch to dark mode" : "Switch to light mode"}
             >
               {theme === 'light' ? <Icons.Moon size={16} className="sm:w-[18px] sm:h-[18px]" /> : <Icons.Sun size={16} className="sm:w-[18px] sm:h-[18px]" />}
             </button>
@@ -139,7 +139,7 @@ function NavHeader() {
                 "transition-all text-sm font-bold flex items-center gap-2 px-2.5 sm:px-4 py-2 rounded-xl",
                 location.pathname === '/tools' 
                   ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40" 
-                  : "text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30"
+                  : "text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30"
               )}
             >
               <Icons.LayoutGrid size={18} />
@@ -343,33 +343,33 @@ export default function App() {
                   <div className="flex flex-wrap justify-center gap-8 md:gap-12">
                     <div className="flex flex-col gap-3">
                       <h4 className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Company</h4>
-                      <Link to="/tools" className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">All Tools</Link>
-                      <Link to="/about" className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About Us</Link>
-                      <Link to="/blog" className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Blog</Link>
-                      <Link to="/faq" className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">FAQ</Link>
+                      <Link to="/tools" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">All Tools</Link>
+                      <Link to="/about" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About Us</Link>
+                      <Link to="/blog" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Blog</Link>
+                      <Link to="/faq" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">FAQ</Link>
                     </div>
                     <div className="flex flex-col gap-3">
                       <h4 className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Legal</h4>
-                      <Link to="/privacy" className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Privacy Policy</Link>
-                      <a href="#" className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Terms</a>
+                      <Link to="/privacy" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Privacy Policy</Link>
+                      <a href="#" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Terms</a>
                     </div>
                     <div className="flex flex-col gap-3">
                       <h4 className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Popular Tools</h4>
                       <div className="grid grid-cols-2 gap-x-6 gap-y-2">
                         {TOOLS.slice(0, 4).map(tool => (
-                          <Link key={tool.id} to={`/tool/${tool.id}`} className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate max-w-[120px]">{tool.name}</Link>
+                          <Link key={tool.id} to={`/tool/${tool.id}`} className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate max-w-[120px]">{tool.name}</Link>
                         ))}
                       </div>
                     </div>
                   </div>
                   <div className="flex justify-center gap-4">
-                    <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all"><Icons.Github size={20} /></a>
-                    <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all"><Icons.Twitter size={20} /></a>
-                    <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all"><Icons.Linkedin size={20} /></a>
+                    <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all"><Icons.Github size={20} /></a>
+                    <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all"><Icons.Twitter size={20} /></a>
+                    <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all"><Icons.Linkedin size={20} /></a>
                   </div>
                 </div>
                 <div className="pt-8 border-t border-slate-100 dark:border-slate-800 text-center">
-                  <p className="text-slate-400 dark:text-slate-500 text-xs">
+                  <p className="text-slate-500 dark:text-slate-400 text-xs">
                     &copy; {new Date().getFullYear()} AI SEO Score Suite. Powered by Google Gemini. All rights reserved.
                   </p>
                 </div>

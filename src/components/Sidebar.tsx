@@ -77,6 +77,7 @@ export default function Sidebar({ onClose, isMobile }: SidebarProps) {
             <button 
               onClick={() => setIsCollapsed(!isCollapsed)}
               className="p-2 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-xl transition-all"
+              aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
               title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
             >
               {isCollapsed ? <Icons.PanelLeftOpen size={20} /> : <Icons.PanelLeftClose size={20} />}

@@ -199,8 +199,8 @@ export const ToolResult: React.FC<ToolResultProps> = ({
         return (
           <motion.div
             key={index}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
             className={cn(
               "bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 border-l-4 overflow-hidden print:shadow-none print:border-slate-100 group transition-all duration-300 hover:shadow-xl hover:shadow-indigo-100/30 dark:hover:shadow-indigo-900/20 hover:border-indigo-200 dark:hover:border-indigo-800",
@@ -223,7 +223,7 @@ export const ToolResult: React.FC<ToolResultProps> = ({
               </h2>
             </div>
             <div className={cn(
-              "p-6 sm:p-8 markdown-body transition-colors duration-300",
+              "p-4 sm:p-8 markdown-body transition-colors duration-300",
               isTechnical && "bg-slate-900 dark:bg-black text-slate-100"
             )}>
               {isScore ? (

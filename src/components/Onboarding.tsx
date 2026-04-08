@@ -40,8 +40,10 @@ const STEPS: Step[] = [
 export default function Onboarding() {
   const [currentStep, setCurrentStep] = React.useState(0);
   const [isVisible, setIsVisible] = React.useState(false);
+  const [isMounted, setIsMounted] = React.useState(false);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
+    setIsMounted(true);
     const hasSeenOnboarding = localStorage.getItem('seo_score_onboarding_seen');
     if (!hasSeenOnboarding) {
       setIsVisible(true);
@@ -65,7 +67,7 @@ export default function Onboarding() {
     setIsVisible(false);
   };
 
-  if (!isVisible) return null;
+  if (!isMounted || !isVisible) return null;
 
   const step = STEPS[currentStep];
 
@@ -80,9 +82,9 @@ export default function Onboarding() {
       />
       
       <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
         className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800"
       >
         {/* Progress Bar */}
@@ -124,7 +126,7 @@ export default function Onboarding() {
           <div className="flex items-center justify-between gap-4">
             <button 
               onClick={handleSkip}
-              className="px-6 py-3 text-slate-400 dark:text-slate-500 font-bold hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+              className="px-6 py-3 text-slate-500 dark:text-slate-400 font-bold hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
             >
               Skip
             </button>

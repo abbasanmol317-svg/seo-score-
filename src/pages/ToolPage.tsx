@@ -259,8 +259,8 @@ export default function ToolPage() {
   let seoDescription = `Optimize your site with our free ${tool.name}. Get deep AI insights and actionable SEO fixes powered by Gemini. Run your free analysis now!`;
 
   if (tool.id === 'meta-tag') {
-    seoTitle = `Free AI Meta Tag Generator: Create SEO Tags Instantly (2026)`;
-    seoDescription = `Generate SEO-friendly meta tags in seconds with our free AI Meta Tag Generator. Improve your CTR and search visibility with perfectly optimized titles and descriptions.`;
+    seoTitle = `AI Meta Tag Generator: Create High-CTR SEO Tags Instantly (2026)`;
+    seoDescription = `Boost your search rankings and CTR with our free AI Meta Tag Generator. Create perfectly optimized meta titles and descriptions in seconds using Google Gemini AI. Start for free!`;
   } else if (tool.id === 'keyword-research') {
     seoTitle = `Free AI Keyword Research Tool: Find High-Volume Keywords (2026)`;
     seoDescription = `Discover high-traffic, low-competition keywords with our free AI Keyword Research tool. Build your topical authority and dominate the SERPs today!`;
