@@ -44,6 +44,10 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
   const description = descMatch ? descMatch[1].replace(/\[GOOD\]|\[AVERAGE\]|\[POOR\]/g, '').trim() : '';
   const codeSnippet = codeMatch ? codeMatch[1].trim() : '';
 
+  // Google Search Preview Truncation
+  const previewTitle = title.length > 60 ? title.substring(0, 57) + '...' : title;
+  const previewDescription = description.length > 160 ? description.substring(0, 157) + '...' : description;
+
   const [copiedCode, setCopiedCode] = React.useState(false);
 
   const handleCopyCode = () => {
@@ -134,15 +138,15 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                 </div>
                 
                 <div className="max-w-[600px] relative z-10">
-                  <div className="text-[#1a0dab] dark:text-[#8ab4f8] text-xl font-medium hover:underline cursor-pointer mb-1 truncate">
-                    {title || 'Your Page Title Will Appear Here'}
+                  <div className="text-[#1a0dab] dark:text-[#8ab4f8] text-xl font-medium hover:underline cursor-pointer mb-1">
+                    {previewTitle || 'Your Page Title Will Appear Here'}
                   </div>
                   <div className="text-[#006621] dark:text-[#34a853] text-sm mb-1 flex items-center gap-1">
                     <span>https://yourwebsite.com</span>
                     <Icons.ChevronDown size={12} />
                   </div>
-                  <div className="text-[#4d5156] dark:text-[#bdc1c6] text-sm line-clamp-2 leading-relaxed">
-                    {description || 'Your meta description will appear here. It should be between 150-160 characters for optimal visibility in search results.'}
+                  <div className="text-[#4d5156] dark:text-[#bdc1c6] text-sm leading-relaxed">
+                    {previewDescription || 'Your meta description will appear here. It should be between 150-160 characters for optimal visibility in search results.'}
                   </div>
                 </div>
               </div>

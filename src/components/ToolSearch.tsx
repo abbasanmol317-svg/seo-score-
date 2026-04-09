@@ -9,9 +9,10 @@ interface ToolSearchProps {
   className?: string;
   onSelect?: () => void;
   autoFocus?: boolean;
+  isMobile?: boolean;
 }
 
-export default function ToolSearch({ className, onSelect, autoFocus }: ToolSearchProps) {
+export default function ToolSearch({ className, onSelect, autoFocus, isMobile: isMobileProp }: ToolSearchProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Tool[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +20,7 @@ export default function ToolSearch({ className, onSelect, autoFocus }: ToolSearc
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+  const isMobile = isMobileProp ?? (typeof window !== 'undefined' && window.innerWidth < 1024);
 
   useEffect(() => {
     const handleKeyDownGlobal = (e: KeyboardEvent) => {
