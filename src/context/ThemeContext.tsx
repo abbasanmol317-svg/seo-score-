@@ -17,7 +17,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     } catch (e) {
       console.warn('LocalStorage not available:', e);
     }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    
+    try {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+    } catch (e) {
+      console.warn('matchMedia not available:', e);
+    }
+    
+    return 'light';
   });
 
   useEffect(() => {
