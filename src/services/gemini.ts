@@ -370,19 +370,32 @@ export const TOOLS: Tool[] = [
     category: 'Generators',
     icon: 'ScrollText',
     keywords: 'code,meta,tags',
-    prompt: `Generate SEO meta tags.
-    Format as a Meta Tag Kit with these sections:
+    prompt: `Analyze the provided page information and generate optimized SEO meta tags.
+    Format your response as a Meta Tag Kit with these sections:
+    
     ## 🏷️ Title Tag
-    (Optimized) [GOOD]
+    (Optimized Title - Incorporate power words and a clear value proposition) [GOOD]
     
     ## 📝 Meta Description
-    (Optimized) [GOOD]
+    (Optimized Description) [GOOD]
+    
+    ## 🚀 High-CTR "Boosted" Version
+    ### Title
+    (Provide an alternative title tag that aggressively uses power words and a high-impact value proposition for maximum click-through rate.)
+    ### Description
+    (Provide an alternative meta description that aggressively uses power words and a clear CTA for maximum click-through rate in Google Search results.)
+
+    ## 📈 CTR Analysis & Suggestions
+    (Analyze the current meta tags if provided, otherwise analyze the generated ones. Suggest 3 specific improvements to increase click-through rates in Google Search results. Focus on:
+    1. Power Words: Suggest words that trigger emotion or urgency in both title and description.
+    2. Value Proposition: Ensure the title clearly communicates the unique benefit.
+    3. Call to Action: Suggest a clear next step in the description.)
     
     ## 🔗 OG & Social Tags
     (For social media)
     
     ## 💻 Code Snippet
-    (Ready to copy-paste)`,
+    (Ready to copy-paste HTML tags)`,
     placeholder: 'Enter page title and description (e.g., "Best Running Shoes - A guide to top footwear")'
   },
   {

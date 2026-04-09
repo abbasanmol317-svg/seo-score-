@@ -41,20 +41,17 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
 
   // Extract alt text variations from markdown result
   const getAltTextVariations = (text: string) => {
-    const primary = text.match(/## 🖼️ Primary Alt Text\n\((.*?)\)/s) || 
-                   text.match(/## 🖼️ Primary Alt Text\n(.*?)\n/s);
+    const primaryMatch = text.match(/## 🖼️ Primary Alt Text\n(.*?)(?=\n##|$)/s);
+    const variationsMatch = text.match(/## 💡 Contextual Variations\n(.*?)(?=\n##|$)/s);
     
-    const decorative = text.match(/- \*\*Decorative:\*\* \((.*?)\)/) || 
-                       text.match(/- \*\*Decorative:\*\* (.*?)\n/);
+    const variationsText = variationsMatch ? variationsMatch[1] : '';
     
-    const informational = text.match(/- \*\*Informational:\*\* \((.*?)\)/) || 
-                          text.match(/- \*\*Informational:\*\* (.*?)\n/);
-    
-    const functional = text.match(/- \*\*Functional:\*\* \((.*?)\)/) || 
-                       text.match(/- \*\*Functional:\*\* (.*?)\n/);
+    const decorative = variationsText.match(/- \*\*Decorative:\*\* (.*?)(?=\n-|$)/s);
+    const informational = variationsText.match(/- \*\*Informational:\*\* (.*?)(?=\n-|$)/s);
+    const functional = variationsText.match(/- \*\*Functional:\*\* (.*?)(?=\n-|$)/s);
 
     return {
-      primary: primary ? primary[1].trim() : '',
+      primary: primaryMatch ? primaryMatch[1].trim() : '',
       decorative: decorative ? decorative[1].trim() : '',
       informational: informational ? informational[1].trim() : '',
       functional: functional ? functional[1].trim() : '',
@@ -63,6 +60,8 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
 
   const variations = result ? getAltTextVariations(result) : { primary: '', decorative: '', informational: '', functional: '' };
   const currentAltText = variations[selectedVariation] || variations.primary;
+
+  const [expandedVariation, setExpandedVariation] = useState<string | null>('primary');
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -128,6 +127,114 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
             showShareMenu={showShareMenu}
             setShowShareMenu={setShowShareMenu}
           />
+
+          {/* Structured Alt Text Variations */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-indigo-600 rounded-xl text-white shadow-lg">
+                <Icons.Layers size={20} />
+              </div>
+              <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Optimized Alt Text Options</h3>
+            </div>
+
+            <div className="grid gap-4">
+              {/* Primary Alt Text - Featured Card */}
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-indigo-500 shadow-xl shadow-indigo-500/10 overflow-hidden"
+              >
+                <div className="bg-indigo-500 px-6 py-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-white">
+                    <Icons.Star size={16} fill="currentColor" />
+                    <span className="text-xs font-black uppercase tracking-widest">Recommended Primary Alt Text</span>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      navigator.clipboard.writeText(variations.primary);
+                      // You could add a local toast here if needed
+                    }}
+                    className="p-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-white transition-colors"
+                    title="Copy Primary Alt Text"
+                  >
+                    <Icons.Copy size={14} />
+                  </button>
+                </div>
+                <div className="p-6 sm:p-8">
+                  <p className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white leading-tight italic">
+                    "{variations.primary}"
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* Variations - Collapsible Sections */}
+              {(['decorative', 'informational', 'functional'] as const).map((type) => {
+                const isExpanded = expandedVariation === type;
+                const content = variations[type];
+                if (!content) return null;
+
+                const getIcon = () => {
+                  if (type === 'decorative') return <Icons.Palette size={18} />;
+                  if (type === 'informational') return <Icons.Info size={18} />;
+                  return <Icons.MousePointer2 size={18} />;
+                };
+
+                const getColor = () => {
+                  if (type === 'decorative') return "text-pink-500 bg-pink-50 dark:bg-pink-900/20";
+                  if (type === 'informational') return "text-blue-500 bg-blue-50 dark:bg-blue-900/20";
+                  return "text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20";
+                };
+
+                return (
+                  <div key={type} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm transition-all hover:shadow-md">
+                    <button 
+                      onClick={() => setExpandedVariation(isExpanded ? null : type)}
+                      className="w-full px-6 py-4 flex items-center justify-between group"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className={cn("p-2 rounded-xl transition-transform group-hover:scale-110", getColor())}>
+                          {getIcon()}
+                        </div>
+                        <div className="text-left">
+                          <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">{type} Variation</h4>
+                          <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-tighter">
+                            {type === 'decorative' ? 'For aesthetic elements' : type === 'informational' ? 'For core content delivery' : 'For interactive elements'}
+                          </p>
+                        </div>
+                      </div>
+                      <Icons.ChevronDown size={20} className={cn("text-slate-400 transition-transform duration-300", isExpanded && "rotate-180")} />
+                    </button>
+                    
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <div className="px-6 pb-6 pt-2 border-t border-slate-50 dark:border-slate-800/50">
+                            <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 relative group/content">
+                              <p className="text-sm font-medium text-slate-700 dark:text-slate-300 italic leading-relaxed pr-8">
+                                "{content}"
+                              </p>
+                              <button 
+                                onClick={() => navigator.clipboard.writeText(content)}
+                                className="absolute top-3 right-3 p-1.5 bg-white dark:bg-slate-700 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg opacity-0 group-hover/content:opacity-100 transition-all shadow-sm"
+                                title="Copy this variation"
+                              >
+                                <Icons.Copy size={14} />
+                              </button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
           
           {/* Live Preview Feature */}
           <motion.section 

@@ -38,15 +38,30 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
   // Extract title and description from the result if possible for a preview
   const titleMatch = result.match(/## 🏷️ Title Tag\n(.*?)(?=\n##|$)/s);
   const descMatch = result.match(/## 📝 Meta Description\n(.*?)(?=\n##|$)/s);
+  const boostedMatch = result.match(/## 🚀 High-CTR "Boosted" Version\n(.*?)(?=\n##|$)/s);
+  const ctrMatch = result.match(/## 📈 CTR Analysis & Suggestions\n(.*?)(?=\n##|$)/s);
   const codeMatch = result.match(/## 💻 Code Snippet\n```(?:html)?\n([\s\S]*?)\n```/s);
 
   const title = titleMatch ? titleMatch[1].replace(/\[GOOD\]|\[AVERAGE\]|\[POOR\]/g, '').trim() : '';
   const description = descMatch ? descMatch[1].replace(/\[GOOD\]|\[AVERAGE\]|\[POOR\]/g, '').trim() : '';
+  
+  const boostedText = boostedMatch ? boostedMatch[1].trim() : '';
+  const boostedTitleMatch = boostedText.match(/### Title\n(.*?)(?=\n###|$)/s);
+  const boostedDescMatch = boostedText.match(/### Description\n(.*?)(?=\n###|$)/s);
+  
+  const boostedTitle = boostedTitleMatch ? boostedTitleMatch[1].trim() : '';
+  const boostedDescription = boostedDescMatch ? boostedDescMatch[1].trim() : boostedText; // Fallback to full text if sub-headers missing
+
+  const ctrAnalysis = ctrMatch ? ctrMatch[1].trim() : '';
   const codeSnippet = codeMatch ? codeMatch[1].trim() : '';
 
   // Google Search Preview Truncation
-  const previewTitle = title.length > 60 ? title.substring(0, 57) + '...' : title;
-  const previewDescription = description.length > 160 ? description.substring(0, 157) + '...' : description;
+  const [showBoosted, setShowBoosted] = React.useState(false);
+  const currentTitle = showBoosted && boostedTitle ? boostedTitle : title;
+  const currentDescription = showBoosted && boostedDescription ? boostedDescription : description;
+
+  const previewTitle = currentTitle.length > 60 ? currentTitle.substring(0, 57) + '...' : currentTitle;
+  const previewDescription = currentDescription.length > 160 ? currentDescription.substring(0, 157) + '...' : currentDescription;
 
   const [copiedCode, setCopiedCode] = React.useState(false);
 
@@ -117,8 +132,37 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                   </div>
                   <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">Google Search Preview</h3>
                 </div>
-                
-                {codeSnippet && (
+
+                <div className="flex items-center gap-2">
+                  {boostedDescription && (
+                    <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl mr-2">
+                      <button
+                        onClick={() => setShowBoosted(false)}
+                        className={cn(
+                          "px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
+                          !showBoosted 
+                            ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
+                            : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
+                        )}
+                      >
+                        Standard
+                      </button>
+                      <button
+                        onClick={() => setShowBoosted(true)}
+                        className={cn(
+                          "px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5",
+                          showBoosted 
+                            ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40" 
+                            : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
+                        )}
+                      >
+                        <Icons.Zap size={10} className={showBoosted ? "text-white" : "text-indigo-500"} />
+                        Boosted
+                      </button>
+                    </div>
+                  )}
+                  
+                  {codeSnippet && (
                   <button
                     onClick={handleCopyCode}
                     className={cn(
@@ -130,12 +174,22 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                     {copiedCode ? "Code Copied!" : "Copy Meta Tags Code"}
                   </button>
                 )}
+                </div>
               </div>
 
               <div className="bg-white dark:bg-slate-800 p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-slate-100 dark:border-slate-700 shadow-inner relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
                   <Icons.Globe size={120} />
                 </div>
+
+                {showBoosted && (
+                  <div className="absolute top-4 right-4 z-20">
+                    <div className="px-3 py-1 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg flex items-center gap-1.5 animate-pulse">
+                      <Icons.Zap size={10} />
+                      High-CTR Mode
+                    </div>
+                  </div>
+                )}
                 
                 <div className="max-w-[600px] relative z-10">
                   <div className="text-[#1a0dab] dark:text-[#8ab4f8] text-xl font-medium hover:underline cursor-pointer mb-1">
@@ -150,28 +204,56 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                   </div>
                 </div>
               </div>
+
+              {ctrAnalysis && (
+                <div className="mt-8 p-6 bg-indigo-50/50 dark:bg-indigo-900/20 rounded-2xl border border-indigo-100 dark:border-indigo-800/50">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-1.5 bg-indigo-600 rounded-lg text-white">
+                      <Icons.TrendingUp size={16} />
+                    </div>
+                    <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">CTR Booster Suggestions</h4>
+                  </div>
+                  <div className="prose prose-sm dark:prose-invert max-w-none text-slate-600 dark:text-slate-400">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {ctrAnalysis.split('\n').filter(line => line.trim().startsWith('-') || line.trim().startsWith('*') || /^\d\./.test(line.trim())).map((suggestion, i) => (
+                        <div key={i} className="flex gap-3 p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                          <div className="mt-1 text-indigo-600 dark:text-indigo-400">
+                            <Icons.Zap size={14} />
+                          </div>
+                          <p className="text-xs font-medium leading-relaxed">
+                            {suggestion.replace(/^[-*]\s*|^\d\.\s*/, '')}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                    {!ctrAnalysis.includes('-') && !ctrAnalysis.includes('*') && !/^\d\./.test(ctrAnalysis) && (
+                      <p className="text-xs leading-relaxed">{ctrAnalysis}</p>
+                    )}
+                  </div>
+                </div>
+              )}
               
               <div className="mt-8 flex flex-wrap items-center gap-8">
                 <div className="flex items-center gap-3">
                   <div className={cn(
                     "h-2 w-32 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800",
-                    title.length > 60 || title.length < 30 ? "bg-amber-100 dark:bg-amber-900/30" : "bg-emerald-100 dark:bg-emerald-900/30"
+                    currentTitle.length > 60 || currentTitle.length < 30 ? "bg-amber-100 dark:bg-amber-900/30" : "bg-emerald-100 dark:bg-emerald-900/30"
                   )}>
                     <div 
                       className={cn(
                         "h-full transition-all duration-500",
-                        title.length > 60 || title.length < 30 ? "bg-amber-500" : "bg-emerald-500"
+                        currentTitle.length > 60 || currentTitle.length < 30 ? "bg-amber-500" : "bg-emerald-500"
                       )}
-                      style={{ width: `${Math.min(100, (title.length / 60) * 100)}%` }}
+                      style={{ width: `${Math.min(100, (currentTitle.length / 60) * 100)}%` }}
                     />
                   </div>
                   <div className="flex flex-col">
                     <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Title Length</span>
                     <span className={cn(
                       "text-xs font-bold",
-                      title.length > 60 || title.length < 30 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
+                      currentTitle.length > 60 || currentTitle.length < 30 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
                     )}>
-                      {title.length}/60 chars
+                      {currentTitle.length}/60 chars
                     </span>
                   </div>
                 </div>
@@ -179,23 +261,23 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                 <div className="flex items-center gap-3">
                   <div className={cn(
                     "h-2 w-32 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800",
-                    description.length > 160 || description.length < 120 ? "bg-amber-100 dark:bg-amber-900/30" : "bg-emerald-100 dark:bg-emerald-900/30"
+                    currentDescription.length > 160 || currentDescription.length < 120 ? "bg-amber-100 dark:bg-amber-900/30" : "bg-emerald-100 dark:bg-emerald-900/30"
                   )}>
                     <div 
                       className={cn(
                         "h-full transition-all duration-500",
-                        description.length > 160 || description.length < 120 ? "bg-amber-500" : "bg-emerald-500"
+                        currentDescription.length > 160 || currentDescription.length < 120 ? "bg-amber-500" : "bg-emerald-500"
                       )}
-                      style={{ width: `${Math.min(100, (description.length / 160) * 100)}%` }}
+                      style={{ width: `${Math.min(100, (currentDescription.length / 160) * 100)}%` }}
                     />
                   </div>
                   <div className="flex flex-col">
                     <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Description Length</span>
                     <span className={cn(
                       "text-xs font-bold",
-                      description.length > 160 || description.length < 120 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
+                      currentDescription.length > 160 || currentDescription.length < 120 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
                     )}>
-                      {description.length}/160 chars
+                      {currentDescription.length}/160 chars
                     </span>
                   </div>
                 </div>
