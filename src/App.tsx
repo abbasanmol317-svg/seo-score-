@@ -218,109 +218,71 @@ function NavHeader() {
 }
 
 function AnimatedRoutes() {
-  const location = useLocation();
-  
   return (
-    <AnimatePresence mode="wait">
-      <Suspense fallback={<PageLoader />}>
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-              <Dashboard />
-            </motion.div>
-          } />
-          <Route path="/tool/:id" element={
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-              <ToolPage />
-            </motion.div>
-          } />
-          <Route path="/about" element={
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <About />
-            </motion.div>
-          } />
-          <Route path="/blog" element={
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Blog />
-            </motion.div>
-          } />
-          <Route path="/privacy" element={
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Privacy />
-            </motion.div>
-          } />
-          <Route path="/faq" element={
-            <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.3 }}
-            >
-              <FAQ />
-            </motion.div>
-          } />
-          <Route path="/tools" element={
-            <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Tools />
-            </motion.div>
-          } />
-          <Route path="/blog/:id" element={
-            <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.3 }}
-            >
-              <BlogPost />
-            </motion.div>
-          } />
-        </Routes>
-      </Suspense>
-    </AnimatePresence>
+    <Suspense fallback={<PageLoader />}>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/tools" element={<Tools />} />
+        <Route path="/tool/:id" element={<ToolPage />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:id" element={<BlogPost />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="*" element={<Dashboard />} />
+      </Routes>
+    </Suspense>
   );
+}
+
+class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: any, errorInfo: any) {
+    console.error('App Error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Something went wrong</h1>
+            <p className="text-slate-600 dark:text-slate-400 mb-6">We're sorry, but the application encountered an error.</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="px-6 py-2 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors"
+            >
+              Reload Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
 }
 
 export default function App() {
   return (
-    <HelmetProvider>
-      <Helmet>
-        <title>SEO Score Suite: Best Free AI SEO Tools for 2026 (20+ Tools)</title>
-        <meta name="description" content="Boost your rankings with 20+ free AI SEO tools. Get technical audits, keyword research, and content fixes instantly. Start optimizing for free today!" />
-      </Helmet>
-      <ThemeProvider>
-        <Onboarding />
-        <Router>
-          <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col transition-colors duration-300">
+    <ErrorBoundary>
+      <HelmetProvider>
+        <Helmet>
+          <title>SEO Score Suite: Best Free AI SEO Tools for 2026 (20+ Tools)</title>
+          <meta name="description" content="Boost your rankings with 20+ free AI SEO tools. Get technical audits, keyword research, and content fixes instantly. Start optimizing for free today!" />
+        </Helmet>
+        <ThemeProvider>
+          <Router>
+            <Onboarding />
+            <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col transition-colors duration-300">
             <NavHeader />
             
             <div className="flex flex-1 relative">
@@ -379,5 +341,6 @@ export default function App() {
         </Router>
       </ThemeProvider>
     </HelmetProvider>
+    </ErrorBoundary>
   );
 }

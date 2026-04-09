@@ -42,10 +42,15 @@ export default function Onboarding() {
   const [isVisible, setIsVisible] = React.useState(false);
   const [isMounted, setIsMounted] = React.useState(false);
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     setIsMounted(true);
-    const hasSeenOnboarding = localStorage.getItem('seo_score_onboarding_seen');
-    if (!hasSeenOnboarding) {
+    try {
+      const hasSeenOnboarding = localStorage.getItem('seo_score_onboarding_seen');
+      if (!hasSeenOnboarding) {
+        setIsVisible(true);
+      }
+    } catch (e) {
+      console.warn('LocalStorage not available:', e);
       setIsVisible(true);
     }
   }, []);
@@ -63,7 +68,11 @@ export default function Onboarding() {
   };
 
   const handleComplete = () => {
-    localStorage.setItem('seo_score_onboarding_seen', 'true');
+    try {
+      localStorage.setItem('seo_score_onboarding_seen', 'true');
+    } catch (e) {
+      // Ignore
+    }
     setIsVisible(false);
   };
 
