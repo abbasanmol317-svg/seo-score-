@@ -387,11 +387,20 @@ export const TOOLS: Tool[] = [
     ## 📝 Meta Description
     (Optimized Description) [GOOD]
     
-    ## 🚀 High-CTR "Boosted" Version
-    ### Title
-    (Provide an alternative title tag that aggressively uses power words and a high-impact value proposition for maximum click-through rate.)
-    ### Description
-    (Provide an alternative meta description that aggressively uses power words and a clear CTA for maximum click-through rate in Google Search results.)
+    ## 🚀 High-CTR "Boosted" Versions
+    Generate 3 distinct variations of high-CTR meta tags. Each variation should focus on a different psychological trigger (e.g., Urgency, Curiosity, Benefit-Driven).
+    
+    ### Variation 1: [Trigger Name]
+    - Title: (Aggressive power words, high-impact)
+    - Description: (Clear CTA, emotional trigger)
+    
+    ### Variation 2: [Trigger Name]
+    - Title: (Aggressive power words, high-impact)
+    - Description: (Clear CTA, emotional trigger)
+    
+    ### Variation 3: [Trigger Name]
+    - Title: (Aggressive power words, high-impact)
+    - Description: (Clear CTA, emotional trigger)
 
     ## 📈 CTR Analysis & Suggestions
     (Analyze the current meta tags if provided, otherwise analyze the generated ones. Suggest 3 specific improvements to increase click-through rates in Google Search results. Focus on:

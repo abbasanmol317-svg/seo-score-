@@ -39,7 +39,7 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
   // Extract title and description from the result if possible for a preview
   const titleMatch = result.match(/## 🏷️ Title Tag\n(.*?)(?=\n##|$)/s);
   const descMatch = result.match(/## 📝 Meta Description\n(.*?)(?=\n##|$)/s);
-  const boostedMatch = result.match(/## 🚀 High-CTR "Boosted" Version\n(.*?)(?=\n##|$)/s);
+  const boostedMatch = result.match(/## 🚀 High-CTR "Boosted" Versions?\n(.*?)(?=\n##|$)/s);
   const ctrMatch = result.match(/## 📈 CTR Analysis & Suggestions\n(.*?)(?=\n##|$)/s);
   const codeMatch = result.match(/## 💻 Code Snippet\n```(?:html)?\n([\s\S]*?)\n```/s);
 
@@ -47,19 +47,41 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
   const description = descMatch ? descMatch[1].replace(/\[GOOD\]|\[AVERAGE\]|\[POOR\]/g, '').trim() : '';
   
   const boostedText = boostedMatch ? boostedMatch[1].trim() : '';
-  const boostedTitleMatch = boostedText.match(/### Title\n(.*?)(?=\n###|$)/s);
-  const boostedDescMatch = boostedText.match(/### Description\n(.*?)(?=\n###|$)/s);
   
-  const boostedTitle = boostedTitleMatch ? boostedTitleMatch[1].trim() : '';
-  const boostedDescription = boostedDescMatch ? boostedDescMatch[1].trim() : boostedText; // Fallback to full text if sub-headers missing
+  // Parse variations
+  const variations = boostedText.split(/### Variation \d+:/).filter(v => v.trim().length > 0).map(v => {
+    const tMatch = v.match(/- Title: (.*?)(?=\n- Description:|$)/s);
+    const dMatch = v.match(/- Description: (.*?)(?=\n|$)/s);
+    
+    // Fallback for old format if regex fails
+    if (!tMatch && !dMatch) {
+      const oldTitleMatch = v.match(/### Title\n(.*?)(?=\n###|$)/s);
+      const oldDescMatch = v.match(/### Description\n(.*?)(?=\n###|$)/s);
+      return {
+        title: oldTitleMatch ? oldTitleMatch[1].trim() : '',
+        description: oldDescMatch ? oldDescMatch[1].trim() : v.trim()
+      };
+    }
+
+    return {
+      title: tMatch ? tMatch[1].trim() : '',
+      description: dMatch ? dMatch[1].trim() : ''
+    };
+  }).filter(v => v.title || v.description);
 
   const ctrAnalysis = ctrMatch ? ctrMatch[1].trim() : '';
   const codeSnippet = codeMatch ? codeMatch[1].trim() : '';
 
   // Google Search Preview Truncation
   const [showBoosted, setShowBoosted] = React.useState(false);
-  const currentTitle = showBoosted && boostedTitle ? boostedTitle : title;
-  const currentDescription = showBoosted && boostedDescription ? boostedDescription : description;
+  const [selectedVariation, setSelectedVariation] = React.useState(0);
+
+  const currentTitle = showBoosted && variations.length > 0 
+    ? variations[selectedVariation]?.title || title 
+    : title;
+  const currentDescription = showBoosted && variations.length > 0 
+    ? variations[selectedVariation]?.description || description 
+    : description;
 
   const previewTitle = currentTitle.length > 60 ? currentTitle.substring(0, 57) + '...' : currentTitle;
   const previewDescription = currentDescription.length > 160 ? currentDescription.substring(0, 157) + '...' : currentDescription;
@@ -136,32 +158,52 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                   <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">Google Search Preview</h3>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  {boostedDescription && (
-                    <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl mr-2">
-                      <button
-                        onClick={() => setShowBoosted(false)}
-                        className={cn(
-                          "px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
-                          !showBoosted 
-                            ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
-                            : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
-                        )}
-                      >
-                        Standard
-                      </button>
-                      <button
-                        onClick={() => setShowBoosted(true)}
-                        className={cn(
-                          "px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5",
-                          showBoosted 
-                            ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40" 
-                            : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
-                        )}
-                      >
-                        <Icons.Zap size={10} className={showBoosted ? "text-white" : "text-indigo-500"} />
-                        Boosted
-                      </button>
+                <div className="flex flex-wrap items-center gap-4">
+                  {variations.length > 0 && (
+                    <div className="flex flex-col gap-2">
+                      <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                        <button
+                          onClick={() => setShowBoosted(false)}
+                          className={cn(
+                            "px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
+                            !showBoosted 
+                              ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
+                              : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
+                          )}
+                        >
+                          Standard
+                        </button>
+                        <button
+                          onClick={() => setShowBoosted(true)}
+                          className={cn(
+                            "px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5",
+                            showBoosted 
+                              ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40" 
+                              : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
+                          )}
+                        >
+                          <Icons.Zap size={10} className={showBoosted ? "text-white" : "text-indigo-500"} />
+                          Boosted
+                        </button>
+                      </div>
+                      
+                      {showBoosted && variations.length > 1 && (
+                        <div className="flex items-center justify-center gap-1.5">
+                          {variations.map((_, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => setSelectedVariation(idx)}
+                              className={cn(
+                                "w-6 h-1.5 rounded-full transition-all",
+                                selectedVariation === idx 
+                                  ? "bg-indigo-600 w-8" 
+                                  : "bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600"
+                              )}
+                              title={`Variation ${idx + 1}`}
+                            />
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
                   
