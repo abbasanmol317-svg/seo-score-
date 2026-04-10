@@ -26,7 +26,7 @@ export const ToolError: React.FC<ToolErrorProps> = ({
         <div className="flex flex-col md:flex-row">
           <div className="bg-rose-50 dark:bg-rose-900/20 p-4 sm:p-6 flex items-center justify-center md:w-24">
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-rose-500 text-white rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-rose-500/20 animate-bounce-slow">
-              <Icons.AlertTriangle size={20} className="sm:w-6 sm:h-6" strokeWidth={2.5} />
+              <Icons.TriangleAlert size={20} className="sm:w-6 sm:h-6" strokeWidth={2.5} />
             </div>
           </div>
           <div className="p-6 sm:p-8 flex-grow">

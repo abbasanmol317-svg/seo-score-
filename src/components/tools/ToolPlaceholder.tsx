@@ -8,7 +8,7 @@ interface ToolPlaceholderProps {
 }
 
 export const ToolPlaceholder: React.FC<ToolPlaceholderProps> = ({ tool }) => {
-  const IconComponent = (Icons as any)[tool.icon] || Icons.HelpCircle;
+  const IconComponent = (Icons as any)[tool.icon] || Icons.CircleHelp;
 
   return (
     <motion.div
@@ -40,7 +40,7 @@ export const ToolPlaceholder: React.FC<ToolPlaceholderProps> = ({ tool }) => {
             <span className="text-xs font-bold uppercase tracking-widest">Safe & Secure</span>
           </div>
           <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500">
-            <Icons.BarChart3 size={16} className="text-indigo-500" />
+            <Icons.ChartBarBig size={16} className="text-indigo-500" />
             <span className="text-xs font-bold uppercase tracking-widest">Actionable Insights</span>
           </div>
         </div>

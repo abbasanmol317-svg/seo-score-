@@ -125,7 +125,7 @@ export default function Dashboard() {
                     <div className="px-4 sm:px-8 pb-8 sm:pb-10">
                       <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pt-2 sm:pt-4">
                         {categoryTools.map((tool, index) => {
-                          const IconComponent = (Icons as any)[tool.icon] || Icons.HelpCircle;
+                          const IconComponent = (Icons as any)[tool.icon] || Icons.CircleHelp;
                           return (
                             <motion.div
                               key={tool.id}

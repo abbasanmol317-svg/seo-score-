@@ -69,7 +69,7 @@ export default function FAQ() {
             animate={{ opacity: 1, scale: 1 }}
             className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-full text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] mb-4 sm:mb-6 border border-indigo-100 dark:border-indigo-800"
           >
-            <Icons.HelpCircle size={12} className="sm:w-3.5 sm:h-3.5" />
+            <Icons.CircleHelp size={12} className="sm:w-3.5 sm:h-3.5" />
             Support Center
           </motion.div>
           <h1 className="text-3xl sm:text-6xl font-black text-slate-900 dark:text-white tracking-tight mb-4 sm:mb-6">

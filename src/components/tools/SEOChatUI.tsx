@@ -198,7 +198,7 @@ export const SEOChatUI: React.FC<ToolComponentProps> = (props) => {
           }}
           className="flex items-center gap-2 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
         >
-          <Icons.HelpCircle size={14} />
+          <Icons.CircleHelp size={14} />
           Restart Tutorial
         </button>
       </div>
@@ -282,7 +282,7 @@ export const SEOChatUI: React.FC<ToolComponentProps> = (props) => {
               </div>
               <div className="bg-emerald-50/50 dark:bg-emerald-900/10 p-6 rounded-[2rem] border border-emerald-100/50 dark:border-emerald-900/20">
                 <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white mb-4 shadow-lg shadow-emerald-100 dark:shadow-none">
-                  <Icons.CheckCircle2 size={20} />
+                  <Icons.CircleCheckBig size={20} />
                 </div>
                 <h4 className="font-bold text-slate-900 dark:text-white mb-2">Actionable Steps</h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400">Every response includes clear, step-by-step instructions so you know exactly what to do next.</p>

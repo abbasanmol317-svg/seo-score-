@@ -204,7 +204,7 @@ export default function Sidebar({ onClose, isMobile }: SidebarProps) {
           )}
           title={isCollapsed && !isMobile ? "FAQ" : undefined}
         >
-          <Icons.HelpCircle size={18} />
+          <Icons.CircleHelp size={18} />
           {(!isCollapsed || isMobile) && <span>FAQ</span>}
         </Link>
       </div>

@@ -32,7 +32,7 @@ export const CATEGORY_CONFIG: Record<string, { icon: keyof typeof Icons; descrip
     accent: 'text-purple-600 dark:text-purple-400'
   },
   'Insights': { 
-    icon: 'BarChart3', 
+    icon: 'ChartBarBig', 
     description: 'Track your progress and view historical SEO data.',
     color: 'bg-rose-600',
     accent: 'text-rose-600 dark:text-rose-400'

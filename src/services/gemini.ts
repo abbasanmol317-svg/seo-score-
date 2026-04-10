@@ -1,6 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 
-const apiKey = process.env.GEMINI_API_KEY;
+const apiKey = process.env.GEMINI_API_KEY || '';
 
 export const ai = new GoogleGenAI({ apiKey });
 
@@ -55,7 +55,7 @@ export const TOOLS: Tool[] = [
     name: 'YouTube SEO',
     description: 'Check and optimize YouTube video SEO.',
     category: 'SEO Analysis',
-    icon: 'PlayCircle',
+    icon: 'CirclePlay',
     keywords: 'youtube,video,marketing',
     prompt: `Analyze the SEO for this YouTube video or topic. 
     Format your response as a YouTube Optimization Guide with these sections:

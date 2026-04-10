@@ -31,9 +31,13 @@ export default function ToolPage() {
       navigate('/');
       return;
     }
-    const savedHistory = localStorage.getItem('seo_history');
-    if (savedHistory) {
-      setHistory(JSON.parse(savedHistory));
+    try {
+      const savedHistory = localStorage.getItem('seo_history');
+      if (savedHistory) {
+        setHistory(JSON.parse(savedHistory));
+      }
+    } catch (e) {
+      console.warn('LocalStorage not available:', e);
     }
   }, [id, tool, navigate]);
 
@@ -165,11 +169,15 @@ export default function ToolPage() {
         input: input.substring(0, 100),
         timestamp: new Date().toISOString(),
       };
-      const savedHistory = localStorage.getItem('seo_history');
-      const historyArr = savedHistory ? JSON.parse(savedHistory) : [];
-      const updatedHistory = [newEntry, ...historyArr].slice(0, 50);
-      setHistory(updatedHistory);
-      localStorage.setItem('seo_history', JSON.stringify(updatedHistory));
+      try {
+        const savedHistory = localStorage.getItem('seo_history');
+        const historyArr = savedHistory ? JSON.parse(savedHistory) : [];
+        const updatedHistory = [newEntry, ...historyArr].slice(0, 50);
+        setHistory(updatedHistory);
+        localStorage.setItem('seo_history', JSON.stringify(updatedHistory));
+      } catch (e) {
+        console.warn('Failed to save to history:', e);
+      }
     } catch (err: any) {
       setError(err.message || 'An error occurred while processing your request.');
     } finally {
@@ -252,7 +260,7 @@ export default function ToolPage() {
   };
 
   const ToolComponent = getToolComponent(tool.id);
-  const IconComponent = (Icons as any)[tool.icon] || Icons.HelpCircle;
+  const IconComponent = (Icons as any)[tool.icon] || Icons.CircleHelp;
 
   // Optimized Meta Tags
   let seoTitle = `${tool.name}: Best Free AI ${tool.category} Tool (2026)`;
@@ -359,15 +367,15 @@ export default function ToolPage() {
                   </h3>
                   <ul className="text-sm text-slate-600 dark:text-slate-400 space-y-2">
                     <li className="flex items-start gap-2">
-                      <Icons.CheckCircle2 className="text-emerald-500 shrink-0 mt-0.5" size={14} />
+                      <Icons.CircleCheckBig className="text-emerald-500 shrink-0 mt-0.5" size={14} />
                       Professional-grade AI analysis for free.
                     </li>
                     <li className="flex items-start gap-2">
-                      <Icons.CheckCircle2 className="text-emerald-500 shrink-0 mt-0.5" size={14} />
+                      <Icons.CircleCheckBig className="text-emerald-500 shrink-0 mt-0.5" size={14} />
                       Actionable recommendations to improve rankings.
                     </li>
                     <li className="flex items-start gap-2">
-                      <Icons.CheckCircle2 className="text-emerald-500 shrink-0 mt-0.5" size={14} />
+                      <Icons.CircleCheckBig className="text-emerald-500 shrink-0 mt-0.5" size={14} />
                       Real-time insights based on 2026 SEO trends.
                     </li>
                   </ul>

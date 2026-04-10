@@ -4,9 +4,9 @@ import { cn } from './utils';
 
 export const StatusBadge = ({ type }: { type: 'GOOD' | 'AVERAGE' | 'POOR' }) => {
   const config = {
-    GOOD: { label: 'Good', icon: <Icons.CheckCircle2 size={12} />, className: 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800' },
-    AVERAGE: { label: 'Average', icon: <Icons.AlertCircle size={12} />, className: 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border-amber-100 dark:border-amber-800' },
-    POOR: { label: 'Poor', icon: <Icons.XCircle size={12} />, className: 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 border-rose-100 dark:border-rose-800' },
+    GOOD: { label: 'Good', icon: <Icons.CircleCheckBig size={12} />, className: 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800' },
+    AVERAGE: { label: 'Average', icon: <Icons.CircleAlert size={12} />, className: 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border-amber-100 dark:border-amber-800' },
+    POOR: { label: 'Poor', icon: <Icons.CircleX size={12} />, className: 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 border-rose-100 dark:border-rose-800' },
   };
   const { label, icon, className } = config[type];
   return (

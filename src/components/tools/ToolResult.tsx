@@ -264,7 +264,7 @@ export const ToolResult: React.FC<ToolResultProps> = ({
                       )}>
                         {(isAction || isChecklist) ? (
                           <div className="mt-1 p-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded-lg shrink-0">
-                            <Icons.CheckCircle2 size={16} />
+                            <Icons.CircleCheckBig size={16} />
                           </div>
                         ) : (
                           <div className="mt-2.5 w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-600 shrink-0" />

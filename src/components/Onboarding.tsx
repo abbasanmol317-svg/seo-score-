@@ -26,7 +26,7 @@ const STEPS: Step[] = [
   {
     title: "Actionable Reports",
     description: "Get detailed reports with specific recommendations to improve your rankings and drive more organic traffic.",
-    icon: <Icons.BarChart3 size={48} />,
+    icon: <Icons.ChartBarBig size={48} />,
     color: "bg-emerald-600"
   },
   {
