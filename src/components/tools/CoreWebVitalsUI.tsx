@@ -7,7 +7,7 @@ interface CoreWebVitalsUIProps {
   content: string;
 }
 
-export const CoreWebVitalsUI: React.FC<CoreWebVitalsUIProps> = ({ content }) => {
+export const CoreWebVitalsUI = React.memo(({ content }: CoreWebVitalsUIProps) => {
   // Parse content to find LCP, FID, CLS
   // Format: - LCP: (Value) [GOOD/AVERAGE/POOR]
   const parseMetric = (name: string) => {
@@ -96,4 +96,4 @@ export const CoreWebVitalsUI: React.FC<CoreWebVitalsUIProps> = ({ content }) => 
       ))}
     </div>
   );
-};
+});

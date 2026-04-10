@@ -7,6 +7,49 @@ import { Tool, TOOLS } from '../services/gemini';
 import { cn } from '../lib/utils';
 import { CATEGORY_CONFIG } from '../constants';
 
+const ToolCard = React.memo(({ tool, index }: { tool: Tool; index: number }) => {
+  const IconComponent = (Icons as any)[tool.icon] || Icons.CircleHelp;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05 }}
+      whileHover={{ y: -5 }}
+      whileTap={{ scale: 0.98 }}
+    >
+      <Link
+        to={`/tool/${tool.id}`}
+        className="group relative bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-2xl hover:shadow-indigo-500/10 dark:hover:shadow-indigo-900/30 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all duration-300 flex flex-col h-full overflow-hidden"
+      >
+        <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500 group-hover:scale-150 group-hover:-rotate-12">
+          <IconComponent size={60} className="sm:w-20 sm:h-20" />
+        </div>
+        
+        <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4 relative z-10">
+          <div className={cn(
+            "p-2.5 sm:p-3 rounded-xl sm:rounded-2xl transition-all duration-300 shadow-sm group-hover:shadow-lg group-hover:scale-110 group-hover:rotate-3",
+            "bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-indigo-600 group-hover:text-white"
+          )}>
+            <IconComponent size={18} className="sm:w-5 sm:h-5" strokeWidth={2.5} />
+          </div>
+          <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-tight tracking-tight">
+            {tool.name}
+          </h3>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 flex-grow leading-relaxed font-medium relative z-10">
+          {tool.description}
+        </p>
+        <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-slate-50 dark:border-slate-800 flex items-center justify-between text-[8px] sm:text-[10px] font-black text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors uppercase tracking-widest relative z-10">
+          <span>Launch Tool</span>
+          <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-all">
+            <Icons.ArrowRight size={10} className="sm:w-3 sm:h-3" />
+          </div>
+        </div>
+      </Link>
+    </motion.div>
+  );
+});
+
 export default function Dashboard() {
   const categories = Object.keys(CATEGORY_CONFIG).filter(cat => 
     TOOLS.some(t => t.category === cat)
@@ -124,49 +167,9 @@ export default function Dashboard() {
                   >
                     <div className="px-4 sm:px-8 pb-8 sm:pb-10">
                       <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pt-2 sm:pt-4">
-                        {categoryTools.map((tool, index) => {
-                          const IconComponent = (Icons as any)[tool.icon] || Icons.CircleHelp;
-                          return (
-                            <motion.div
-                              key={tool.id}
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: index * 0.05 }}
-                              whileHover={{ y: -5 }}
-                              whileTap={{ scale: 0.98 }}
-                            >
-                              <Link
-                                to={`/tool/${tool.id}`}
-                                className="group relative bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-2xl hover:shadow-indigo-500/10 dark:hover:shadow-indigo-900/30 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all duration-300 flex flex-col h-full overflow-hidden"
-                              >
-                                <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500 group-hover:scale-150 group-hover:-rotate-12">
-                                  <IconComponent size={60} className="sm:w-20 sm:h-20" />
-                                </div>
-                                
-                                <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4 relative z-10">
-                                  <div className={cn(
-                                    "p-2.5 sm:p-3 rounded-xl sm:rounded-2xl transition-all duration-300 shadow-sm group-hover:shadow-lg group-hover:scale-110 group-hover:rotate-3",
-                                    "bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-indigo-600 group-hover:text-white"
-                                  )}>
-                                    <IconComponent size={18} className="sm:w-5 sm:h-5" strokeWidth={2.5} />
-                                  </div>
-                                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-tight tracking-tight">
-                                    {tool.name}
-                                  </h3>
-                                </div>
-                                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 flex-grow leading-relaxed font-medium relative z-10">
-                                  {tool.description}
-                                </p>
-                                <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-slate-50 dark:border-slate-800 flex items-center justify-between text-[8px] sm:text-[10px] font-black text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors uppercase tracking-widest relative z-10">
-                                  <span>Launch Tool</span>
-                                  <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-all">
-                                    <Icons.ArrowRight size={10} className="sm:w-3 sm:h-3" />
-                                  </div>
-                                </div>
-                              </Link>
-                            </motion.div>
-                          );
-                        })}
+                        {categoryTools.map((tool, index) => (
+                          <ToolCard key={tool.id} tool={tool} index={index} />
+                        ))}
                       </div>
                     </div>
                   </motion.div>

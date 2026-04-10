@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { motion } from 'motion/react';
 import * as Icons from 'lucide-react';
 import { ToolComponentProps } from './ToolComponentProps';
@@ -6,9 +6,10 @@ import { ToolLayout } from './ToolLayout';
 import { ToolInput } from './ToolInput';
 import { ToolLoading } from './ToolLoading';
 import { ToolError } from './ToolError';
-import { ToolResult } from './ToolResult';
 import { ToolPlaceholder } from './ToolPlaceholder';
 import { cn } from '../../lib/utils';
+
+const ToolResult = lazy(() => import('./ToolResult').then(m => ({ default: m.ToolResult })));
 
 export const SitemapRobotsUI: React.FC<ToolComponentProps> = (props) => {
   const {
@@ -84,20 +85,22 @@ export const SitemapRobotsUI: React.FC<ToolComponentProps> = (props) => {
       result={result}
       resultSection={
         <div className="space-y-8">
-          <ToolResult
-            tool={tool}
-            result={result}
-            reportRef={reportRef}
-            handlePrint={handlePrint}
-            handleDownloadPDF={handleDownloadPDF}
-            handleCopy={handleCopy}
-            handleShare={handleShare}
-            isDownloading={isDownloading}
-            isGeneratingPDF={isGeneratingPDF}
-            copied={copied}
-            showShareMenu={showShareMenu}
-            setShowShareMenu={setShowShareMenu}
-          />
+          <Suspense fallback={<div className="h-96 animate-pulse bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800" />}>
+            <ToolResult
+              tool={tool}
+              result={result}
+              reportRef={reportRef}
+              handlePrint={handlePrint}
+              handleDownloadPDF={handleDownloadPDF}
+              handleCopy={handleCopy}
+              handleShare={handleShare}
+              isDownloading={isDownloading}
+              isGeneratingPDF={isGeneratingPDF}
+              copied={copied}
+              showShareMenu={showShareMenu}
+              setShowShareMenu={setShowShareMenu}
+            />
+          </Suspense>
           
           {result && (robotsCode || sitemapCode) && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto mt-8 print:hidden">

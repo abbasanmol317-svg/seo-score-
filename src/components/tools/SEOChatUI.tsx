@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import * as Icons from 'lucide-react';
 import { ToolComponentProps } from './ToolComponentProps';
@@ -6,9 +6,10 @@ import { ToolLayout } from './ToolLayout';
 import { ToolInput } from './ToolInput';
 import { ToolLoading } from './ToolLoading';
 import { ToolError } from './ToolError';
-import { ToolResult } from './ToolResult';
 import { ToolPlaceholder } from './ToolPlaceholder';
 import { cn } from '../../lib/utils';
+
+const ToolResult = lazy(() => import('./ToolResult').then(m => ({ default: m.ToolResult })));
 
 interface TutorialStep {
   title: string;
@@ -256,20 +257,22 @@ export const SEOChatUI: React.FC<ToolComponentProps> = (props) => {
         result={result}
         resultSection={
           <div className="space-y-12">
-            <ToolResult
-              tool={tool}
-              result={result}
-              reportRef={reportRef}
-              handlePrint={handlePrint}
-              handleDownloadPDF={handleDownloadPDF}
-              handleCopy={handleCopy}
-              handleShare={handleShare}
-              isDownloading={isDownloading}
-              isGeneratingPDF={isGeneratingPDF}
-              copied={copied}
-              showShareMenu={showShareMenu}
-              setShowShareMenu={setShowShareMenu}
-            />
+            <Suspense fallback={<div className="h-96 animate-pulse bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800" />}>
+              <ToolResult
+                tool={tool}
+                result={result}
+                reportRef={reportRef}
+                handlePrint={handlePrint}
+                handleDownloadPDF={handleDownloadPDF}
+                handleCopy={handleCopy}
+                handleShare={handleShare}
+                isDownloading={isDownloading}
+                isGeneratingPDF={isGeneratingPDF}
+                copied={copied}
+                showShareMenu={showShareMenu}
+                setShowShareMenu={setShowShareMenu}
+              />
+            </Suspense>
             
             {/* Walkthrough Info Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 print:hidden">

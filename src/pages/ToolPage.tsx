@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import * as Icons from 'lucide-react';
@@ -7,8 +7,9 @@ import { TOOLS, runTool, ToolId } from '../services/gemini';
 import { cn } from '../lib/utils';
 import { getToolComponent } from '../components/tools/toolRegistry';
 
-export default function ToolPage() {
-  const { id } = useParams<{ id: string }>();
+export default function ToolPage({ idOverride }: { idOverride?: string }) {
+  const { id: paramId } = useParams<{ id: string }>();
+  const id = idOverride || paramId;
   const navigate = useNavigate();
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
@@ -312,36 +313,38 @@ export default function ToolPage() {
             </div>
           </div>
 
-          <ToolComponent
-            tool={tool}
-            input={input}
-            setInput={setInput}
-            result={result}
-            loading={loading}
-            error={error}
-            handleRun={handleRun}
-            handleClear={handleClear}
-            handleCopy={handleCopy}
-            handlePrint={handlePrint}
-            handleDownloadPDF={handleDownloadPDF}
-            isDownloading={isDownloading}
-            isGeneratingPDF={isGeneratingPDF}
-            copied={copied}
-            showShareMenu={showShareMenu}
-            setShowShareMenu={setShowShareMenu}
-            handleShare={handleShare}
-            reportRef={reportRef}
-            loadingMessage={loadingMessage}
-            progress={progress}
-            currentTip={currentTip}
-            isFeedbackSubmitted={isFeedbackSubmitted}
-            setIsFeedbackSubmitted={setIsFeedbackSubmitted}
-            feedbackRating={feedbackRating}
-            setFeedbackRating={setFeedbackRating}
-            feedbackText={feedbackText}
-            setFeedbackText={setFeedbackText}
-            history={history}
-          />
+          <Suspense fallback={<div className="h-96 animate-pulse bg-slate-100 dark:bg-slate-800 rounded-3xl" />}>
+            <ToolComponent
+              tool={tool}
+              input={input}
+              setInput={setInput}
+              result={result}
+              loading={loading}
+              error={error}
+              handleRun={handleRun}
+              handleClear={handleClear}
+              handleCopy={handleCopy}
+              handlePrint={handlePrint}
+              handleDownloadPDF={handleDownloadPDF}
+              isDownloading={isDownloading}
+              isGeneratingPDF={isGeneratingPDF}
+              copied={copied}
+              showShareMenu={showShareMenu}
+              setShowShareMenu={setShowShareMenu}
+              handleShare={handleShare}
+              reportRef={reportRef}
+              loadingMessage={loadingMessage}
+              progress={progress}
+              currentTip={currentTip}
+              isFeedbackSubmitted={isFeedbackSubmitted}
+              setIsFeedbackSubmitted={setIsFeedbackSubmitted}
+              feedbackRating={feedbackRating}
+              setFeedbackRating={setFeedbackRating}
+              feedbackText={feedbackText}
+              setFeedbackText={setFeedbackText}
+              history={history}
+            />
+          </Suspense>
 
           <div className={cn("mt-12 sm:mt-20 space-y-12", isGeneratingPDF && "hidden")}>
             <section className="p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
@@ -385,9 +388,17 @@ export default function ToolPage() {
 
             <section className="p-6 sm:p-8 bg-slate-50 dark:bg-slate-900/50 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800">
               <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4">Why Choose Our AI-Driven {tool.name}?</h2>
-              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
                 In the search landscape of 2026, authority is built on technical precision and content relevance. Our {tool.name} tool is specifically tuned to identify the subtle signals that modern search engines prioritize. Whether you're optimizing for **Core Web Vitals** or **Semantic Search**, this tool provides the data-driven edge you need to outperform your competition.
               </p>
+              <div className="flex flex-wrap gap-4">
+                <Link to="/blog/4" className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
+                  <Icons.BookOpen size={14} /> Best Free AI SEO Tools 2026
+                </Link>
+                <Link to="/blog/5" className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
+                  <Icons.BookOpen size={14} /> Step-by-Step SEO Audit Guide
+                </Link>
+              </div>
             </section>
           </div>
 

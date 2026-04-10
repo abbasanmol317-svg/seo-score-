@@ -11,7 +11,7 @@ interface SidebarProps {
   isMobile?: boolean;
 }
 
-export default function Sidebar({ onClose, isMobile }: SidebarProps) {
+export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) {
   const location = useLocation();
   const currentToolId = location.pathname.startsWith('/tool/') ? location.pathname.split('/')[2] : null;
   const currentTool = currentToolId ? TOOLS.find(t => t.id === currentToolId) : null;
@@ -210,4 +210,4 @@ export default function Sidebar({ onClose, isMobile }: SidebarProps) {
       </div>
     </aside>
   );
-}
+});

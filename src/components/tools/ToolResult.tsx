@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import * as Icons from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { Link } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { Tool } from '../../services/gemini';
 import { renderMarkdownContent } from '../../lib/seo-utils';
@@ -22,7 +23,7 @@ interface ToolResultProps {
   setShowShareMenu: (show: boolean) => void;
 }
 
-export const ToolResult: React.FC<ToolResultProps> = ({
+export const ToolResult = React.memo(({
   tool,
   result,
   reportRef,
@@ -35,7 +36,7 @@ export const ToolResult: React.FC<ToolResultProps> = ({
   copied,
   showShareMenu,
   setShowShareMenu,
-}) => {
+}: ToolResultProps) => {
   return (
     <div ref={reportRef} className={cn("space-y-8 print:space-y-4", isGeneratingPDF && "p-12 bg-white dark:bg-slate-900")}>
       {isGeneratingPDF && (
@@ -257,21 +258,89 @@ export const ToolResult: React.FC<ToolResultProps> = ({
                       }
                       return <p className="mb-5 leading-relaxed text-slate-700 dark:text-slate-300 font-medium">{children}</p>;
                     },
-                    li: ({ children }) => (
-                      <li className={cn(
-                        "mb-4 text-slate-600 dark:text-slate-400 flex items-start gap-3 sm:gap-4",
-                        (isAction || isChecklist) && "p-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm"
-                      )}>
-                        {(isAction || isChecklist) ? (
-                          <div className="mt-1 p-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded-lg shrink-0">
-                            <Icons.CircleCheckBig size={16} />
-                          </div>
-                        ) : (
-                          <div className="mt-2.5 w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-600 shrink-0" />
-                        )}
-                        <div className="flex-grow font-medium text-sm sm:text-base">{children}</div>
-                      </li>
-                    ),
+                    li: ({ children }) => {
+                      const text = React.Children.toArray(children).join('');
+                      // Match pattern: [Anchor] -> tool-id | Reason | Source Sentence
+                      const linkMatch = text.match(/\[(.*?)\]\s*->\s*([a-z0-9-]+)(?:\s*\|\s*([^|]*))(?:\s*\|\s*(.*))?/i) || 
+                                       text.match(/"(.*?)"\s*->\s*([a-z0-9-]+)(?:\s*\|\s*([^|]*))(?:\s*\|\s*(.*))?/i);
+                      
+                      if (isLinking && linkMatch) {
+                        const anchorText = linkMatch[1];
+                        const toolId = linkMatch[2];
+                        const reason = linkMatch[3];
+                        const sourceSentence = linkMatch[4];
+
+                        const getToolPath = (tid: string) => {
+                          if (tid === 'seo-audit') return '/ai-seo-audit-tool';
+                          if (tid === 'keyword-research') return '/keyword-research-tool';
+                          return `/tool/${tid}`;
+                        };
+
+                        return (
+                          <li className="mb-4 p-4 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-2xl border border-indigo-100 dark:border-indigo-900/20 flex flex-col gap-4 group/link">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                              <div className="flex items-start gap-3">
+                                <div className="mt-1 p-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded-lg shrink-0">
+                                  <Icons.Link size={16} />
+                                </div>
+                                <div>
+                                  <p className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">Use anchor text: <span className="text-indigo-600 dark:text-indigo-400">"{anchorText}"</span></p>
+                                  {reason && (
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{reason}</p>
+                                  )}
+                                </div>
+                              </div>
+                              <Link 
+                                to={getToolPath(toolId)}
+                                className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-200 dark:shadow-none"
+                              >
+                                Open Tool <Icons.ExternalLink size={14} />
+                              </Link>
+                            </div>
+                            
+                            {sourceSentence && (
+                              <div className="mt-2 p-3 bg-white dark:bg-slate-800/50 rounded-xl border border-indigo-50 dark:border-indigo-900/30">
+                                <p className="text-[10px] font-black text-indigo-400 dark:text-indigo-500 uppercase tracking-widest mb-1">Contextual Placement</p>
+                                <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 italic">
+                                  <ReactMarkdown
+                                    components={{
+                                      p: ({ children }) => <p className="m-0">{children}</p>,
+                                      strong: ({ children }) => (
+                                        <Link 
+                                          to={getToolPath(toolId)}
+                                          className="text-indigo-600 dark:text-indigo-400 font-black not-italic hover:underline decoration-2 underline-offset-4"
+                                          title={`Open ${toolId} tool`}
+                                        >
+                                          {children}
+                                        </Link>
+                                      )
+                                    }}
+                                  >
+                                    {sourceSentence}
+                                  </ReactMarkdown>
+                                </div>
+                              </div>
+                            )}
+                          </li>
+                        );
+                      }
+
+                      return (
+                        <li className={cn(
+                          "mb-4 text-slate-600 dark:text-slate-400 flex items-start gap-3 sm:gap-4",
+                          (isAction || isChecklist) && "p-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm"
+                        )}>
+                          {(isAction || isChecklist) ? (
+                            <div className="mt-1 p-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded-lg shrink-0">
+                              <Icons.CircleCheckBig size={16} />
+                            </div>
+                          ) : (
+                            <div className="mt-2.5 w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-600 shrink-0" />
+                          )}
+                          <div className="flex-grow font-medium text-sm sm:text-base">{children}</div>
+                        </li>
+                      );
+                    },
                     table: ({ children }) => (
                       <div className="overflow-x-auto my-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
                         <table className="w-full border-collapse">{children}</table>
@@ -312,4 +381,4 @@ export const ToolResult: React.FC<ToolResultProps> = ({
       )}
     </div>
   );
-};
+});

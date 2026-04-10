@@ -313,7 +313,12 @@ export const TOOLS: Tool[] = [
     (Is it optimized?)
     
     ## 🔗 Internal Linking Opportunities
-    Analyze the content for opportunities to link to other tools in the "SEO Score Suite". For each opportunity, suggest the most relevant anchor text and the target tool ID.
+    Identify strategic opportunities to link to other tools within the "SEO Score Suite" to enhance user value and SEO.
+    
+    Guidelines for Anchor Text:
+    - **Contextual Relevance**: The anchor text MUST be a phrase that naturally occurs or fits perfectly within the flow of the content.
+    - **Descriptive & Natural**: Avoid generic phrases like "click here" or "use this tool". Instead, use descriptive keywords like "technical SEO audit", "mobile responsiveness", or "keyword difficulty analysis".
+    - **Variety**: Use a mix of exact match and partial match keywords for the anchor text.
     
     Target Tools List:
     - Website SEO Analysis (website-seo)
@@ -336,9 +341,12 @@ export const TOOLS: Tool[] = [
     - Compare Websites (compare-websites)
     - AI SEO Chat (seo-chat)
     
-    Format as a list:
-    - [Anchor Text] -> [Tool ID]
-    - [Anchor Text] -> [Tool ID]`,
+    Format each recommendation as follows:
+    - [Contextual Anchor Text] -> [Tool ID] | [Brief Reason] | [Source Sentence with the anchor text highlighted using **bold**]
+    
+    Example:
+    - "technical SEO audit" -> seo-audit | Use this to identify the underlying technical issues mentioned in the second paragraph. | "Before you publish, run a **technical SEO audit** to ensure your site is healthy."
+    - "optimize your meta tags" -> meta-tag | This will help improve the click-through rate for the titles you've drafted. | "You should **optimize your meta tags** to improve visibility in search results."`,
     placeholder: 'Paste your content or enter URL to optimize (e.g., "Our mission is...")'
   },
   {

@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import { ToolId } from '../../services/gemini';
 import { ToolComponentProps } from './ToolComponentProps';
-import { GenericToolUI } from './GenericToolUI';
-import { SEODashboardUI } from './SEODashboardUI';
 
-import { MetaTagToolUI } from './MetaTagToolUI';
-import { SitemapRobotsUI } from './SitemapRobotsUI';
-import { SEOChatUI } from './SEOChatUI';
-import { ImageAltTextUI } from './ImageAltTextUI';
+const GenericToolUI = lazy(() => import('./GenericToolUI').then(m => ({ default: m.GenericToolUI })));
+const SEODashboardUI = lazy(() => import('./SEODashboardUI').then(m => ({ default: m.SEODashboardUI })));
+const MetaTagToolUI = lazy(() => import('./MetaTagToolUI').then(m => ({ default: m.MetaTagToolUI })));
+const SitemapRobotsUI = lazy(() => import('./SitemapRobotsUI').then(m => ({ default: m.SitemapRobotsUI })));
+const SEOChatUI = lazy(() => import('./SEOChatUI').then(m => ({ default: m.SEOChatUI })));
+const ImageAltTextUI = lazy(() => import('./ImageAltTextUI').then(m => ({ default: m.ImageAltTextUI })));
 
-export const TOOL_COMPONENTS: Partial<Record<ToolId, React.FC<ToolComponentProps & any>>> = {
+export const TOOL_COMPONENTS: Partial<Record<ToolId, React.LazyExoticComponent<React.FC<ToolComponentProps & any>>>> = {
   'seo-dashboard': SEODashboardUI,
   'meta-tag': MetaTagToolUI,
   'sitemap-robots': SitemapRobotsUI,
@@ -17,6 +17,6 @@ export const TOOL_COMPONENTS: Partial<Record<ToolId, React.FC<ToolComponentProps
   'image-alt-text': ImageAltTextUI,
 };
 
-export const getToolComponent = (toolId: string): React.FC<ToolComponentProps & any> => {
+export const getToolComponent = (toolId: string): React.LazyExoticComponent<React.FC<ToolComponentProps & any>> | React.FC<ToolComponentProps & any> => {
   return TOOL_COMPONENTS[toolId as ToolId] || GenericToolUI;
 };

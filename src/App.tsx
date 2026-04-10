@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import * as Icons from 'lucide-react';
@@ -7,17 +7,18 @@ import { cn } from './lib/utils';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import ToolSearch from './components/ToolSearch';
-import Onboarding from './components/Onboarding';
 import Sidebar from './components/Sidebar';
 
-import Dashboard from './pages/Dashboard';
-import ToolPage from './pages/ToolPage';
-import About from './pages/About';
-import Blog from './pages/Blog';
-import Privacy from './pages/Privacy';
-import FAQ from './pages/FAQ';
-import Tools from './pages/Tools';
-import BlogPost from './pages/BlogPost';
+// Lazy load pages for better performance
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const ToolPage = lazy(() => import('./pages/ToolPage'));
+const About = lazy(() => import('./pages/About'));
+const Blog = lazy(() => import('./pages/Blog'));
+const Privacy = lazy(() => import('./pages/Privacy'));
+const FAQ = lazy(() => import('./pages/FAQ'));
+const Tools = lazy(() => import('./pages/Tools'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
+const Onboarding = lazy(() => import('./components/Onboarding'));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-[60vh]">
@@ -165,6 +166,8 @@ function AnimatedRoutes() {
       <Route path="/" element={<Dashboard />} />
       <Route path="/tools" element={<Tools />} />
       <Route path="/tool/:id" element={<ToolPage />} />
+      <Route path="/ai-seo-audit-tool" element={<ToolPage idOverride="seo-audit" />} />
+      <Route path="/keyword-research-tool" element={<ToolPage idOverride="keyword-research" />} />
       <Route path="/about" element={<About />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="/blog/:id" element={<BlogPost />} />
@@ -221,13 +224,17 @@ export default function App() {
         </Helmet>
         <ThemeProvider>
           <Router>
-            <Onboarding />
+            <Suspense fallback={null}>
+              <Onboarding />
+            </Suspense>
             <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col transition-colors duration-300">
               <NavHeader />
               <div className="flex flex-1 relative">
                 <Sidebar />
                 <main className="flex-grow min-w-0">
-                  <AnimatedRoutes />
+                  <Suspense fallback={<PageLoader />}>
+                    <AnimatedRoutes />
+                  </Suspense>
                 </main>
               </div>
 

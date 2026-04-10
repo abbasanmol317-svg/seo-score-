@@ -34,19 +34,23 @@ export default function ToolSearch({ className, onSelect, autoFocus, isMobile: i
   }, []);
 
   useEffect(() => {
-    if (query.trim().length > 0) {
-      const filtered = TOOLS.filter(tool => 
-        tool.name.toLowerCase().includes(query.toLowerCase()) ||
-        tool.category.toLowerCase().includes(query.toLowerCase()) ||
-        tool.description.toLowerCase().includes(query.toLowerCase())
-      ).slice(0, 8);
-      setResults(filtered);
-      setIsOpen(true);
-    } else {
-      setResults([]);
-      setIsOpen(false);
-    }
-    setSelectedIndex(-1);
+    const timer = setTimeout(() => {
+      if (query.trim().length > 0) {
+        const filtered = TOOLS.filter(tool => 
+          tool.name.toLowerCase().includes(query.toLowerCase()) ||
+          tool.category.toLowerCase().includes(query.toLowerCase()) ||
+          tool.description.toLowerCase().includes(query.toLowerCase())
+        ).slice(0, 8);
+        setResults(filtered);
+        setIsOpen(true);
+      } else {
+        setResults([]);
+        setIsOpen(false);
+      }
+      setSelectedIndex(-1);
+    }, 200);
+
+    return () => clearTimeout(timer);
   }, [query]);
 
   useEffect(() => {
