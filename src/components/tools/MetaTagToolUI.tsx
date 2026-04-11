@@ -41,6 +41,7 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
   const descMatch = result.match(/## 📝 Meta Description\n(.*?)(?=\n##|$)/s);
   const boostedMatch = result.match(/## 🚀 High-CTR "Boosted" Versions?\n(.*?)(?=\n##|$)/s);
   const ctrMatch = result.match(/## 📈 CTR Analysis & Suggestions\n(.*?)(?=\n##|$)/s);
+  const descAuditMatch = result.match(/### 📝 Meta Description Audit\n(.*?)(?=\n##|$)/s);
   const codeMatch = result.match(/## 💻 Code Snippet\n```(?:html)?\n([\s\S]*?)\n```/s);
 
   const title = titleMatch ? titleMatch[1].replace(/\[GOOD\]|\[AVERAGE\]|\[POOR\]/g, '').trim() : '';
@@ -70,6 +71,7 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
   }).filter(v => v.title || v.description);
 
   const ctrAnalysis = ctrMatch ? ctrMatch[1].trim() : '';
+  const descAudit = descAuditMatch ? descAuditMatch[1].trim() : '';
   const codeSnippet = codeMatch ? codeMatch[1].trim() : '';
 
   // Google Search Preview Truncation
@@ -78,6 +80,44 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
   const [previewMode, setPreviewMode] = React.useState<'desktop' | 'mobile'>('desktop');
   const [siteName, setSiteName] = React.useState('SEO Score Suite');
   const [siteUrl, setSiteUrl] = React.useState('https://seo-score-suite.com');
+
+  // Product Schema Fields
+  const [showProductFields, setShowProductFields] = React.useState(false);
+  const [productName, setProductName] = React.useState('');
+  const [productPrice, setProductPrice] = React.useState('');
+  const [productCurrency, setProductCurrency] = React.useState('USD');
+  const [productRating, setProductRating] = React.useState('5');
+  const [productReviews, setProductReviews] = React.useState('10');
+
+  const handleRunMeta = () => {
+    let finalInput = input;
+    if (showProductFields && productName) {
+      finalInput = `${input}\n\nProduct Details:\n- Name: ${productName}\n- Price: ${productPrice} ${productCurrency}\n- Rating: ${productRating}/5\n- Reviews: ${productReviews}`;
+    }
+    handleRun(finalInput);
+  };
+
+  const schemaMatch = result.match(/## 🛠️ Schema Markup \(JSON-LD\)\n.*?\n```json\n([\s\S]*?)\n```/s);
+  const schemaSnippet = schemaMatch ? schemaMatch[1].trim() : '';
+
+  const [copiedCode, setCopiedCode] = React.useState(false);
+  const [copiedSchema, setCopiedSchema] = React.useState(false);
+
+  const handleCopyCode = () => {
+    if (codeSnippet) {
+      navigator.clipboard.writeText(codeSnippet);
+      setCopiedCode(true);
+      setTimeout(() => setCopiedCode(false), 2000);
+    }
+  };
+
+  const handleCopySchema = () => {
+    if (schemaSnippet) {
+      navigator.clipboard.writeText(schemaSnippet);
+      setCopiedSchema(true);
+      setTimeout(() => setCopiedSchema(false), 2000);
+    }
+  };
 
   const currentTitle = showBoosted && variations.length > 0 
     ? variations[selectedVariation]?.title || title 
@@ -89,27 +129,112 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
   const previewTitle = currentTitle.length > 60 ? currentTitle.substring(0, 57) + '...' : currentTitle;
   const previewDescription = currentDescription.length > 160 ? currentDescription.substring(0, 157) + '...' : currentDescription;
 
-  const [copiedCode, setCopiedCode] = React.useState(false);
-
-  const handleCopyCode = () => {
-    if (codeSnippet) {
-      navigator.clipboard.writeText(codeSnippet);
-      setCopiedCode(true);
-      setTimeout(() => setCopiedCode(false), 2000);
-    }
-  };
-
   return (
     <ToolLayout
       inputSection={
-        <ToolInput
-          tool={tool}
-          input={input}
-          setInput={setInput}
-          handleRun={handleRun}
-          handleClear={handleClear}
-          loading={loading}
-        />
+        <div className="space-y-6">
+          <ToolInput
+            tool={tool}
+            input={input}
+            setInput={setInput}
+            handleRun={handleRunMeta}
+            handleClear={handleClear}
+            loading={loading}
+          />
+          
+          <div className="bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 sm:p-6">
+            <button 
+              onClick={() => setShowProductFields(!showProductFields)}
+              className="flex items-center justify-between w-full group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-lg">
+                  <Icons.ShoppingBag size={18} />
+                </div>
+                <div className="text-left">
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Product Schema Details</h4>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-black">Optional • Boost Rich Snippets</p>
+                </div>
+              </div>
+              <div className={cn(
+                "p-1.5 rounded-lg transition-all",
+                showProductFields ? "bg-amber-600 text-white" : "bg-slate-200 dark:bg-slate-700 text-slate-500"
+              )}>
+                {showProductFields ? <Icons.ChevronUp size={16} /> : <Icons.ChevronDown size={16} />}
+              </div>
+            </button>
+
+            {showProductFields && (
+              <motion.div 
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                className="pt-6 space-y-4"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Product Name</label>
+                    <input 
+                      type="text"
+                      value={productName}
+                      onChange={(e) => setProductName(e.target.value)}
+                      placeholder="e.g. Premium Running Shoes"
+                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Price</label>
+                      <input 
+                        type="number"
+                        value={productPrice}
+                        onChange={(e) => setProductPrice(e.target.value)}
+                        placeholder="99.99"
+                        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Currency</label>
+                      <select 
+                        value={productCurrency}
+                        onChange={(e) => setProductCurrency(e.target.value)}
+                        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
+                      >
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="GBP">GBP (£)</option>
+                        <option value="INR">INR (₹)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Rating (1-5)</label>
+                    <input 
+                      type="number"
+                      min="1"
+                      max="5"
+                      step="0.1"
+                      value={productRating}
+                      onChange={(e) => setProductRating(e.target.value)}
+                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Review Count</label>
+                    <input 
+                      type="number"
+                      value={productReviews}
+                      onChange={(e) => setProductReviews(e.target.value)}
+                      placeholder="128"
+                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </div>
+        </div>
       }
       loading={loading}
       loadingSection={
@@ -356,6 +481,62 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                     {!ctrAnalysis.includes('-') && !ctrAnalysis.includes('*') && !/^\d\./.test(ctrAnalysis) && (
                       <p className="text-xs leading-relaxed">{ctrAnalysis}</p>
                     )}
+                  </div>
+                </div>
+              )}
+
+              {descAudit && (
+                <div className="mt-8 p-6 bg-emerald-50/50 dark:bg-emerald-900/20 rounded-2xl border border-emerald-100 dark:border-emerald-800/50">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-1.5 bg-emerald-600 rounded-lg text-white">
+                      <Icons.FileText size={16} />
+                    </div>
+                    <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Meta Description Audit</h4>
+                  </div>
+                  <div className="prose prose-sm dark:prose-invert max-w-none text-slate-600 dark:text-slate-400">
+                    <div className="grid grid-cols-1 gap-4">
+                      {descAudit.split('\n').filter(line => line.trim().startsWith('-') || line.trim().startsWith('*') || /^\d\./.test(line.trim())).map((item, i) => (
+                        <div key={i} className="flex gap-3 p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                          <div className="mt-1 text-emerald-600 dark:text-emerald-400">
+                            <Icons.CheckCircle2 size={14} />
+                          </div>
+                          <p className="text-xs font-medium leading-relaxed">
+                            {item.replace(/^[-*]\s*|^\d\.\s*/, '')}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                    {!descAudit.includes('-') && !descAudit.includes('*') && !/^\d\./.test(descAudit) && (
+                      <p className="text-xs leading-relaxed">{descAudit}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+              
+              {schemaSnippet && (
+                <div className="mt-8 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-1.5 bg-amber-600 rounded-lg text-white">
+                        <Icons.Code2 size={16} />
+                      </div>
+                      <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">JSON-LD Schema Markup</h4>
+                    </div>
+                    <button
+                      onClick={handleCopySchema}
+                      className={cn(
+                        "px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5",
+                        copiedSchema ? "bg-emerald-500 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
+                      )}
+                    >
+                      {copiedSchema ? <Icons.Check size={12} /> : <Icons.Copy size={12} />}
+                      {copiedSchema ? "Copied!" : "Copy Schema"}
+                    </button>
+                  </div>
+                  <div className="p-4 bg-slate-900 dark:bg-black rounded-2xl border border-slate-800 overflow-hidden">
+                    <pre className="text-[10px] sm:text-xs font-mono text-emerald-400 overflow-x-auto leading-relaxed">
+                      <code>{schemaSnippet}</code>
+                    </pre>
                   </div>
                 </div>
               )}

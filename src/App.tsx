@@ -227,6 +227,35 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
   }
 }
 
+function GlobalMetaTags() {
+  const location = useLocation();
+  const siteUrl = 'https://seo-score-suite.com'; // Base URL
+  const canonicalUrl = `${siteUrl}${location.pathname === '/' ? '' : location.pathname}`;
+  const title = "SEO Score Suite: Best Free AI SEO Tools for 2026";
+  const description = "Boost your rankings with 20+ free AI SEO tools. Get technical audits, keyword research, and content fixes instantly.";
+  const ogImage = `${siteUrl}/og-image.png`; // Assuming an OG image exists or will be added
+
+  return (
+    <Helmet>
+      <link rel="canonical" href={canonicalUrl} />
+      
+      {/* Open Graph / Facebook */}
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content={canonicalUrl} />
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+      <meta property="og:image" content={ogImage} />
+
+      {/* Twitter */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:url" content={canonicalUrl} />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={ogImage} />
+    </Helmet>
+  );
+}
+
 export default function App() {
   return (
     <ErrorBoundary>
@@ -237,6 +266,7 @@ export default function App() {
         </Helmet>
         <ThemeProvider>
           <Router>
+            <GlobalMetaTags />
             <Suspense fallback={null}>
               <Onboarding />
             </Suspense>

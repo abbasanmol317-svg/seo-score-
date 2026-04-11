@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import * as Icons from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
@@ -37,6 +37,22 @@ export const ToolResult = React.memo(({
   showShareMenu,
   setShowShareMenu,
 }: ToolResultProps) => {
+  const isContentOptimizer = tool.id === 'content-optimizer';
+
+  const metrics = useMemo(() => {
+    if (!isContentOptimizer || !result) return null;
+
+    const readabilityMatch = result.match(/Score:\s*(\d+)/i) || result.match(/Readability Score:\s*(\d+)/i);
+    const statusMatch = result.match(/\[(GOOD|AVERAGE|POOR)\]/i);
+    const keywordDensityMatch = result.match(/Density:\s*\[?([\d.]+%?)\]?/i) || result.match(/Keyword Density:\s*([\d.]+%?)/i);
+
+    return {
+      readability: readabilityMatch ? parseInt(readabilityMatch[1]) : null,
+      status: statusMatch ? statusMatch[1].toUpperCase() as 'GOOD' | 'AVERAGE' | 'POOR' : null,
+      density: keywordDensityMatch ? keywordDensityMatch[1] : null,
+    };
+  }, [isContentOptimizer, result]);
+
   return (
     <div ref={reportRef} className={cn("space-y-8 print:space-y-4", isGeneratingPDF && "p-12 bg-white dark:bg-slate-900")}>
       {isGeneratingPDF && (
@@ -159,6 +175,52 @@ export const ToolResult = React.memo(({
           </button>
         </div>
       </div>
+
+      {metrics && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+        >
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col items-center text-center group hover:border-indigo-200 dark:hover:border-indigo-900 transition-all">
+            <div className="p-3 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-2xl mb-4 group-hover:scale-110 transition-transform">
+              <Icons.BookOpen size={24} />
+            </div>
+            <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Readability</p>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white">{metrics.readability || 'N/A'}<span className="text-sm text-slate-400">/100</span></h3>
+            <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full mt-4 overflow-hidden">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${metrics.readability || 0}%` }}
+                className="h-full bg-indigo-600 rounded-full"
+              />
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col items-center text-center group hover:border-emerald-200 dark:hover:border-emerald-900 transition-all">
+            <div className="p-3 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-2xl mb-4 group-hover:scale-110 transition-transform">
+              <Icons.ShieldCheck size={24} />
+            </div>
+            <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">SEO Status</p>
+            <h3 className={cn(
+              "text-2xl font-black uppercase tracking-tight",
+              metrics.status === 'GOOD' ? "text-emerald-600" : metrics.status === 'AVERAGE' ? "text-amber-600" : "text-rose-600"
+            )}>
+              {metrics.status || 'PENDING'}
+            </h3>
+            <p className="text-[10px] text-slate-500 mt-2 font-medium">Overall Content Health</p>
+          </div>
+
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col items-center text-center group hover:border-amber-200 dark:hover:border-amber-900 transition-all">
+            <div className="p-3 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-2xl mb-4 group-hover:scale-110 transition-transform">
+              <Icons.Target size={24} />
+            </div>
+            <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Keyword Density</p>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white">{metrics.density || 'N/A'}</h3>
+            <p className="text-[10px] text-slate-500 mt-2 font-medium">Primary Keyword Focus</p>
+          </div>
+        </motion.div>
+      )}
 
       {result.split(/(?=## )/g).filter(s => s.trim()).map((section, index) => {
         const isHeader = section.startsWith('## ');

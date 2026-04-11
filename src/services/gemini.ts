@@ -298,13 +298,15 @@ export const TOOLS: Tool[] = [
     prompt: `Analyze this content for SEO.
     Format as a Content Audit with these sections:
     ## ✍️ Readability Score
-    (Out of 100)
+    Score: [0-100]
     
     ## 🚦 SEO Content Status
     [GOOD], [AVERAGE], or [POOR]
     
     ## 🔑 Keyword Usage Analysis
-    (Density and placement)
+    - Primary Keyword: [Keyword]
+    - Density: [X.X%]
+    - Placement: [Details]
     
     ## 🛠️ Rewrite Suggestions
     (Specific parts to improve)
@@ -369,14 +371,14 @@ export const TOOLS: Tool[] = [
     - 10 Technical SEO Mistakes You're Probably Making (blog-2)
     - The Future of Voice Search Optimization (blog-3)
     
-    Format each recommendation as follows:
-    - [Contextual Anchor Text] -> [Tool ID or Blog ID] | [Brief Reason] | [Source Sentence with the anchor text highlighted using **bold**]
+    Format each suggestion as:
+    '[Contextual Anchor Text] -> [Tool ID or Blog ID] | [Brief Reason] | [Source Sentence with anchor text bolded]'
     
     Example:
-    - "technical SEO audit" -> seo-audit | Use this to identify the underlying technical issues mentioned in the second paragraph. | "Before you publish, run a **technical SEO audit** to ensure your site is healthy."
-    - "YouTube SEO guide" -> blog-15 | Provide users with a beginner-friendly tutorial on video optimization. | "If you're new to video, check out our **YouTube SEO guide** for tips."
-    - "SEO resources" -> resources | Direct users to our comprehensive list of AI SEO tools and guides. | "For more information, check out our curated list of **SEO resources**."
-    - "Website SEO Guide" -> blog-22 | Offer a complete roadmap for ranking websites in 2026. | "To master the basics, read our comprehensive **Website SEO Guide**."`,
+    'technical SEO audit' -> seo-audit | Use this to identify the underlying technical issues mentioned in the second paragraph. | Before you publish, run a **technical SEO audit** to ensure your site is healthy.
+    'YouTube SEO guide' -> blog-15 | Provide users with a beginner-friendly tutorial on video optimization. | If you're new to video, check out our **YouTube SEO guide** for tips.
+    'SEO resources' -> resources | Direct users to our comprehensive list of AI SEO tools and guides. | For more information, check out our curated list of **SEO resources**.
+    'Website SEO Guide' -> blog-22 | Offer a complete roadmap for ranking websites in 2026. | To master the basics, read our comprehensive **Website SEO Guide**.`,
     placeholder: 'Paste your content or enter URL to optimize (e.g., "Our mission is...")'
   },
   {
@@ -404,7 +406,7 @@ export const TOOLS: Tool[] = [
   {
     id: 'meta-tag',
     name: 'Meta Tag Generator',
-    description: 'Generate SEO-friendly meta tags.',
+    description: 'Generate high-CTR meta tags with advanced SERP previews and real-time SEO analysis to boost rankings.',
     category: 'Generators',
     icon: 'ScrollText',
     keywords: 'code,meta,tags',
@@ -459,11 +461,14 @@ export const TOOLS: Tool[] = [
     - **Micro-Copy Improvement:** Suggest small tweaks to the CTA to make it feel more personal or urgent (e.g., changing "Learn More" to "Discover Your Potential").
     
     ### 📝 Meta Description Audit
-    - **Length & Truncation:** (Analyze if it fits the 150-160 char limit and avoids truncation)
-    - **Clarity & Intent:** (Does it clearly state the page's purpose and align with the user's search intent?)
-    - **Keyword Alignment:** (Is the primary keyword naturally integrated to bold in SERPs?)
-    - **CTA Effectiveness:** (How strong is the closing hook?)
-    - **Refined Version:** (Provide a perfectly balanced meta description based on this audit)
+    - **Clarity & Intent Analysis:** (Analyze how well the description matches the user's likely search intent. Is it too vague or highly specific?)
+    - **Keyword Integration Strategy:** (Evaluate how the primary keyword is integrated. Suggest better placement, such as front-loading, to ensure it bolds in search results.)
+    - **CTA Effectiveness & Hook:** (Analyze the closing hook. Provide 2-3 specific, high-conversion CTA alternatives that create urgency or curiosity.)
+    - **Actionable Refinements:**
+        1. (Specific suggestion for clarity and readability)
+        2. (Specific suggestion for keyword optimization and SERP visibility)
+        3. (Specific suggestion for CTA improvement and click-through intent)
+    - **Optimized Master Version:** (Provide a final, perfectly balanced meta description that incorporates all the above improvements within 155 characters.)
     
     ### 📏 Length & Visibility Check
     - **Title:** (Is it between 50-60 characters?)
@@ -473,9 +478,34 @@ export const TOOLS: Tool[] = [
     ## 🔗 OG & Social Tags
     (For social media)
     
+    ## 🛠️ Schema Markup (JSON-LD)
+    If product details (name, price, reviews) are provided, generate a valid Product JSON-LD schema. Otherwise, generate a WebPage or Article schema based on the content.
+    
+    \u0060\u0060\u0060json
+    {
+      "@context": "https://schema.org",
+      "@type": "...",
+      ...
+    }
+    \u0060\u0060\u0060
+    
     ## 💻 Code Snippet
-    (Ready to copy-paste HTML tags)`,
-    placeholder: 'Enter page title and description (e.g., "Best Running Shoes - A guide to top footwear")'
+    \u0060\u0060\u0060html
+    <!-- Standard Meta Tags -->
+    <title>...</title>
+    <meta name="description" content="...">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="...">
+    <meta property="og:description" content="...">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="...">
+    <meta name="twitter:description" content="...">
+    \u0060\u0060\u0060 `,
+    placeholder: 'Enter page title, description, and optional product details like price/reviews (e.g., "Best Running Shoes - $99, 4.5 stars")'
   },
   {
     id: 'serp-preview',

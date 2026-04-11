@@ -7,7 +7,7 @@ export interface ToolComponentProps {
   result: string;
   loading: boolean;
   error: string;
-  handleRun: () => void;
+  handleRun: (overrideInput?: string) => void;
   handleClear: () => void;
   handleCopy: () => void;
   handlePrint: () => void;

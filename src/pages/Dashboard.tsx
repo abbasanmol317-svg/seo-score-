@@ -179,18 +179,78 @@ export default function Dashboard() {
           );
         })}
       </div>
-      <div className="mt-16 sm:mt-24 p-6 sm:p-10 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[3rem] border border-slate-200 dark:border-slate-800 shadow-sm">
-        <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-4 sm:mb-6 tracking-tight">Revolutionizing Search Optimization with Gemini AI</h2>
-        <div className="prose prose-sm sm:prose-base dark:prose-invert max-w-none text-slate-600 dark:text-slate-400 leading-relaxed">
-          <p>
-            The SEO landscape of 2026 demands more than just keyword stuffing; it requires semantic understanding and technical excellence. **SEO Score Suite** is built to bridge the gap between complex data and actionable strategy. By utilizing the latest Google Gemini AI models, we provide a level of analysis that was previously only available through expensive enterprise software.
-          </p>
-          <p>
-            Our platform is designed for digital marketers, business owners, and SEO specialists who need fast, reliable, and data-driven insights. From **Core Web Vitals** audits to **Semantic Content Optimization**, each of our {TOOLS.length}+ tools is fine-tuned to help you navigate the ever-evolving search engine algorithms.
-          </p>
-          <p>
-            Whether you're performing a deep-dive technical audit or looking for high-intent keyword opportunities, SEO Score Suite provides the precision you need to dominate the SERPs. We are committed to democratizing professional SEO tools, ensuring that every website has the chance to rank where it belongs: at the top.
-          </p>
+      <div className="mt-16 sm:mt-24 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 p-6 sm:p-10 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[3rem] border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
+            <Icons.Globe size={240} />
+          </div>
+          <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white mb-6 tracking-tight relative z-10">
+            Mastering Search in <span className="text-indigo-600">2026</span>
+          </h2>
+          <div className="prose prose-sm sm:prose-base dark:prose-invert max-w-none text-slate-600 dark:text-slate-400 leading-relaxed relative z-10">
+            <p className="text-base sm:text-lg font-medium mb-6">
+              The SEO landscape has shifted from simple pattern matching to deep semantic understanding. Today, search engines like Google prioritize **User Intent**, **Topical Authority**, and **Technical Excellence** above all else.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+              <div className="space-y-3">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Icons.Cpu size={18} className="text-indigo-600" />
+                  AI-First Optimization
+                </h3>
+                <p className="text-sm">
+                  We use Google Gemini AI to simulate how search crawlers perceive your content. This allows us to identify semantic gaps that traditional tools miss, ensuring your content is both human-friendly and machine-readable.
+                </p>
+              </div>
+              <div className="space-y-3">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Icons.Zap size={18} className="text-indigo-600" />
+                  Technical Foundations
+                </h3>
+                <p className="text-sm">
+                  From **Core Web Vitals** to **Schema Markup**, our technical tools ensure your site's infrastructure is built for speed and clarity. A fast site isn't just a luxury; it's a core ranking factor in 2026.
+                </p>
+              </div>
+            </div>
+            <p className="mt-8 italic border-l-4 border-indigo-600 pl-4 py-2 bg-indigo-50/50 dark:bg-indigo-900/20 rounded-r-xl">
+              "SEO is no longer about tricking the algorithm; it's about providing the most comprehensive and accessible answer to the user's query."
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-6">
+          <div className="p-8 bg-indigo-600 text-white rounded-[2.5rem] shadow-xl relative overflow-hidden group">
+            <div className="absolute -bottom-4 -right-4 p-4 opacity-20 group-hover:scale-110 transition-transform duration-500">
+              <Icons.ShieldCheck size={120} />
+            </div>
+            <h3 className="text-xl font-bold mb-3">Privacy First</h3>
+            <p className="text-indigo-100 text-sm leading-relaxed mb-6">
+              Your data is yours. We don't store your URLs or keywords. Our analysis happens in real-time, ensuring your competitive intelligence stays private.
+            </p>
+            <Link to="/privacy" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest hover:underline">
+              Learn More <Icons.ArrowRight size={14} />
+            </Link>
+          </div>
+
+          <div className="p-8 bg-slate-900 text-white rounded-[2.5rem] shadow-xl border border-slate-800">
+            <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
+              <Icons.TrendingUp size={20} className="text-indigo-400" />
+              SEO Trends
+            </h3>
+            <ul className="space-y-4">
+              <li className="flex gap-3 items-start">
+                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0" />
+                <p className="text-xs text-slate-400"><span className="text-white font-bold">Semantic Search:</span> Focus on topics, not just keywords.</p>
+              </li>
+              <li className="flex gap-3 items-start">
+                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0" />
+                <p className="text-xs text-slate-400"><span className="text-white font-bold">Video SEO:</span> YouTube is the 2nd largest search engine.</p>
+              </li>
+              <li className="flex gap-3 items-start">
+                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0" />
+                <p className="text-xs text-slate-400"><span className="text-white font-bold">Local Intent:</span> 46% of all searches have local intent.</p>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

@@ -6,6 +6,9 @@ import { Helmet } from 'react-helmet-async';
 import { TOOLS, runTool, ToolId } from '../services/gemini';
 import { cn } from '../lib/utils';
 import { getToolComponent } from '../components/tools/toolRegistry';
+import { getDeepContent } from '../constants/toolContent';
+
+import { getErrorMessage } from '../lib/seo-utils';
 
 export default function ToolPage({ idOverride }: { idOverride?: string }) {
   const { id: paramId } = useParams<{ id: string }>();
@@ -211,8 +214,9 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
 
   if (!tool) return null;
 
-  const handleRun = async () => {
-    if (!input.trim()) return;
+  const handleRun = async (overrideInput?: string) => {
+    const finalInput = typeof overrideInput === 'string' ? overrideInput : input;
+    if (!finalInput.trim()) return;
     setLoading(true);
     setError('');
     setResult('');
@@ -220,14 +224,14 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
     setFeedbackText('');
     setIsFeedbackSubmitted(false);
     try {
-      const output = await runTool(tool.id as ToolId, input);
+      const output = await runTool(tool.id as ToolId, finalInput);
       setResult(output || 'No response from AI.');
       
       const newEntry = {
         id: Date.now(),
         toolId: tool.id,
         toolName: tool.name,
-        input: input.substring(0, 100),
+        input: finalInput.substring(0, 100),
         timestamp: new Date().toISOString(),
       };
       try {
@@ -240,7 +244,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
         console.warn('Failed to save to history:', e);
       }
     } catch (err: any) {
-      setError(err.message || 'An error occurred while processing your request.');
+      setError(getErrorMessage(err.message || ''));
     } finally {
       setLoading(false);
     }
@@ -368,11 +372,12 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
 
   const relatedBlogs = getRelatedBlogs(tool.id);
 
-  // Dynamic Related Tools based on thematic similarity
+  // Dynamic Related Tools based on thematic similarity, user activity, and generated results
   const relatedTools = useMemo(() => {
     if (!tool) return [];
     
     const currentKeywords = tool.keywords.split(',').map(k => k.trim().toLowerCase());
+    const usedToolIds = new Set(history.map(h => h.toolId));
     
     return TOOLS
       .filter(t => t.id !== tool.id)
@@ -387,21 +392,62 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
         // 2. Same category (structural link)
         if (t.category === tool.category) score += 10;
         
-        // 3. Description overlap (semantic link)
+        // 3. Specific hardcoded relations for better UX
+        const relations: Record<string, string[]> = {
+          'meta-tag': ['on-page-checklist', 'content-optimizer', 'serp-preview'],
+          'keyword-research': ['content-optimizer', 'seo-audit', 'website-seo'],
+          'site-speed': ['mobile-friendly', 'seo-audit', 'broken-links'],
+          'seo-audit': ['on-page-checklist', 'technical-seo', 'backlinks'],
+        };
+        if (relations[tool.id]?.includes(t.id)) score += 20;
+
+        // 4. Result-based context (NEW: Analysis of generated output)
+        let isSmartSuggestion = false;
+        if (result && tool.id === 'meta-tag') {
+          const lowerResult = result.toLowerCase();
+          // If result mentions content quality or length, suggest Content Optimizer
+          if (lowerResult.includes('content') || lowerResult.includes('length') || lowerResult.includes('readability')) {
+            if (t.id === 'content-optimizer') {
+              score += 15;
+              isSmartSuggestion = true;
+            }
+          }
+          // If result mentions keywords or targeting, suggest Keyword Research
+          if (lowerResult.includes('keyword') || lowerResult.includes('target') || lowerResult.includes('niche')) {
+            if (t.id === 'keyword-research') {
+              score += 15;
+              isSmartSuggestion = true;
+            }
+          }
+          // If result mentions structure or checklist, suggest On-Page Checklist
+          if (lowerResult.includes('structure') || lowerResult.includes('checklist') || lowerResult.includes('h1')) {
+            if (t.id === 'on-page-checklist') {
+              score += 15;
+              isSmartSuggestion = true;
+            }
+          }
+        }
+
+        // 5. Description overlap (semantic link)
         const currentDesc = tool.description.toLowerCase();
         const targetDesc = t.description.toLowerCase();
         const descWords = currentDesc.split(/\s+/).filter(w => w.length > 3);
         const sharedDescWords = descWords.filter(w => targetDesc.includes(w));
         score += sharedDescWords.length * 1;
 
-        // 4. Add a tiny bit of randomness for variety among equal scores
+        // 6. User activity boost: If user has NOT used this tool yet, encourage discovery
+        if (!usedToolIds.has(t.id)) score += 5;
+        
+        // 7. Add a tiny bit of randomness for variety
         score += Math.random();
         
-        return { ...t, score };
+        return { ...t, score, isSmartSuggestion };
       })
       .sort((a, b) => b.score - a.score)
       .slice(0, 3);
-  }, [tool]);
+  }, [tool, history, result]);
+
+  const hasHistory = history.length > 0;
 
   // Optimized Meta Tags
   let seoTitle = `${tool.name}: Best Free AI ${tool.category} Tool (2026)`;
@@ -419,6 +465,8 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
   }
 
   const seoKeywords = `${tool.name.toLowerCase()}, free SEO tool, AI SEO analysis, ${tool.category.toLowerCase()}, search engine optimization, Google Gemini AI, SEO Score Suite, technical SEO`;
+
+  const deepContent = getDeepContent(tool.category);
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
@@ -487,83 +535,179 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
           </Suspense>
 
           <div className={cn("mt-12 sm:mt-20 space-y-12", isGeneratingPDF && "hidden")}>
-            <section className="p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-4">Advanced Analysis with {tool.name}</h2>
-              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
-                {tool.description} This specialized tool is part of the **SEO Score Suite**, engineered to provide deep technical and semantic insights into your digital presence. By utilizing **Google Gemini AI**, we move beyond simple pattern matching to provide a holistic view of your SEO health, mimicking the analysis of a senior SEO strategist.
-              </p>
+            <section className="p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
+                <Icons.BookOpen size={200} />
+              </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                    <Icons.Settings className="text-indigo-600" size={18} />
-                    How it Works
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Simply enter your data (URL, keyword, or content) and our AI will scan it against hundreds of ranking factors. It analyzes semantic relevance, technical structure, and user experience patterns to generate a comprehensive report with actionable steps.
+              <div className="relative z-10">
+                <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white mb-6 tracking-tight">
+                  The Definitive Guide to <span className="text-indigo-600">{tool.name}</span>
+                </h2>
+                
+                <div className="prose prose-slate dark:prose-invert max-w-none">
+                  <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-8 font-medium">
+                    {deepContent.about}
                   </p>
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                    <Icons.TrendingUp className="text-indigo-600" size={18} />
-                    Key Benefits
-                  </h3>
-                  <ul className="text-sm text-slate-600 dark:text-slate-400 space-y-2">
-                    <li className="flex items-start gap-2">
-                      <Icons.CircleCheckBig className="text-emerald-500 shrink-0 mt-0.5" size={14} />
-                      Professional-grade AI analysis for free.
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Icons.CircleCheckBig className="text-emerald-500 shrink-0 mt-0.5" size={14} />
-                      Actionable recommendations to improve rankings.
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Icons.CircleCheckBig className="text-emerald-500 shrink-0 mt-0.5" size={14} />
-                      Real-time insights based on 2026 SEO trends.
-                    </li>
-                  </ul>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12">
+                    <div className="space-y-6">
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                        <div className="p-2 bg-indigo-600 rounded-lg text-white shadow-lg">
+                          <Icons.ListChecks size={20} />
+                        </div>
+                        Step-by-Step Optimization
+                      </h3>
+                      <ul className="space-y-4">
+                        {deepContent.howTo.map((step, idx) => (
+                          <li key={idx} className="flex gap-4 group">
+                            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xs font-black border border-indigo-100 dark:border-indigo-800 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                              {idx + 1}
+                            </span>
+                            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                              {step}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="space-y-6">
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                        <div className="p-2 bg-emerald-600 rounded-lg text-white shadow-lg">
+                          <Icons.Lightbulb size={20} />
+                        </div>
+                        Expert Pro Tips
+                      </h3>
+                      <div className="grid grid-cols-1 gap-4">
+                        {deepContent.proTips.map((tip, idx) => (
+                          <div key={idx} className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all">
+                            <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-1">Pro Tip #{idx + 1}</p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                              {tip}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-12 p-6 sm:p-8 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-[2rem] border border-indigo-100/50 dark:border-indigo-800/30">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-3">
+                      <Icons.Info size={20} className="text-indigo-600" />
+                      Why This Matters for Your SEO
+                    </h3>
+                    <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed italic">
+                      "{deepContent.whyItMatters}"
+                    </p>
+                  </div>
                 </div>
               </div>
             </section>
 
-            <section className="p-6 sm:p-8 bg-slate-50 dark:bg-slate-900/50 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800">
-              <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4">Why Choose Our AI-Driven {tool.name}?</h2>
-              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
-                In the search landscape of 2026, authority is built on technical precision and content relevance. Our {tool.name} tool is specifically tuned to identify the subtle signals that modern search engines prioritize. Whether you're optimizing for **Core Web Vitals** or **Semantic Search**, this tool provides the data-driven edge you need to outperform your competition.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                {relatedBlogs.map(blog => (
-                  <Link key={blog.id} to={`/blog/${blog.id}`} className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
-                    <Icons.BookOpen size={14} /> {blog.title}
-                  </Link>
+            <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-2 p-6 sm:p-8 bg-slate-900 text-white rounded-[2.5rem] shadow-2xl relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-700">
+                  <Icons.Zap size={160} fill="currentColor" />
+                </div>
+                <div className="relative z-10">
+                  <h2 className="text-2xl font-black mb-4 tracking-tight">Ready to Dominate the SERPs?</h2>
+                  <p className="text-slate-300 mb-8 leading-relaxed max-w-md">
+                    Our AI-driven tools are updated weekly to reflect the latest changes in Google's search algorithms. Start your journey to the first page today.
+                  </p>
+                  <div className="flex flex-wrap gap-4">
+                    {relatedBlogs.slice(0, 2).map(blog => (
+                      <Link key={blog.id} to={`/blog/${blog.id}`} className="px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl text-sm font-bold transition-all flex items-center gap-2">
+                        <Icons.BookOpen size={16} /> {blog.title}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="p-6 sm:p-8 bg-indigo-600 text-white rounded-[2.5rem] shadow-xl flex flex-col justify-center items-center text-center">
+                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
+                  <Icons.ShieldCheck size={32} />
+                </div>
+                <h3 className="text-xl font-bold mb-2">100% Free & Secure</h3>
+                <p className="text-indigo-100 text-sm leading-relaxed">
+                  No signup required. No hidden fees. Just pure SEO power for your business.
+                </p>
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                <Icons.CircleHelp className="text-indigo-600" size={24} />
+                Frequently Asked Questions
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {deepContent.faqs.map((faq, idx) => (
+                  <div key={idx} className="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all">
+                    <h3 className="text-sm font-black text-slate-900 dark:text-white mb-2 flex items-start gap-2">
+                      <span className="text-indigo-600">Q:</span> {faq.q}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                      {faq.a}
+                    </p>
+                  </div>
                 ))}
               </div>
             </section>
           </div>
 
           <div className={cn("mt-12 sm:mt-20 pt-8 sm:pt-12 border-t border-slate-200 dark:border-slate-800", isGeneratingPDF && "hidden")}>
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-6 sm:mb-8 flex items-center gap-3">
-              <Icons.Sparkles className="text-indigo-600" size={20} />
-              Related SEO Tools
-            </h2>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+              <div>
+                <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-3 tracking-tight">
+                  <Icons.Sparkles className="text-indigo-600" size={24} />
+                  {hasHistory ? "Recommended for You" : "Related SEO Tools"}
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
+                  {hasHistory 
+                    ? "Based on your recent activity and current optimization needs." 
+                    : "Powerful tools to complement your current SEO workflow."}
+                </p>
+              </div>
+              <Link to="/" className="text-xs font-black text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 uppercase tracking-widest">
+                View All Tools <Icons.ArrowRight size={14} />
+              </Link>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {relatedTools.map(relatedTool => {
+              {relatedTools.map((relatedTool, idx) => {
                 const RelatedIcon = (Icons as any)[relatedTool.icon] || Icons.Zap;
                 return (
                   <Link
                     key={relatedTool.id}
                     to={`/tool/${relatedTool.id}`}
-                    className="group bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all hover:shadow-lg flex flex-col h-full"
+                    className="group bg-white dark:bg-slate-900 p-6 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all hover:shadow-2xl hover:shadow-indigo-500/5 flex flex-col h-full relative overflow-hidden"
                   >
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="p-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                        <RelatedIcon size={20} />
-                      </div>
-                      <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{relatedTool.name}</h3>
+                    <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500 group-hover:scale-150 group-hover:-rotate-12">
+                      <RelatedIcon size={60} />
                     </div>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-6 flex-grow">{relatedTool.description}</p>
-                    <div className="flex items-center gap-2 text-xs font-bold text-indigo-600 dark:text-indigo-400 group-hover:translate-x-1 transition-transform">
-                      Try Tool <Icons.ArrowRight size={14} />
+
+                    <div className="flex items-center gap-4 mb-4 relative z-10">
+                      <div className="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl text-slate-600 dark:text-slate-400 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+                        <RelatedIcon size={18} strokeWidth={2.5} />
+                      </div>
+                      <div className="flex flex-col">
+                        <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-tight">
+                          {relatedTool.name}
+                        </h3>
+                        {(relatedTool as any).isSmartSuggestion && (
+                          <span className="text-[8px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mt-0.5 flex items-center gap-1">
+                            <Icons.Zap size={8} fill="currentColor" /> Smart Suggestion
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 mb-6 flex-grow relative z-10">
+                      {relatedTool.description}
+                    </p>
+                    <div className="mt-auto flex items-center justify-between text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest relative z-10">
+                      <span>Try Now</span>
+                      <Icons.ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
                     </div>
                   </Link>
                 );

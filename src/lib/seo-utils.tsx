@@ -45,39 +45,110 @@ export const renderMarkdownContent = (content: string) => {
   });
 };
 
+export const getErrorMessage = (error: string) => {
+  const err = error.toLowerCase();
+  
+  if (err.includes('429') || err.includes('quota')) {
+    return 'Rate Limit Exceeded: You\'ve sent too many requests in a short time.';
+  }
+  
+  if (err.includes('503') || err.includes('overloaded') || err.includes('service unavailable')) {
+    return 'Server Overloaded: The AI service is temporarily busy handling other requests.';
+  }
+
+  if (err.includes('400') || err.includes('bad request')) {
+    return 'Invalid Request: The input provided might be too long or in an incorrect format.';
+  }
+
+  if (err.includes('401') || err.includes('403') || err.includes('unauthorized') || err.includes('forbidden')) {
+    return 'Authentication Error: There is an issue with the API key configuration.';
+  }
+
+  if (err.includes('404') || err.includes('not found')) {
+    return 'Resource Not Found: The requested AI model or endpoint could not be reached.';
+  }
+
+  if (err.includes('500') || err.includes('internal server error')) {
+    return 'Server Error: Something went wrong on the AI provider\'s end.';
+  }
+
+  if (err.includes('504') || err.includes('gateway timeout') || err.includes('deadline')) {
+    return 'Request Timeout: The server took too long to respond. Please try a simpler input.';
+  }
+
+  if (err.includes('safety') || err.includes('blocked') || err.includes('candidate')) {
+    return 'Content Blocked: Our safety filters flagged the input or generated output.';
+  }
+
+  if (err.includes('fetch') || err.includes('network') || err.includes('failed to fetch')) {
+    return 'Network Error: We couldn\'t connect to the AI service. Please check your connection.';
+  }
+
+  return 'Unexpected Error: Something went wrong while processing your request.';
+};
+
 export const getErrorSolutions = (error: string) => {
   const err = error.toLowerCase();
-  if (err.includes('api key') || err.includes('unauthorized')) {
+  
+  if (err.includes('api key') || err.includes('unauthorized') || err.includes('forbidden') || err.includes('401') || err.includes('403')) {
     return [
-      'Check if your Gemini API key is correctly configured in the environment.',
-      'Ensure the API key has the necessary permissions for the requested model.',
-      'Try refreshing the page and running the analysis again.'
+      'Verify your Gemini API key is correctly set in the project settings.',
+      'Check for extra spaces or hidden characters in your API key.',
+      'Ensure your API key is active and has not been revoked in Google AI Studio.'
     ];
   }
-  if (err.includes('rate limit') || err.includes('429') || err.includes('quota') || err.includes('503') || err.includes('overloaded')) {
+  
+  if (err.includes('rate limit') || err.includes('429') || err.includes('quota')) {
     return [
-      'The AI service is currently experiencing high demand or quota limits.',
-      'This is usually temporary (503). Wait for 10-20 seconds and try again.',
-      'If you are on a free tier, you might have hit the rate limit.'
+      'Wait for 60 seconds and try again; the quota usually resets quickly.',
+      'If you are using a free tier key, consider upgrading for higher limits.',
+      'Reduce the frequency of your requests to stay within the allowed limits.'
     ];
   }
-  if (err.includes('network') || err.includes('fetch') || err.includes('failed to fetch')) {
+
+  if (err.includes('503') || err.includes('overloaded') || err.includes('service unavailable') || err.includes('500')) {
     return [
-      'Check your internet connection.',
-      'Ensure that no firewall or browser extension is blocking the request.',
-      'Try again in a few moments.'
+      'Wait for 10-20 seconds and click "Try Again".',
+      'The server might be temporarily down; try again in a few minutes.',
+      'Check the Google Cloud Status page if the problem persists.'
     ];
   }
-  if (err.includes('safety') || err.includes('blocked')) {
+
+  if (err.includes('400') || err.includes('bad request') || err.includes('invalid')) {
     return [
-      'The AI blocked the response due to safety filters.',
-      'Try rephrasing your input to be more neutral.',
-      'Ensure your input doesn\'t contain sensitive or prohibited content.'
+      'Try shortening your input text or providing a simpler URL.',
+      'Ensure the input doesn\'t contain any unusual special characters.',
+      'If you are analyzing a URL, make sure it is a valid, public website.'
     ];
   }
+
+  if (err.includes('network') || err.includes('fetch') || err.includes('failed to fetch') || err.includes('connection')) {
+    return [
+      'Check your internet connection and ensure you are online.',
+      'Disable any VPN or proxy that might be interfering with the request.',
+      'Check if a browser extension (like an ad-blocker) is blocking the API call.'
+    ];
+  }
+
+  if (err.includes('safety') || err.includes('blocked') || err.includes('candidate')) {
+    return [
+      'Try rephrasing your input to be more professional and neutral.',
+      'Ensure the URL or text provided doesn\'t contain prohibited terms.',
+      'Avoid topics that might trigger safety filters (e.g., medical advice, sensitive personal info).'
+    ];
+  }
+
+  if (err.includes('timeout') || err.includes('504') || err.includes('deadline')) {
+    return [
+      'The server is taking too long. Try again with a smaller amount of data.',
+      'Check if the website you are analyzing is slow or currently down.',
+      'Try again in a few moments when traffic might be lower.'
+    ];
+  }
+
   return [
-    'Double-check your input for any typos or invalid URLs.',
-    'Try simplifying your request or providing more specific details.',
-    'If the issue persists, please try again in a few moments.'
+    'Double-check your input for any typos or invalid characters.',
+    'Try refreshing the page to reset the application state.',
+    'If the issue persists, wait a few minutes and try again.'
   ];
 };
