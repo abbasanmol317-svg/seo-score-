@@ -18,6 +18,8 @@ const Privacy = lazy(() => import('./pages/Privacy'));
 const FAQ = lazy(() => import('./pages/FAQ'));
 const Tools = lazy(() => import('./pages/Tools'));
 const BlogPost = lazy(() => import('./pages/BlogPost'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const PowerPage = lazy(() => import('./pages/PowerPage'));
 const Onboarding = lazy(() => import('./components/Onboarding'));
 
 const PageLoader = () => (
@@ -173,7 +175,8 @@ function AnimatedRoutes() {
       <Route path="/blog/:id" element={<BlogPost />} />
       <Route path="/privacy" element={<Privacy />} />
       <Route path="/faq" element={<FAQ />} />
-      <Route path="*" element={<Dashboard />} />
+      <Route path="/resources" element={<PowerPage />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
@@ -254,6 +257,7 @@ export default function App() {
                         <Link to="/about" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About Us</Link>
                         <Link to="/blog" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Blog</Link>
                         <Link to="/faq" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">FAQ</Link>
+                        <Link to="/resources" className="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline transition-colors">Resources</Link>
                       </div>
                       <div className="flex flex-col gap-3">
                         <h4 className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Legal</h4>
