@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Suspense } from 'react';
+import React, { useState, useEffect, useRef, Suspense, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import * as Icons from 'lucide-react';
@@ -88,6 +88,66 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
         ];
 
         const toolSpecific: Record<string, string[]> = {
+          'website-seo': [
+            'Scanning domain authority...',
+            'Analyzing on-page elements...',
+            'Checking meta tag consistency...',
+            'Evaluating content depth...'
+          ],
+          'youtube-seo': [
+            'Analyzing video metadata...',
+            'Checking tag relevance...',
+            'Evaluating title CTR potential...',
+            'Scanning description for keywords...'
+          ],
+          'site-speed': [
+            'Simulating page load...',
+            'Measuring Core Web Vitals...',
+            'Identifying render-blocking assets...',
+            'Analyzing image compression...'
+          ],
+          'broken-links': [
+            'Crawling site structure...',
+            'Verifying HTTP status codes...',
+            'Mapping internal link paths...',
+            'Identifying 404 error patterns...'
+          ],
+          'seo-audit': [
+            'Running comprehensive audit...',
+            'Checking technical health...',
+            'Evaluating mobile-first readiness...',
+            'Scanning for security protocols...'
+          ],
+          'mobile-friendly': [
+            'Simulating mobile viewport...',
+            'Checking touch target sizes...',
+            'Analyzing font legibility...',
+            'Testing responsive breakpoints...'
+          ],
+          'meta-tag': [
+            'Generating high-CTR titles...',
+            'Optimizing meta descriptions...',
+            'Checking character limits...',
+            'Analyzing keyword prominence...'
+          ],
+          'schema-markup': [
+            'Identifying entity relationships...',
+            'Generating JSON-LD code...',
+            'Validating structured data...',
+            'Mapping rich snippet opportunities...'
+          ],
+          'image-alt-text': [
+            'Analyzing image context...',
+            'Generating descriptive alt text...',
+            'Checking accessibility standards...',
+            'Optimizing for image search...'
+          ],
+          'sitemap-robots': [
+            'Mapping site architecture...',
+            'Generating XML sitemap...',
+            'Configuring robots.txt rules...',
+            'Optimizing crawl instructions...'
+          ],
           'keyword-research': [
             'Extracting high-volume keywords...',
             'Analyzing search volume trends...',
@@ -263,6 +323,86 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
   const ToolComponent = getToolComponent(tool.id);
   const IconComponent = (Icons as any)[tool.icon] || Icons.CircleHelp;
 
+  // Tool-specific blog links
+  const getRelatedBlogs = (tid: string) => {
+    const blogs: Record<string, { id: number, title: string }[]> = {
+      'youtube-seo': [
+        { id: 15, title: 'YouTube SEO Tool for Beginners Free' },
+        { id: 16, title: 'AI YouTube Keyword Research Tool 2026' },
+        { id: 17, title: 'Video SEO Optimization Tool Free' }
+      ],
+      'site-speed': [
+        { id: 18, title: 'Website Speed Test AI Tool Free' }
+      ],
+      'backlinks': [
+        { id: 19, title: 'Free Backlink Checker Tool with Report' }
+      ],
+      'broken-links': [
+        { id: 20, title: 'Broken Link Checker Tool Online Free' },
+        { id: 21, title: 'AI Tool to Fix 404 Errors Website' }
+      ],
+      'keyword-research': [
+        { id: 6, title: 'SEO Analysis Tools: Finding Low Competition Keywords' },
+        { id: 16, title: 'AI YouTube Keyword Research Tool 2026' }
+      ],
+      'seo-audit': [
+        { id: 7, title: 'AI Website SEO Audit Tool Free Online' },
+        { id: 10, title: 'Instant SEO Audit Tool Without Signup' },
+        { id: 14, title: 'Technical SEO Audit Tool Online Free' },
+        { id: 5, title: 'How to do SEO Audit Step by Step' }
+      ],
+      'website-seo': [
+        { id: 8, title: 'Free SEO Analysis Tool for Beginners 2026' },
+        { id: 9, title: 'Website SEO Checker with AI Report' },
+        { id: 11, title: 'AI SEO Analyzer for Small Businesses' }
+      ],
+      'bulk-url': [
+        { id: 12, title: 'Bulk URL SEO Checker Tool Free' }
+      ]
+    };
+    return blogs[tid] || [
+      { id: 4, title: 'Best Free AI SEO Tools 2026' },
+      { id: 5, title: 'Step-by-Step SEO Audit Guide' }
+    ];
+  };
+
+  const relatedBlogs = getRelatedBlogs(tool.id);
+
+  // Dynamic Related Tools based on thematic similarity
+  const relatedTools = useMemo(() => {
+    if (!tool) return [];
+    
+    const currentKeywords = tool.keywords.split(',').map(k => k.trim().toLowerCase());
+    
+    return TOOLS
+      .filter(t => t.id !== tool.id)
+      .map(t => {
+        const toolKeywords = t.keywords.split(',').map(k => k.trim().toLowerCase());
+        const sharedKeywords = toolKeywords.filter(k => currentKeywords.includes(k));
+        
+        // Scoring logic:
+        // 1. Shared keywords (strong thematic link)
+        let score = sharedKeywords.length * 5;
+        
+        // 2. Same category (structural link)
+        if (t.category === tool.category) score += 10;
+        
+        // 3. Description overlap (semantic link)
+        const currentDesc = tool.description.toLowerCase();
+        const targetDesc = t.description.toLowerCase();
+        const descWords = currentDesc.split(/\s+/).filter(w => w.length > 3);
+        const sharedDescWords = descWords.filter(w => targetDesc.includes(w));
+        score += sharedDescWords.length * 1;
+
+        // 4. Add a tiny bit of randomness for variety among equal scores
+        score += Math.random();
+        
+        return { ...t, score };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
+  }, [tool]);
+
   // Optimized Meta Tags
   let seoTitle = `${tool.name}: Best Free AI ${tool.category} Tool (2026)`;
   let seoDescription = `Optimize your site with our free ${tool.name}. Get deep AI insights and actionable SEO fixes powered by Gemini. Run your free analysis now!`;
@@ -392,12 +532,11 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                 In the search landscape of 2026, authority is built on technical precision and content relevance. Our {tool.name} tool is specifically tuned to identify the subtle signals that modern search engines prioritize. Whether you're optimizing for **Core Web Vitals** or **Semantic Search**, this tool provides the data-driven edge you need to outperform your competition.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Link to="/blog/4" className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
-                  <Icons.BookOpen size={14} /> Best Free AI SEO Tools 2026
-                </Link>
-                <Link to="/blog/5" className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
-                  <Icons.BookOpen size={14} /> Step-by-Step SEO Audit Guide
-                </Link>
+                {relatedBlogs.map(blog => (
+                  <Link key={blog.id} to={`/blog/${blog.id}`} className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
+                    <Icons.BookOpen size={14} /> {blog.title}
+                  </Link>
+                ))}
               </div>
             </section>
           </div>
@@ -408,27 +547,27 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
               Related SEO Tools
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {TOOLS
-                .filter(t => t.id !== tool.id && (t.category === tool.category || Math.random() > 0.7))
-                .slice(0, 3)
-                .map(relatedTool => {
-                  const RelatedIcon = (Icons as any)[relatedTool.icon] || Icons.Zap;
-                  return (
-                    <Link
-                      key={relatedTool.id}
-                      to={`/tool/${relatedTool.id}`}
-                      className="group bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all hover:shadow-lg"
-                    >
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="p-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                          <RelatedIcon size={20} />
-                        </div>
-                        <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{relatedTool.name}</h3>
+              {relatedTools.map(relatedTool => {
+                const RelatedIcon = (Icons as any)[relatedTool.icon] || Icons.Zap;
+                return (
+                  <Link
+                    key={relatedTool.id}
+                    to={`/tool/${relatedTool.id}`}
+                    className="group bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all hover:shadow-lg flex flex-col h-full"
+                  >
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="p-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <RelatedIcon size={20} />
                       </div>
-                      <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2">{relatedTool.description}</p>
-                    </Link>
-                  );
-                })}
+                      <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{relatedTool.name}</h3>
+                    </div>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-6 flex-grow">{relatedTool.description}</p>
+                    <div className="flex items-center gap-2 text-xs font-bold text-indigo-600 dark:text-indigo-400 group-hover:translate-x-1 transition-transform">
+                      Try Tool <Icons.ArrowRight size={14} />
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </div>

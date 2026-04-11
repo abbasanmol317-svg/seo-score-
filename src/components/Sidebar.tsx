@@ -109,7 +109,10 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
             return (
               <div key={category} className="relative group/category">
                 <button
+                  id={`category-btn-${category.replace(/\s+/g, '-').toLowerCase()}`}
                   onClick={() => toggleCategory(category)}
+                  aria-expanded={isExpanded}
+                  aria-controls={`category-panel-${category.replace(/\s+/g, '-').toLowerCase()}`}
                   className={cn(
                     "w-full flex items-center p-3 rounded-xl transition-all group",
                     isCollapsed && !isMobile ? "justify-center" : "justify-between",
@@ -144,6 +147,9 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
                 <AnimatePresence initial={false}>
                   {isExpanded && (!isCollapsed || isMobile) && (
                     <motion.div
+                      id={`category-panel-${category.replace(/\s+/g, '-').toLowerCase()}`}
+                      role="region"
+                      aria-labelledby={`category-btn-${category.replace(/\s+/g, '-').toLowerCase()}`}
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}

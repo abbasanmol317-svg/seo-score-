@@ -273,6 +273,8 @@ export const ToolResult = React.memo(({
                         const getToolPath = (tid: string) => {
                           if (tid === 'seo-audit') return '/ai-seo-audit-tool';
                           if (tid === 'keyword-research') return '/keyword-research-tool';
+                          if (tid === 'resources') return '/resources';
+                          if (tid.startsWith('blog-')) return `/blog/${tid.replace('blog-', '')}`;
                           return `/tool/${tid}`;
                         };
 
@@ -284,10 +286,20 @@ export const ToolResult = React.memo(({
                                   <Icons.Link size={16} />
                                 </div>
                                 <div>
-                                  <p className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">Use anchor text: <span className="text-indigo-600 dark:text-indigo-400">"{anchorText}"</span></p>
-                                  {reason && (
-                                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{reason}</p>
-                                  )}
+                                  <p className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                                    Anchor: <span className="text-indigo-600 dark:text-indigo-400">"{anchorText}"</span>
+                                  </p>
+                                  <div className="flex flex-wrap items-center gap-2 mt-1">
+                                    <span className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-[10px] font-mono text-slate-500 dark:text-slate-400 rounded border border-slate-200 dark:border-slate-700">
+                                      Target ID: {toolId}
+                                    </span>
+                                    {reason && (
+                                      <>
+                                        <span className="text-slate-300 dark:text-slate-700">•</span>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400">{reason}</p>
+                                      </>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                               <Link 

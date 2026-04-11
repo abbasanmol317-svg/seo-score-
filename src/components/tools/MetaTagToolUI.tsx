@@ -75,6 +75,9 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
   // Google Search Preview Truncation
   const [showBoosted, setShowBoosted] = React.useState(false);
   const [selectedVariation, setSelectedVariation] = React.useState(0);
+  const [previewMode, setPreviewMode] = React.useState<'desktop' | 'mobile'>('desktop');
+  const [siteName, setSiteName] = React.useState('SEO Score Suite');
+  const [siteUrl, setSiteUrl] = React.useState('https://seo-score-suite.com');
 
   const currentTitle = showBoosted && variations.length > 0 
     ? variations[selectedVariation]?.title || title 
@@ -159,6 +162,33 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4">
+                  <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                    <button
+                      onClick={() => setPreviewMode('desktop')}
+                      className={cn(
+                        "px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5",
+                        previewMode === 'desktop' 
+                          ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
+                          : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
+                      )}
+                    >
+                      <Icons.Monitor size={12} />
+                      Desktop
+                    </button>
+                    <button
+                      onClick={() => setPreviewMode('mobile')}
+                      className={cn(
+                        "px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5",
+                        previewMode === 'mobile' 
+                          ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
+                          : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
+                      )}
+                    >
+                      <Icons.Smartphone size={12} />
+                      Mobile
+                    </button>
+                  </div>
+
                   {variations.length > 0 && (
                     <div className="flex flex-col gap-2">
                       <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
@@ -222,9 +252,45 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-slate-800 p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-slate-100 dark:border-slate-700 shadow-inner relative overflow-hidden">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Site Name</label>
+                  <div className="relative">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                      <Icons.Type size={14} />
+                    </div>
+                    <input 
+                      type="text"
+                      value={siteName}
+                      onChange={(e) => setSiteName(e.target.value)}
+                      placeholder="e.g. My Awesome Site"
+                      className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl py-2 pl-9 pr-4 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all dark:text-slate-200"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Site URL</label>
+                  <div className="relative">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                      <Icons.Link size={14} />
+                    </div>
+                    <input 
+                      type="text"
+                      value={siteUrl}
+                      onChange={(e) => setSiteUrl(e.target.value)}
+                      placeholder="e.g. https://example.com"
+                      className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl py-2 pl-9 pr-4 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all dark:text-slate-200"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className={cn(
+                "bg-white dark:bg-slate-800 p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-slate-100 dark:border-slate-700 shadow-inner relative overflow-hidden transition-all duration-500",
+                previewMode === 'mobile' ? "max-w-[400px] mx-auto" : "w-full"
+              )}>
                 <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
-                  <Icons.Globe size={120} />
+                  {previewMode === 'desktop' ? <Icons.Monitor size={120} /> : <Icons.Smartphone size={120} />}
                 </div>
 
                 {showBoosted && (
@@ -236,15 +302,31 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                   </div>
                 )}
                 
-                <div className="max-w-[600px] relative z-10">
-                  <div className="text-[#1a0dab] dark:text-[#8ab4f8] text-xl font-medium hover:underline cursor-pointer mb-1">
+                <div className="relative z-10 font-sans">
+                  {/* Modern Google SERP Header */}
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-7 h-7 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-400 shrink-0 overflow-hidden">
+                      <Icons.Globe size={14} />
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-sm font-medium text-slate-900 dark:text-slate-200 truncate">{siteName}</span>
+                        <Icons.ChevronDown size={12} className="text-slate-400" />
+                      </div>
+                      <span className="text-xs text-slate-500 dark:text-slate-400 truncate">{siteUrl}</span>
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <div className={cn(
+                    "text-[#1a0dab] dark:text-[#8ab4f8] hover:underline cursor-pointer mb-1 leading-tight",
+                    previewMode === 'mobile' ? "text-lg" : "text-xl font-medium"
+                  )}>
                     {previewTitle || 'Your Page Title Will Appear Here'}
                   </div>
-                  <div className="text-[#006621] dark:text-[#34a853] text-sm mb-1 flex items-center gap-1">
-                    <span>https://yourwebsite.com</span>
-                    <Icons.ChevronDown size={12} />
-                  </div>
-                  <div className="text-[#4d5156] dark:text-[#bdc1c6] text-sm leading-relaxed">
+
+                  {/* Description */}
+                  <div className="text-[#4d5156] dark:text-[#bdc1c6] text-sm leading-relaxed line-clamp-2">
                     {previewDescription || 'Your meta description will appear here. It should be between 150-160 characters for optimal visibility in search results.'}
                   </div>
                 </div>

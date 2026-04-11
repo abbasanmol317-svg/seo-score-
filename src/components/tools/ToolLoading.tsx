@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import * as Icons from 'lucide-react';
+import { cn } from '../../lib/utils';
 
 interface ToolLoadingProps {
   loadingMessage: string;
@@ -34,18 +35,55 @@ export const ToolLoading: React.FC<ToolLoadingProps> = ({
         <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white mb-3 sm:mb-4 tracking-tight">
           {loadingMessage}
         </h2>
-        <div className="w-full max-w-md mx-auto mb-6 sm:mb-8">
-          <div className="h-1.5 sm:h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200 dark:border-slate-700 shadow-inner">
+        <div className="w-full max-w-md mx-auto mb-8 sm:mb-12">
+          <div className="relative h-3 sm:h-4 bg-slate-100 dark:bg-slate-800 rounded-full p-1 border border-slate-200 dark:border-slate-700 shadow-inner overflow-hidden">
             <motion.div 
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.5 }}
-              className="h-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600"
-            />
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="h-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-full relative"
+            >
+              {/* Glow Effect */}
+              <div className="absolute inset-0 blur-sm bg-inherit opacity-50" />
+              {/* Moving Highlight */}
+              <motion.div 
+                animate={{ x: ['-100%', '200%'] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                className="absolute top-0 bottom-0 w-20 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+              />
+            </motion.div>
           </div>
-          <div className="flex justify-between mt-2 px-1">
-            <span className="text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Progress</span>
-            <span className="text-[9px] sm:text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">{Math.round(progress)}%</span>
+
+          {/* Dynamic Milestones */}
+          <div className="grid grid-cols-4 mt-6 gap-2">
+            {[
+              { label: 'Fetching', threshold: 20, icon: Icons.Database },
+              { label: 'Analyzing', threshold: 45, icon: Icons.Search },
+              { label: 'Processing', threshold: 70, icon: Icons.Cpu },
+              { label: 'Finalizing', threshold: 90, icon: Icons.FileCheck }
+            ].map((m, i) => (
+              <div key={i} className="flex flex-col items-center gap-1.5">
+                <div className={cn(
+                  "p-2 rounded-xl transition-all duration-500",
+                  progress >= m.threshold 
+                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40 scale-110" 
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600"
+                )}>
+                  <m.icon size={14} className="sm:w-4 sm:h-4" />
+                </div>
+                <span className={cn(
+                  "text-[8px] sm:text-[10px] font-black uppercase tracking-tighter sm:tracking-widest transition-colors duration-500",
+                  progress >= m.threshold ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400 dark:text-slate-600"
+                )}>
+                  {m.label}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex justify-between mt-6 px-1">
+            <span className="text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">System Status</span>
+            <span className="text-[9px] sm:text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">{Math.round(progress)}% Complete</span>
           </div>
         </div>
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium max-w-sm mx-auto leading-relaxed mb-6 sm:mb-8">

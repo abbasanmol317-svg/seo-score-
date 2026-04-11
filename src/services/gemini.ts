@@ -313,14 +313,16 @@ export const TOOLS: Tool[] = [
     (Is it optimized?)
     
     ## 🔗 Internal Linking Opportunities
-    Identify strategic opportunities to link to other tools within the "SEO Score Suite" to enhance user value and SEO.
+    Identify strategic opportunities to link to other tools and blog posts within the "SEO Score Suite" to enhance user value, topical authority, and internal SEO structure.
     
-    Guidelines for Anchor Text:
+    Guidelines for Internal Linking:
     - **Contextual Relevance**: The anchor text MUST be a phrase that naturally occurs or fits perfectly within the flow of the content.
     - **Descriptive & Natural**: Avoid generic phrases like "click here" or "use this tool". Instead, use descriptive keywords like "technical SEO audit", "mobile responsiveness", or "keyword difficulty analysis".
     - **Variety**: Use a mix of exact match and partial match keywords for the anchor text.
+    - **Natural Integration**: The link should feel like a helpful resource for the reader, not a forced advertisement.
+    - **Topical Authority**: Link to blog posts that provide deeper educational value on the topic being discussed.
     
-    Target Tools List:
+    Target Tools & Resources List:
     - Website SEO Analysis (website-seo)
     - YouTube SEO Checker (youtube-seo)
     - Site Speed Checker (site-speed)
@@ -340,13 +342,41 @@ export const TOOLS: Tool[] = [
     - Sitemap & Robots.txt Generator (sitemap-robots)
     - Compare Websites (compare-websites)
     - AI SEO Chat (seo-chat)
+    - SEO Dashboard & History (seo-dashboard)
+    - SEO Resources & Guides (resources)
+    
+    Target Blog Posts List:
+    - Website SEO: Complete Guide to Ranking Your Website in 2026 (blog-22)
+    - YouTube SEO Tool for Beginners Free (blog-15)
+    - AI YouTube Keyword Research Tool 2026 (blog-16)
+    - Video SEO Optimization Tool Free (blog-17)
+    - Website Speed Test AI Tool Free (blog-18)
+    - Free Backlink Checker Tool with Report (blog-19)
+    - Broken Link Checker Tool Online Free (blog-20)
+    - AI Tool to Fix 404 Errors Website (blog-21)
+    - Finding Low Competition Keywords (blog-6)
+    - AI Website SEO Audit Tool Free Online (blog-7)
+    - Free SEO Analysis Tool for Beginners 2026 (blog-8)
+    - Website SEO Checker with AI Report (blog-9)
+    - Instant SEO Audit Tool Without Signup (blog-10)
+    - AI SEO Analyzer for Small Businesses (blog-11)
+    - Bulk URL SEO Checker Tool Free (blog-12)
+    - Website Health Checker SEO Free Tool (blog-13)
+    - Technical SEO Audit Tool Online Free (blog-14)
+    - Best Free AI SEO Tools 2026 (blog-4)
+    - How to do SEO Audit Step by Step (blog-5)
+    - How Gemini AI is Revolutionizing SEO Analysis (blog-1)
+    - 10 Technical SEO Mistakes You're Probably Making (blog-2)
+    - The Future of Voice Search Optimization (blog-3)
     
     Format each recommendation as follows:
-    - [Contextual Anchor Text] -> [Tool ID] | [Brief Reason] | [Source Sentence with the anchor text highlighted using **bold**]
+    - [Contextual Anchor Text] -> [Tool ID or Blog ID] | [Brief Reason] | [Source Sentence with the anchor text highlighted using **bold**]
     
     Example:
     - "technical SEO audit" -> seo-audit | Use this to identify the underlying technical issues mentioned in the second paragraph. | "Before you publish, run a **technical SEO audit** to ensure your site is healthy."
-    - "optimize your meta tags" -> meta-tag | This will help improve the click-through rate for the titles you've drafted. | "You should **optimize your meta tags** to improve visibility in search results."`,
+    - "YouTube SEO guide" -> blog-15 | Provide users with a beginner-friendly tutorial on video optimization. | "If you're new to video, check out our **YouTube SEO guide** for tips."
+    - "SEO resources" -> resources | Direct users to our comprehensive list of AI SEO tools and guides. | "For more information, check out our curated list of **SEO resources**."
+    - "Website SEO Guide" -> blog-22 | Offer a complete roadmap for ranking websites in 2026. | "To master the basics, read our comprehensive **Website SEO Guide**."`,
     placeholder: 'Paste your content or enter URL to optimize (e.g., "Our mission is...")'
   },
   {
@@ -388,7 +418,7 @@ export const TOOLS: Tool[] = [
     (Optimized Description) [GOOD]
     
     ## 🚀 High-CTR "Boosted" Versions
-    Generate 3 distinct variations of high-CTR meta tags. Each variation should focus on a different psychological trigger (e.g., Urgency, Curiosity, Benefit-Driven).
+    Generate 5 distinct variations of high-CTR meta tags. Each variation should focus on a different psychological trigger (e.g., Urgency, Curiosity, Benefit-Driven, Scarcity, Social Proof).
     
     ### Variation 1: [Trigger Name]
     - Title: (Aggressive power words, high-impact)
@@ -402,11 +432,43 @@ export const TOOLS: Tool[] = [
     - Title: (Aggressive power words, high-impact)
     - Description: (Clear CTA, emotional trigger)
 
+    ### Variation 4: [Trigger Name]
+    - Title: (Aggressive power words, high-impact)
+    - Description: (Clear CTA, emotional trigger)
+
+    ### Variation 5: [Trigger Name]
+    - Title: (Aggressive power words, high-impact)
+    - Description: (Clear CTA, emotional trigger)
+
     ## 📈 CTR Analysis & Suggestions
-    (Analyze the current meta tags if provided, otherwise analyze the generated ones. Suggest 3 specific improvements to increase click-through rates in Google Search results. Focus on:
-    1. Power Words: Suggest words that trigger emotion or urgency in both title and description.
-    2. Value Proposition: Ensure the title clearly communicates the unique benefit.
-    3. Call to Action: Suggest a clear next step in the description.)
+    Provide a granular, deep-dive analysis of the generated (or provided) meta tags with highly specific, actionable recommendations to maximize Click-Through Rate (CTR):
+    
+    ### ⚡ Power Word Optimization
+    - **Current Impact:** (Analyze the emotional weight of existing words. Are they "safe" or "magnetic"?)
+    - **Niche-Specific Power Words:** Suggest 5 specific "Power Words" tailored to this EXACT niche (e.g., for Finance: *Secure, Guaranteed*; for Health: *Proven, Natural*).
+    - **Placement Strategy:** Suggest where to place these words (front-loading vs. end-loading) for maximum visual impact in search results.
+    
+    ### 💎 Value Proposition Clarity
+    - **The 2-Second Test:** Does the Title Tag immediately answer "Why should I click this instead of the other 9 results?"
+    - **USP Refinement:** Identify the single strongest Unique Selling Point (USP) from the content and provide a "Value-First" Title rewrite that leads with that benefit.
+    - **Clarity vs. Cleverness:** Audit if the title is too "clever" at the expense of being clear to a searching user.
+    
+    ### 📣 Call-to-Action (CTA) Strategy
+    - **Psychological Trigger Audit:** Identify which trigger the current CTA uses (e.g., Fear of Missing Out, Desire for Gain, Curiosity).
+    - **High-Intent CTAs:** Provide 3 distinct, high-intent CTAs tailored to the user's stage in the funnel (e.g., "Compare Prices Now" for consideration, "Get Instant Access" for conversion).
+    - **Micro-Copy Improvement:** Suggest small tweaks to the CTA to make it feel more personal or urgent (e.g., changing "Learn More" to "Discover Your Potential").
+    
+    ### 📝 Meta Description Audit
+    - **Length & Truncation:** (Analyze if it fits the 150-160 char limit and avoids truncation)
+    - **Clarity & Intent:** (Does it clearly state the page's purpose and align with the user's search intent?)
+    - **Keyword Alignment:** (Is the primary keyword naturally integrated to bold in SERPs?)
+    - **CTA Effectiveness:** (How strong is the closing hook?)
+    - **Refined Version:** (Provide a perfectly balanced meta description based on this audit)
+    
+    ### 📏 Length & Visibility Check
+    - **Title:** (Is it between 50-60 characters?)
+    - **Description:** (Is it between 150-160 characters?)
+    - **Suggestion:** If truncated, provide a perfectly trimmed version that keeps the most important keywords at the front.
     
     ## 🔗 OG & Social Tags
     (For social media)
@@ -498,10 +560,10 @@ export const TOOLS: Tool[] = [
     (List of relevant keywords used in the alt text)
     
     ## 💡 Contextual Variations
-    Provide 3 distinct variations based on how the image is used:
-    - **Decorative:** (Used for purely aesthetic images, usually empty alt="" or very brief)
-    - **Informational:** (Describes the core content for users who need the information)
-    - **Functional:** (Describes the action if the image is a link or button)
+    Provide 3 distinct variations based on the specific use case of the image:
+    - **Decorative:** (For images that add no informational value. Output MUST be exactly alt="" with a brief explanation that this allows screen readers to skip the element.)
+    - **Informational:** (For images that convey a message or data. Provide a concise description that delivers the same information as the image itself.)
+    - **Functional:** (For images used as links or buttons. Describe the ACTION or DESTINATION, e.g., "Search", "Download Report", or "Go to Homepage".)
     
     ## 🚦 Implementation Status
     [GOOD]
