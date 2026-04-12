@@ -6,6 +6,7 @@ import { TOOLS } from './services/gemini';
 import { cn } from './lib/utils';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
+import { Analytics } from '@vercel/analytics/react';
 import ToolSearch from './components/ToolSearch';
 import Sidebar from './components/Sidebar';
 
@@ -259,6 +260,7 @@ function GlobalMetaTags() {
 export default function App() {
   return (
     <ErrorBoundary>
+      <Analytics />
       <HelmetProvider>
         <Helmet>
           <title>SEO Score Suite: Best Free AI SEO Tools for 2026 (20+ Tools)</title>
