@@ -235,6 +235,7 @@ export const ToolResult = React.memo(({
         const isTechnical = titleLower.includes('code') || titleLower.includes('snippet') || titleLower.includes('markup');
         const isLinking = titleLower.includes('linking') || titleLower.includes('internal');
         const isCoreWebVitals = titleLower.includes('core web vitals');
+        const isRelatedKeywords = titleLower.includes('related keywords');
         const isChecklist = titleLower.includes('checklist') || titleLower.includes('tasks') || titleLower.includes('fixes') || titleLower.includes('optimization') || titleLower.includes('structure') || titleLower.includes('tags');
 
         const getHeaderIcon = () => {
@@ -245,6 +246,7 @@ export const ToolResult = React.memo(({
           if (isFindings) return <Icons.Search className="text-emerald-500" size={22} />;
           if (isTechnical) return <Icons.Code className="text-purple-500" size={22} />;
           if (isLinking) return <Icons.Link className="text-blue-600" size={22} />;
+          if (isRelatedKeywords) return <Icons.Target className="text-amber-600" size={22} />;
           return <Icons.ChevronRight className="text-slate-400" size={22} />;
         };
 
@@ -256,6 +258,7 @@ export const ToolResult = React.memo(({
           if (isFindings) return "border-l-emerald-500";
           if (isTechnical) return "border-l-purple-500";
           if (isLinking) return "border-l-blue-600";
+          if (isRelatedKeywords) return "border-l-amber-600";
           return "border-l-slate-300";
         };
 

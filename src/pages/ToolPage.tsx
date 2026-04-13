@@ -9,6 +9,7 @@ import { getToolComponent } from '../components/tools/toolRegistry';
 import { getDeepContent } from '../constants/toolContent';
 
 import { getErrorMessage } from '../lib/seo-utils';
+import { BLOG_POSTS } from '../constants/blogData';
 
 export default function ToolPage({ idOverride }: { idOverride?: string }) {
   const { id: paramId } = useParams<{ id: string }>();
@@ -69,7 +70,11 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
     "Social signals may not be direct factors, but they drive traffic.",
     "Avoid duplicate content; use canonical tags where necessary.",
     "Optimize for 'Featured Snippets' by answering questions directly.",
-    "Local SEO is crucial for businesses with physical locations."
+    "Local SEO is crucial for businesses with physical locations.",
+    "Decorative images should have an empty alt attribute (alt=\"\") to avoid distracting screen readers.",
+    "Informational images need alt text that provides an equivalent experience to the visual content.",
+    "Functional images (like buttons) should have alt text describing the action, not the icon itself.",
+    "Avoid starting alt text with 'image of' or 'picture of'—it's redundant for screen readers."
   ];
 
   useEffect(() => {
@@ -327,52 +332,6 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
   const ToolComponent = getToolComponent(tool.id);
   const IconComponent = (Icons as any)[tool.icon] || Icons.CircleHelp;
 
-  // Tool-specific blog links
-  const getRelatedBlogs = (tid: string) => {
-    const blogs: Record<string, { id: number, title: string }[]> = {
-      'youtube-seo': [
-        { id: 15, title: 'YouTube SEO Tool for Beginners Free' },
-        { id: 16, title: 'AI YouTube Keyword Research Tool 2026' },
-        { id: 17, title: 'Video SEO Optimization Tool Free' }
-      ],
-      'site-speed': [
-        { id: 18, title: 'Website Speed Test AI Tool Free' }
-      ],
-      'backlinks': [
-        { id: 19, title: 'Free Backlink Checker Tool with Report' }
-      ],
-      'broken-links': [
-        { id: 20, title: 'Broken Link Checker Tool Online Free' },
-        { id: 21, title: 'AI Tool to Fix 404 Errors Website' }
-      ],
-      'keyword-research': [
-        { id: 6, title: 'SEO Analysis Tools: Finding Low Competition Keywords' },
-        { id: 16, title: 'AI YouTube Keyword Research Tool 2026' }
-      ],
-      'seo-audit': [
-        { id: 7, title: 'AI Website SEO Audit Tool Free Online' },
-        { id: 10, title: 'Instant SEO Audit Tool Without Signup' },
-        { id: 14, title: 'Technical SEO Audit Tool Online Free' },
-        { id: 5, title: 'How to do SEO Audit Step by Step' }
-      ],
-      'website-seo': [
-        { id: 8, title: 'Free SEO Analysis Tool for Beginners 2026' },
-        { id: 9, title: 'Website SEO Checker with AI Report' },
-        { id: 11, title: 'AI SEO Analyzer for Small Businesses' }
-      ],
-      'bulk-url': [
-        { id: 12, title: 'Bulk URL SEO Checker Tool Free' }
-      ]
-    };
-    return blogs[tid] || [
-      { id: 4, title: 'Best Free AI SEO Tools 2026' },
-      { id: 5, title: 'Step-by-Step SEO Audit Guide' }
-    ];
-  };
-
-  const relatedBlogs = getRelatedBlogs(tool.id);
-
-  // Dynamic Related Tools based on thematic similarity, user activity, and generated results
   const relatedTools = useMemo(() => {
     if (!tool) return [];
     
@@ -446,6 +405,51 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
       .sort((a, b) => b.score - a.score)
       .slice(0, 3);
   }, [tool, history, result]);
+
+  const relatedPosts = useMemo(() => {
+    if (!tool) return [];
+    const toolKeywords = tool.keywords.toLowerCase().split(',').map(k => k.trim());
+    const toolId = tool.id.toLowerCase();
+    const toolName = tool.name.toLowerCase();
+
+    return BLOG_POSTS.map(post => {
+      let score = 0;
+      const title = post.title.toLowerCase();
+      const excerpt = post.excerpt.toLowerCase();
+      const content = post.content.toLowerCase();
+      const category = post.category.toLowerCase();
+
+      // 1. Exact Tool Name match (Very strong)
+      if (title.includes(toolName)) score += 50;
+      if (excerpt.includes(toolName)) score += 30;
+
+      // 2. Tool ID match
+      const toolIdClean = toolId.replace('-', ' ');
+      if (title.includes(toolIdClean)) score += 40;
+      if (excerpt.includes(toolIdClean)) score += 25;
+
+      // 3. Keyword matches
+      toolKeywords.forEach(kw => {
+        if (kw === 'seo' || kw === 'ai') {
+          // Generic keywords get less score
+          if (title.includes(kw)) score += 2;
+          if (excerpt.includes(kw)) score += 1;
+        } else {
+          if (title.includes(kw)) score += 10;
+          if (excerpt.includes(kw)) score += 5;
+          if (category.includes(kw)) score += 5;
+        }
+      });
+
+      // 4. Content mentions the tool path
+      if (content.includes(`/tool/${toolId}`)) score += 20;
+
+      return { ...post, score };
+    })
+    .filter(post => post.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3);
+  }, [tool]);
 
   const hasHistory = history.length > 0;
 
@@ -534,6 +538,58 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
             />
           </Suspense>
 
+          {relatedPosts.length > 0 && (
+            <div className={cn("mt-12 sm:mt-16", isGeneratingPDF && "hidden")}>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-3 tracking-tight">
+                    <Icons.BookOpen className="text-indigo-600" size={24} />
+                    Suggested Reading
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
+                    Expert guides to help you master {tool?.name}.
+                  </p>
+                </div>
+                <Link to="/blog" className="text-xs font-black text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 uppercase tracking-widest">
+                  All Articles <Icons.ArrowRight size={14} />
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {relatedPosts.map((post) => (
+                  <Link
+                    key={post.id}
+                    to={`/blog/${post.id}`}
+                    className="group bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden hover:border-indigo-200 dark:hover:border-indigo-900 transition-all hover:shadow-xl flex flex-col"
+                  >
+                    <div className="p-5 flex flex-col flex-grow">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-[8px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest px-2 py-0.5 bg-indigo-50 dark:bg-indigo-900/30 rounded-full border border-indigo-100 dark:border-indigo-800">
+                          {post.category}
+                        </span>
+                        {(post as any).score > 40 && (
+                          <span className="flex items-center gap-1 text-[8px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+                            <Icons.Star size={8} fill="currentColor" /> Highly Relevant
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2">
+                        {post.title}
+                      </h3>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 mb-4 flex-grow">
+                        {post.excerpt}
+                      </p>
+                      <div className="flex items-center justify-between text-[10px] font-black text-slate-400 group-hover:text-indigo-600 transition-colors uppercase tracking-widest">
+                        <span>Read Article</span>
+                        <Icons.ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className={cn("mt-12 sm:mt-20 space-y-12", isGeneratingPDF && "hidden")}>
             <section className="p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
@@ -616,9 +672,9 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                     Our AI-driven tools are updated weekly to reflect the latest changes in Google's search algorithms. Start your journey to the first page today.
                   </p>
                   <div className="flex flex-wrap gap-4">
-                    {relatedBlogs.slice(0, 2).map(blog => (
-                      <Link key={blog.id} to={`/blog/${blog.id}`} className="px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl text-sm font-bold transition-all flex items-center gap-2">
-                        <Icons.BookOpen size={16} /> {blog.title}
+                    {relatedPosts.slice(0, 2).map(post => (
+                      <Link key={post.id} to={`/blog/${post.id}`} className="px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl text-sm font-bold transition-all flex items-center gap-2">
+                        <Icons.BookOpen size={16} /> {post.title}
                       </Link>
                     ))}
                   </div>
@@ -714,6 +770,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
               })}
             </div>
           </div>
+
         </div>
       </div>
     </div>

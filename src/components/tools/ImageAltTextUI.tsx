@@ -47,20 +47,45 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
     
     const variationsText = variationsMatch ? variationsMatch[1] : '';
     
-    const decorative = variationsText.match(/- \*\*Decorative:\*\* (.*?)(?=\n-|$)/s);
-    const informational = variationsText.match(/- \*\*Informational:\*\* (.*?)(?=\n-|$)/s);
-    const functional = variationsText.match(/- \*\*Functional:\*\* (.*?)(?=\n-|$)/s);
+    const parseVariation = (type: string) => {
+      const match = variationsText.match(new RegExp(`- \\*\\*${type}:\\*\\* (.*?)(?=\\n-|$)`, 's'));
+      if (!match) return { text: '', tip: '' };
+      
+      const fullText = match[1].trim();
+      const tipMatch = fullText.match(/\*\*SEO Tip\*\*:\s*(.*)/i);
+      
+      if (tipMatch) {
+        return {
+          text: fullText.replace(/\*\*SEO Tip\*\*:\s*.*/i, '').trim(),
+          tip: tipMatch[1].trim()
+        };
+      }
+      
+      return { text: fullText, tip: '' };
+    };
+
+    const bestPracticesMatch = text.match(/## 🛠️ Best Practices Applied\n(.*?)(?=\n##|$)/s);
 
     return {
       primary: primaryMatch ? primaryMatch[1].trim() : '',
-      decorative: decorative ? decorative[1].trim() : '',
-      informational: informational ? informational[1].trim() : '',
-      functional: functional ? functional[1].trim() : '',
+      decorative: parseVariation('Decorative'),
+      informational: parseVariation('Informational'),
+      functional: parseVariation('Functional'),
+      bestPractices: bestPracticesMatch ? bestPracticesMatch[1].trim() : '',
     };
   };
 
-  const variations = result ? getAltTextVariations(result) : { primary: '', decorative: '', informational: '', functional: '' };
-  const currentAltText = variations[selectedVariation] || variations.primary;
+  const variations = result ? getAltTextVariations(result) : { 
+    primary: '', 
+    decorative: { text: '', tip: '' }, 
+    informational: { text: '', tip: '' }, 
+    functional: { text: '', tip: '' }, 
+    bestPractices: '' 
+  };
+  
+  const currentAltText = typeof variations[selectedVariation] === 'object' 
+    ? (variations[selectedVariation] as any).text 
+    : variations[selectedVariation];
 
   const [expandedVariation, setExpandedVariation] = useState<string | null>('primary');
 
@@ -173,7 +198,10 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
               {/* Variations - Collapsible Sections */}
               {(['decorative', 'informational', 'functional'] as const).map((type) => {
                 const isExpanded = expandedVariation === type;
-                const content = variations[type];
+                const variationData = variations[type] as { text: string; tip: string };
+                const content = variationData.text;
+                const tip = variationData.tip;
+                
                 if (!content) return null;
 
                 const getIcon = () => {
@@ -183,9 +211,15 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
                 };
 
                 const getColor = () => {
-                  if (type === 'decorative') return "text-pink-500 bg-pink-50 dark:bg-pink-900/20";
-                  if (type === 'informational') return "text-blue-500 bg-blue-50 dark:bg-blue-900/20";
-                  return "text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20";
+                  if (type === 'decorative') return "text-pink-500 bg-pink-50 dark:bg-pink-900/20 border-pink-100 dark:border-pink-800";
+                  if (type === 'informational') return "text-blue-500 bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-800";
+                  return "text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-800";
+                };
+
+                const getBadge = () => {
+                  if (type === 'decorative') return "WCAG: Null Alt";
+                  if (type === 'informational') return "SEO: Keyword Rich";
+                  return "UX: Action Oriented";
                 };
 
                 return (
@@ -195,12 +229,17 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
                       className="w-full px-6 py-4 flex items-center justify-between group"
                     >
                       <div className="flex items-center gap-4">
-                        <div className={cn("p-2 rounded-xl transition-transform group-hover:scale-110", getColor())}>
+                        <div className={cn("p-2 rounded-xl transition-transform group-hover:scale-110 border", getColor())}>
                           {getIcon()}
                         </div>
                         <div className="text-left">
-                          <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">{type} Variation</h4>
-                          <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-tighter">
+                          <div className="flex items-center gap-2">
+                            <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">{type} Variation</h4>
+                            <span className={cn("text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md", getColor())}>
+                              {getBadge()}
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-tighter mt-0.5">
                             {type === 'decorative' ? 'For aesthetic elements' : type === 'informational' ? 'For core content delivery' : 'For interactive elements'}
                           </p>
                         </div>
@@ -221,6 +260,15 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
                               <p className="text-sm font-medium text-slate-700 dark:text-slate-300 italic leading-relaxed pr-8">
                                 "{content}"
                               </p>
+                              {tip && (
+                                <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-start gap-2">
+                                  <Icons.Lightbulb size={12} className="text-amber-500 mt-0.5 shrink-0" />
+                                  <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                                    <span className="text-amber-600 dark:text-amber-400 uppercase tracking-widest mr-1">SEO Tip:</span>
+                                    {tip}
+                                  </p>
+                                </div>
+                              )}
                               <button 
                                 onClick={() => navigator.clipboard.writeText(content)}
                                 className="absolute top-3 right-3 p-1.5 bg-white dark:bg-slate-700 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg opacity-0 group-hover/content:opacity-100 transition-all shadow-sm"
@@ -238,6 +286,37 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
               })}
             </div>
           </div>
+
+          {variations.bestPractices && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-indigo-50/50 dark:bg-indigo-900/10 rounded-3xl p-6 sm:p-8 border border-indigo-100 dark:border-indigo-900/30"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-indigo-600 rounded-xl text-white">
+                  <Icons.ShieldCheck size={20} />
+                </div>
+                <h3 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">Accessibility & SEO Best Practices</h3>
+              </div>
+              <div className="grid sm:grid-cols-2 gap-4">
+                {variations.bestPractices.split('\n').filter(line => line.trim().startsWith('-')).map((practice, idx) => {
+                  const [title, desc] = practice.replace('- **', '').split('**: ');
+                  return (
+                    <div key={idx} className="flex gap-3">
+                      <div className="mt-1">
+                        <Icons.CheckCircle2 size={16} className="text-emerald-500" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-slate-900 dark:text-white">{title}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{desc}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
           
           {/* Live Preview Feature */}
           <motion.section 

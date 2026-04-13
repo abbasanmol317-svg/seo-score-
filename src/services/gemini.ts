@@ -285,7 +285,11 @@ export const TOOLS: Tool[] = [
     (Topics for these keywords)
     
     ## 🏁 Easy Wins
-    (Low competition keywords to target now)`,
+    (Low competition keywords to target now)
+    
+    ## 📉 Related Keywords (Low Competition)
+    Analyze the primary keywords provided and suggest 5 related keywords that have a lower competition score but similar search intent. Format as a list:
+    - **Keyword**: [Keyword Name] | **Difficulty**: [Estimated Difficulty 0-100] | **Intent**: [Search Intent]`,
     placeholder: 'Enter niche or seed keyword (e.g., "vegan dog food" or "SaaS marketing")'
   },
   {
@@ -422,25 +426,35 @@ export const TOOLS: Tool[] = [
     ## 🚀 High-CTR "Boosted" Versions
     Generate 5 distinct variations of high-CTR meta tags. Each variation should focus on a different psychological trigger (e.g., Urgency, Curiosity, Benefit-Driven, Scarcity, Social Proof).
     
+    For EACH variation, you MUST provide:
+    - **Title**: (Aggressive power words, high-impact)
+    - **Description**: (Clear CTA, emotional trigger)
+    - **CTR Improvements**: (List exactly 3 specific improvements made to increase CTR: 1. [Power Word used], 2. [Clarity enhancement], 3. [CTA optimization])
+    
     ### Variation 1: [Trigger Name]
-    - Title: (Aggressive power words, high-impact)
-    - Description: (Clear CTA, emotional trigger)
+    - **Title**: ...
+    - **Description**: ...
+    - **CTR Improvements**: 1. ... 2. ... 3. ...
     
     ### Variation 2: [Trigger Name]
-    - Title: (Aggressive power words, high-impact)
-    - Description: (Clear CTA, emotional trigger)
+    - **Title**: ...
+    - **Description**: ...
+    - **CTR Improvements**: 1. ... 2. ... 3. ...
     
     ### Variation 3: [Trigger Name]
-    - Title: (Aggressive power words, high-impact)
-    - Description: (Clear CTA, emotional trigger)
+    - **Title**: ...
+    - **Description**: ...
+    - **CTR Improvements**: 1. ... 2. ... 3. ...
 
     ### Variation 4: [Trigger Name]
-    - Title: (Aggressive power words, high-impact)
-    - Description: (Clear CTA, emotional trigger)
+    - **Title**: ...
+    - **Description**: ...
+    - **CTR Improvements**: 1. ... 2. ... 3. ...
 
     ### Variation 5: [Trigger Name]
-    - Title: (Aggressive power words, high-impact)
-    - Description: (Clear CTA, emotional trigger)
+    - **Title**: ...
+    - **Description**: ...
+    - **CTR Improvements**: 1. ... 2. ... 3. ...
 
     ## 📈 CTR Analysis & Suggestions
     Provide a granular, deep-dive analysis of the generated (or provided) meta tags with highly specific, actionable recommendations to maximize Click-Through Rate (CTR):
@@ -457,17 +471,20 @@ export const TOOLS: Tool[] = [
     
     ### 📣 Call-to-Action (CTA) Strategy
     - **Psychological Trigger Audit:** Identify which trigger the current CTA uses (e.g., Fear of Missing Out, Desire for Gain, Curiosity).
-    - **High-Intent CTAs:** Provide 3 distinct, high-intent CTAs tailored to the user's stage in the funnel (e.g., "Compare Prices Now" for consideration, "Get Instant Access" for conversion).
+    - **Funnel-Tailored CTA Matrix:** Provide a diverse set of high-converting CTAs tailored to different stages of the user funnel and psychological profiles:
+      - **TOFU (Awareness - Curiosity/Education):** e.g., "Discover the 5 secrets to...", "Learn how to master...", "Uncover the truth about..."
+      - **MOFU (Consideration - Benefit/Comparison):** e.g., "See why experts choose...", "Compare the best options for...", "Download your free guide to..."
+      - **BOFU (Conversion - Urgency/Direct Action):** e.g., "Get started for free", "Claim your 20% discount", "Join 10,000+ happy customers today"
     - **Micro-Copy Improvement:** Suggest small tweaks to the CTA to make it feel more personal or urgent (e.g., changing "Learn More" to "Discover Your Potential").
     
     ### 📝 Meta Description Audit
     - **Clarity & Intent Analysis:** (Analyze how well the description matches the user's likely search intent. Is it too vague or highly specific?)
     - **Keyword Integration Strategy:** (Evaluate how the primary keyword is integrated. Suggest better placement, such as front-loading, to ensure it bolds in search results.)
     - **CTA Effectiveness & Hook:** (Analyze the closing hook. Provide 2-3 specific, high-conversion CTA alternatives that create urgency or curiosity.)
-    - **Actionable Refinements:**
-        1. (Specific suggestion for clarity and readability)
-        2. (Specific suggestion for keyword optimization and SERP visibility)
-        3. (Specific suggestion for CTA improvement and click-through intent)
+    - **3 Key CTR Improvements:**
+        1. [Power Word/Emotional Trigger improvement]
+        2. [Clarity/Readability improvement]
+        3. [Call-to-Action/Intent improvement]
     - **Optimized Master Version:** (Provide a final, perfectly balanced meta description that incorporates all the above improvements within 155 characters.)
     
     ### 📏 Length & Visibility Check
@@ -581,24 +598,28 @@ export const TOOLS: Tool[] = [
     Format your response as an Alt Text Kit with these sections:
     
     ## 🖼️ Primary Alt Text
-    (The best, most descriptive alt text for the image)
+    (The best, most descriptive alt text for the image, balancing accessibility and SEO)
     
     ## ♿ Accessibility Score
-    (Out of 100, based on how well it describes the image for screen readers)
+    (Out of 100, based on WCAG 2.1 guidelines for non-text content)
     
     ## 🔍 SEO Keywords Included
-    (List of relevant keywords used in the alt text)
+    (List of relevant keywords used in the alt text to improve image search rankings)
     
     ## 💡 Contextual Variations
-    Provide 3 distinct variations based on the specific use case of the image:
-    - **Decorative:** (For images that add no informational value. Output MUST be exactly alt="" with a brief explanation that this allows screen readers to skip the element.)
-    - **Informational:** (For images that convey a message or data. Provide a concise description that delivers the same information as the image itself.)
-    - **Functional:** (For images used as links or buttons. Describe the ACTION or DESTINATION, e.g., "Search", "Download Report", or "Go to Homepage".)
+    Provide 3 distinct variations based on the specific use case of the image, adhering to accessibility (WCAG) and SEO best practices:
+    - **Decorative:** (For images that are purely aesthetic, like background patterns or mood-setters. Output MUST be exactly alt="" with a brief explanation that this allows screen readers to skip the element, preventing cognitive load for users. **SEO Tip**: Use CSS for these whenever possible.)
+    - **Informational:** (For images that convey a specific message, data, or emotion. Provide a concise description that delivers the same information as the image itself. If the image contains text, that text MUST be included in the alt text. **SEO Tip**: This is where you should naturally include your primary keywords.)
+    - **Functional:** (For images used as links or buttons. Describe the ACTION or DESTINATION, e.g., "Search", "Download Report", or "Go to Homepage", rather than describing the visual appearance of the icon. **SEO Tip**: Use keywords related to the destination page.)
     
     ## 🚦 Implementation Status
     [GOOD]
     
-    Ensure the alt text is concise yet descriptive, avoiding phrases like "image of" or "picture of".`,
+    ## 🛠️ Best Practices Applied
+    - **Conciseness**: Avoiding "image of" or "picture of".
+    - **Keyword Integration**: Natural inclusion of keywords without stuffing.
+    - **Context Awareness**: Tailoring text to the image's role on the page.
+    - **Screen Reader Optimization**: Ensuring the most important info is at the start.`,
     placeholder: 'Describe the image or provide an image URL (e.g., "A golden retriever playing in a park" or https://example.com/image.jpg)'
   },
   {

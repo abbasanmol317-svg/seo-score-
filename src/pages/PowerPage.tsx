@@ -71,6 +71,12 @@ const PowerPage = () => {
       platform: "Pinterest",
       url: "https://www.pinterest.com/pin/1090082284833550906/",
       icon: Icons.Image
+    },
+    {
+      name: "SEO Infographics & Tips",
+      platform: "Pinterest",
+      url: "https://www.pinterest.com/pin/1090082284833550906/",
+      icon: Icons.Layout
     }
   ];
 
