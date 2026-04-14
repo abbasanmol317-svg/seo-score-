@@ -229,11 +229,24 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
 
 function GlobalMetaTags() {
   const location = useLocation();
-  const siteUrl = 'https://seo-score-suite.com'; // Base URL
+  const siteUrl = window.location.origin || 'https://seoscore.site'; // Dynamic base URL
   const canonicalUrl = `${siteUrl}${location.pathname === '/' ? '' : location.pathname}`;
-  const title = "SEO Score Suite: Best Free AI SEO Tools for 2026";
+  const title = "SEO Score Suite | AI SEO Tools for 2026";
   const description = "Boost your rankings with 20+ free AI SEO tools. Get technical audits, keyword research, and content fixes instantly.";
-  const ogImage = `${siteUrl}/og-image.png`; // Assuming an OG image exists or will be added
+  const ogImage = `${siteUrl}/og-image.png`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "SEO Score Suite",
+    "url": siteUrl,
+    "description": description,
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": `${siteUrl}/tools?q={search_term_string}`,
+      "query-input": "required name=search_term_string"
+    }
+  };
 
   return (
     <Helmet>
@@ -252,6 +265,11 @@ function GlobalMetaTags() {
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
+
+      {/* JSON-LD Schema */}
+      <script type="application/ld+json">
+        {JSON.stringify(jsonLd)}
+      </script>
     </Helmet>
   );
 }
@@ -261,7 +279,7 @@ export default function App() {
     <ErrorBoundary>
       <HelmetProvider>
         <Helmet>
-          <title>SEO Score Suite: Best Free AI SEO Tools for 2026 (20+ Tools)</title>
+          <title>SEO Score Suite | AI SEO Tools for 2026</title>
           <meta name="description" content="Boost your rankings with 20+ free AI SEO tools. Get technical audits, keyword research, and content fixes instantly. Start optimizing for free today!" />
         </Helmet>
         <ThemeProvider>

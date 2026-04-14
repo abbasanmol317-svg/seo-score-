@@ -67,10 +67,10 @@ export default function Dashboard() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
       <Helmet>
-        <title>SEO Score Suite | Free AI-Powered SEO Tools for 2026</title>
+        <title>SEO Score Suite | AI SEO Tools for 2026</title>
         <meta name="description" content="Dominate search rankings with SEO Score Suite. Access 50+ free AI-powered SEO tools for keyword research, technical audits, backlink analysis, and content optimization using Google Gemini AI." />
         <meta name="keywords" content="free SEO tools, AI SEO analysis, Google Gemini SEO, keyword research tool, technical SEO audit, backlink checker, content optimizer, SEO suite 2026" />
-        <link rel="canonical" href="https://seo-score-suite.com/" />
+        <link rel="canonical" href="https://seoscore.site/" />
       </Helmet>
       <header className="text-center mb-12 sm:mb-16">
         <motion.div
@@ -83,7 +83,7 @@ export default function Dashboard() {
         <motion.h1 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl md:text-6xl"
+          className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl md:text-6xl mb-4"
         >
           <span className="block">Next-Gen AI</span>
           <span className="block text-indigo-600 dark:text-indigo-400">SEO Score Suite</span>
@@ -92,10 +92,25 @@ export default function Dashboard() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="mt-3 max-w-md mx-auto text-sm sm:text-base text-slate-600 dark:text-slate-400 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl px-4"
+          className="mt-3 max-w-md mx-auto text-base sm:text-lg text-slate-600 dark:text-slate-400 md:mt-5 md:text-xl md:max-w-3xl px-4 leading-relaxed"
         >
-          Empower your digital growth with {TOOLS.length} professional-grade SEO tools. Engineered with Google Gemini AI for precision, speed, and actionable search intelligence.
+          Empower your digital growth with {TOOLS.length} professional-grade SEO tools. Engineered with Google Gemini AI for precision, speed, and actionable search intelligence. Our suite helps you identify technical errors, discover high-value keywords, and optimize your content for the 2026 search landscape.
         </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.4 }}
+          className="mt-10 relative max-w-4xl mx-auto"
+        >
+          <div className="absolute inset-0 bg-indigo-500/10 blur-3xl rounded-full" />
+          <img 
+            src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426&ixlib=rb-4.0.3" 
+            alt="AI-Powered SEO Dashboard Analytics Visualization" 
+            className="relative z-10 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full object-cover h-[200px] sm:h-[400px]"
+            referrerPolicy="no-referrer"
+          />
+        </motion.div>
       </header>
 
       <div className="space-y-6 sm:space-y-8">
