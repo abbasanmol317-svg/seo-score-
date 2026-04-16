@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, Suspense, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import * as Icons from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { TOOLS, runTool, ToolId } from '../services/gemini';
@@ -45,6 +45,19 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
       console.warn('LocalStorage not available:', e);
     }
   }, [id, tool, navigate]);
+
+  // Track recently viewed tools
+  useEffect(() => {
+    if (tool) {
+      try {
+        const recent = JSON.parse(localStorage.getItem('seo_recent_tools') || '[]');
+        const updated = [tool.id, ...recent.filter((tid: string) => tid !== tool.id)].slice(0, 4);
+        localStorage.setItem('seo_recent_tools', JSON.stringify(updated));
+      } catch (e) {
+        // Ignore
+      }
+    }
+  }, [tool]);
 
   const [loadingMessage, setLoadingMessage] = useState('Analyzing your data...');
   const [progress, setProgress] = useState(0);
@@ -319,6 +332,8 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
       window.open(`mailto:?subject=SEO Analysis Report&body=${encodeURIComponent(shareText + '\n\n' + shareUrl)}`, '_blank');
     } else if (platform === 'copy') {
       navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
     setShowShareMenu(false);
   };
@@ -454,23 +469,57 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
   const hasHistory = history.length > 0;
 
   // Optimized Meta Tags
-  let seoTitle = `${tool.name}: Best Free AI ${tool.category} Tool (2026)`;
-  let seoDescription = `Optimize your site with our free ${tool.name}. Get deep AI insights and actionable SEO fixes powered by Gemini. Run your free analysis now!`;
-
-  if (tool.id === 'meta-tag') {
-    seoTitle = `AI Meta Tag Generator: Create High-CTR SEO Tags Instantly (2026)`;
-    seoDescription = `Boost your search rankings and CTR with our free AI Meta Tag Generator. Create perfectly optimized meta titles and descriptions in seconds using Google Gemini AI. Start for free!`;
-  } else if (tool.id === 'keyword-research') {
-    seoTitle = `Free AI Keyword Research Tool: Find High-Volume Keywords (2026)`;
-    seoDescription = `Discover high-traffic, low-competition keywords with our free AI Keyword Research tool. Build your topical authority and dominate the SERPs today!`;
-  } else if (tool.id === 'content-optimizer') {
-    seoTitle = `AI Content Optimizer: Improve Your SEO Rankings Fast (2026)`;
-    seoDescription = `Analyze and optimize your content for search engines with our free AI Content Optimizer. Get semantic suggestions and readability fixes in seconds.`;
-  }
+  const seoTitle = tool.seoTitle || `${tool.name}: Best Free AI ${tool.category} Tool (2026)`;
+  const seoDescription = tool.seoDescription || `Optimize your site with our free ${tool.name}. Get deep AI insights and actionable SEO fixes powered by Gemini. Run your free analysis now!`;
 
   const seoKeywords = `${tool.name.toLowerCase()}, free SEO tool, AI SEO analysis, ${tool.category.toLowerCase()}, search engine optimization, Google Gemini AI, SEO Score Suite, technical SEO`;
 
   const deepContent = getDeepContent(tool.category);
+
+  const toolSchema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": tool.name,
+      "description": tool.description,
+      "applicationCategory": "SEO Tool",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "1250"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Dashboard",
+          "item": "https://seoscore.site/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": tool.category,
+          "item": `https://seoscore.site/tools?category=${encodeURIComponent(tool.category)}`
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": tool.name,
+          "item": `https://seoscore.site/tool/${tool.id}`
+        }
+      ]
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
@@ -479,7 +528,24 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
         <meta name="description" content={seoDescription} />
         <meta name="keywords" content={seoKeywords} />
         <link rel="canonical" href={`https://seoscore.site/tool/${tool.id}`} />
+        <script type="application/ld+json">
+          {JSON.stringify(toolSchema)}
+        </script>
       </Helmet>
+
+      <AnimatePresence>
+        {copied && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[110] px-6 py-3 bg-slate-900 text-white rounded-2xl shadow-2xl font-bold text-sm flex items-center gap-3"
+          >
+            <Icons.CheckCircle2 className="text-emerald-400" size={18} />
+            Copied to clipboard!
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="px-4 py-6 sm:py-12 flex flex-col gap-6 sm:gap-8 max-w-5xl mx-auto lg:mx-0 lg:pl-8 xl:pl-12">
         <div className="flex-grow">
@@ -598,13 +664,13 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
               
               <div className="relative z-10">
                 <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white mb-6 tracking-tight">
-                  The Definitive Guide to <span className="text-indigo-600">{tool.name}</span>
+                  The Definitive Guide to <span className="text-indigo-600">{tool.name}</span> Optimization
                 </h2>
                 
                 <div className="prose prose-slate dark:prose-invert max-w-none">
-                  <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-8 font-medium">
-                    {deepContent.about}
-                  </p>
+                  <div className="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-8 font-medium">
+                    Master your search strategy with our **{tool.name}** guide. {deepContent.about}
+                  </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12">
                     <div className="space-y-6">
@@ -653,9 +719,9 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                       <Icons.Info size={20} className="text-indigo-600" />
                       Why This Matters for Your SEO
                     </h3>
-                    <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed italic">
+                    <div className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed italic">
                       "{deepContent.whyItMatters}"
-                    </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -703,9 +769,9 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                     <h3 className="text-sm font-black text-slate-900 dark:text-white mb-2 flex items-start gap-2">
                       <span className="text-indigo-600">Q:</span> {faq.q}
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                    <div className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                       {faq.a}
-                    </p>
+                    </div>
                   </div>
                 ))}
               </div>

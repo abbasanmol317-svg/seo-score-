@@ -8,6 +8,7 @@ import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import ToolSearch from './components/ToolSearch';
 import Sidebar from './components/Sidebar';
+import BackToTop from './components/BackToTop';
 
 // Lazy load pages for better performance
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -84,7 +85,7 @@ function NavHeader() {
           <div className="flex items-center gap-4 flex-1">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+              className="lg:hidden p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
             >
               <Icons.Menu size={20} />
             </button>
@@ -130,7 +131,7 @@ function NavHeader() {
             
             <button
               onClick={() => setIsMobileSearchOpen(true)}
-              className="sm:hidden p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+              className="sm:hidden p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
             >
               <Icons.Search size={20} />
             </button>
@@ -139,7 +140,7 @@ function NavHeader() {
 
             <button
               onClick={toggleTheme}
-              className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all hover:scale-110 active:scale-95"
+              className="p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all hover:scale-110 active:scale-95"
             >
               {theme === 'dark' ? <Icons.Sun size={20} /> : <Icons.Moon size={20} />}
             </button>
@@ -232,21 +233,34 @@ function GlobalMetaTags() {
   const siteUrl = window.location.origin || 'https://seoscore.site'; // Dynamic base URL
   const canonicalUrl = `${siteUrl}${location.pathname === '/' ? '' : location.pathname}`;
   const title = "SEO Score Suite | AI SEO Tools for 2026";
-  const description = "Boost your rankings with 20+ free AI SEO tools. Get technical audits, keyword research, and content fixes instantly.";
+  const description = "Dominate search rankings in 2026 with SEO Score Suite. Access 50+ free AI-powered SEO tools for keyword research, technical audits, and content optimization. Start for free!";
   const ogImage = `${siteUrl}/og-image.png`;
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "SEO Score Suite",
-    "url": siteUrl,
-    "description": description,
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": `${siteUrl}/tools?q={search_term_string}`,
-      "query-input": "required name=search_term_string"
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "SEO Score Suite",
+      "url": siteUrl,
+      "description": description,
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": `${siteUrl}/tools?q={search_term_string}`,
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "SEO Score Suite",
+      "url": siteUrl,
+      "logo": `${siteUrl}/logo.png`,
+      "sameAs": [
+        "https://twitter.com/seoscoresuite",
+        "https://linkedin.com/company/seoscoresuite"
+      ]
     }
-  };
+  ];
 
   return (
     <Helmet>
@@ -280,7 +294,7 @@ export default function App() {
       <HelmetProvider>
         <Helmet>
           <title>SEO Score Suite | AI SEO Tools for 2026</title>
-          <meta name="description" content="Boost your rankings with 20+ free AI SEO tools. Get technical audits, keyword research, and content fixes instantly. Start optimizing for free today!" />
+          <meta name="description" content="Dominate search rankings in 2026 with SEO Score Suite. Access 50+ free AI-powered SEO tools for keyword research, technical audits, and content optimization. Start for free!" />
         </Helmet>
         <ThemeProvider>
           <Router>
@@ -298,6 +312,7 @@ export default function App() {
                   </Suspense>
                 </main>
               </div>
+              <BackToTop />
 
               <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12">
                 <div className="max-w-7xl mx-auto px-4">

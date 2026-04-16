@@ -36,10 +36,10 @@ export default function Blog() {
           <Icons.BookOpen size={32} className="sm:w-10 sm:h-10" />
         </div>
         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl">
-          SEO <span className="text-indigo-600 dark:text-indigo-400">Insights Blog</span>
+          AI SEO <span className="text-indigo-600 dark:text-indigo-400">Insights Blog</span>
         </h1>
-        <p className="mt-4 text-base sm:text-xl text-slate-500 dark:text-slate-400 px-4">
-          Stay updated with the latest trends and strategies in AI-driven SEO.
+        <p className="mt-4 text-base sm:text-xl text-slate-500 dark:text-slate-400 px-4 max-w-3xl mx-auto leading-relaxed">
+          Master the future of search with our expert guides on AI-driven SEO, technical audits, and high-performance content strategies for 2026.
         </p>
       </motion.div>
 
@@ -89,8 +89,8 @@ export default function Blog() {
                     </div>
                     <span className="hidden sm:inline mx-1">•</span>
                     <div className="flex items-center gap-1">
-                      <Icons.User size={12} className="sm:w-3.5 sm:h-3.5" />
-                      <span>{post.author}</span>
+                      <Icons.Clock size={12} className="sm:w-3.5 sm:h-3.5" />
+                      <span>{post.readingTime || '5 min read'}</span>
                     </div>
                   </div>
                   <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-tight">

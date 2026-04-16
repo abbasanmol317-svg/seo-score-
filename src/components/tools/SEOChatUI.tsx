@@ -265,6 +265,7 @@ export const SEOChatUI: React.FC<ToolComponentProps> = (props) => {
                 handlePrint={handlePrint}
                 handleDownloadPDF={handleDownloadPDF}
                 handleCopy={handleCopy}
+                handleClear={handleClear}
                 handleShare={handleShare}
                 isDownloading={isDownloading}
                 isGeneratingPDF={isGeneratingPDF}

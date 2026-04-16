@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import * as Icons from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import Markdown from 'react-markdown';
@@ -10,6 +10,7 @@ export default function BlogPost() {
   const { id } = useParams<{ id: string }>();
   const postId = Number(id);
   const post = BLOG_POSTS.find(p => p.id === postId);
+  const [copied, setCopied] = React.useState(false);
 
   if (!post) {
     return (
@@ -20,15 +21,76 @@ export default function BlogPost() {
     );
   }
 
+  const handleShare = (platform: 'twitter' | 'linkedin' | 'copy') => {
+    const url = window.location.href;
+    const text = `Check out this SEO guide: ${post.title}`;
+
+    if (platform === 'twitter') {
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+    } else if (platform === 'linkedin') {
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+    } else if (platform === 'copy') {
+      navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const relatedPosts = BLOG_POSTS
+    .filter(p => p.category === post.category && p.id !== post.id)
+    .slice(0, 3);
+
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "description": post.excerpt,
+    "image": post.image,
+    "author": {
+      "@type": "Organization",
+      "name": "SEO Score Suite"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SEO Score Suite",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://seoscore.site/logo.png"
+      }
+    },
+    "datePublished": post.date,
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://seoscore.site/blog/${post.id}`
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-12 sm:py-20">
       <Helmet>
-        <title>{post.title} | SEO Score Suite Blog</title>
-        <meta name="description" content={post.excerpt} />
+        <title>{post.metaTitle || post.title} | SEO Score Suite Blog</title>
+        <meta name="description" content={post.metaDescription || post.excerpt} />
+        <script type="application/ld+json">
+          {JSON.stringify(articleSchema)}
+        </script>
       </Helmet>
 
-      <Link to="/blog" className="inline-flex items-center gap-2 text-slate-500 hover:text-indigo-600 font-bold text-sm mb-8 transition-colors">
-        <Icons.ArrowLeft size={16} /> Back to Blog
+      <AnimatePresence>
+        {copied && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[110] px-6 py-3 bg-slate-900 text-white rounded-2xl shadow-2xl font-bold text-sm flex items-center gap-3"
+          >
+            <Icons.CheckCircle2 className="text-emerald-400" size={18} />
+            Link copied!
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <Link to="/blog" className="inline-flex items-center gap-2 text-slate-500 hover:text-indigo-600 font-bold text-sm mb-8 transition-colors group">
+        <Icons.ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to Blog
       </Link>
 
       <motion.article
@@ -36,40 +98,111 @@ export default function BlogPost() {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white dark:bg-slate-900 rounded-[2rem] sm:rounded-[3rem] border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden"
       >
-        <div className="p-5 sm:p-12 lg:p-16">
-          <div className="flex items-center gap-3 mb-6">
-            <span className="px-3 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-100 dark:border-indigo-800">
-              {post.category}
-            </span>
-            <span className="text-slate-400 dark:text-slate-500 text-xs font-bold">•</span>
-            <span className="text-slate-400 dark:text-slate-500 text-xs font-bold">{post.date}</span>
+        <div className="relative h-64 sm:h-96 overflow-hidden">
+          <img 
+            src={post.image} 
+            alt={post.title} 
+            className="w-full h-full object-cover"
+            referrerPolicy="no-referrer"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8 sm:p-12">
+            <div>
+              <span className="px-3 py-1 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-widest rounded-full mb-4 inline-block">
+                {post.category}
+              </span>
+              <h1 className="text-2xl sm:text-4xl font-black text-white leading-tight tracking-tight">
+                {post.title}
+              </h1>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-6 sm:p-12 lg:p-16">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-10 text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-bold border-b border-slate-100 dark:border-slate-800 pb-8">
+            <div className="flex items-center gap-2">
+              <Icons.Calendar size={16} className="text-indigo-600" />
+              <span>{post.date}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Icons.User size={16} className="text-indigo-600" />
+              <span>{post.author}</span>
+            </div>
+            {post.readingTime && (
+              <div className="flex items-center gap-2">
+                <Icons.Clock size={16} className="text-indigo-600" />
+                <span>{post.readingTime}</span>
+              </div>
+            )}
           </div>
 
           <div className="markdown-body">
             <Markdown>{post.content}</Markdown>
           </div>
 
-          <div className="mt-12 pt-12 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-8">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400">
-                <Icons.User size={24} />
+              <div className="w-14 h-14 bg-indigo-50 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-800">
+                <Icons.User size={28} />
               </div>
               <div>
-                <p className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Written by</p>
-                <p className="text-sm font-bold text-slate-900 dark:text-white">{post.author}</p>
+                <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">Written by</p>
+                <p className="text-base font-bold text-slate-900 dark:text-white">{post.author}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <button className="p-2.5 bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-indigo-600 rounded-xl transition-all">
-                <Icons.Share2 size={20} />
-              </button>
-              <button className="p-2.5 bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-indigo-600 rounded-xl transition-all">
-                <Icons.Twitter size={20} />
-              </button>
+            <div className="flex items-center gap-4">
+              <span className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Share this post</span>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => handleShare('twitter')}
+                  className="p-3 bg-slate-50 dark:bg-slate-800 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all border border-slate-100 dark:border-slate-700"
+                >
+                  <Icons.Twitter size={18} />
+                </button>
+                <button 
+                  onClick={() => handleShare('linkedin')}
+                  className="p-3 bg-slate-50 dark:bg-slate-800 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all border border-slate-100 dark:border-slate-700"
+                >
+                  <Icons.Linkedin size={18} />
+                </button>
+                <button 
+                  onClick={() => handleShare('copy')}
+                  className="p-3 bg-slate-50 dark:bg-slate-800 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all border border-slate-100 dark:border-slate-700"
+                >
+                  <Icons.Link size={18} />
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </motion.article>
+
+      {relatedPosts.length > 0 && (
+        <div className="mt-20">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="p-2 bg-indigo-600 rounded-xl text-white">
+              <Icons.Layers size={20} />
+            </div>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Related Articles</h3>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {relatedPosts.map(rp => (
+              <Link 
+                key={rp.id} 
+                to={`/blog/${rp.id}`}
+                className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 hover:shadow-xl transition-all group"
+              >
+                <span className="text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-3 block">{rp.category}</span>
+                <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-3 group-hover:text-indigo-600 transition-colors line-clamp-2">{rp.title}</h4>
+                <div className="flex items-center gap-2 text-xs text-slate-400 font-bold">
+                  <Icons.Calendar size={12} />
+                  <span>{rp.date}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="mt-12 text-center">
         <Link 

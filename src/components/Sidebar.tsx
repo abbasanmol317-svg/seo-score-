@@ -85,7 +85,7 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
           ) : (
             <button 
               onClick={onClose}
-              className="p-2.5 -mr-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors bg-slate-50 dark:bg-slate-800 rounded-xl"
+              className="p-3 -mr-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors bg-slate-50 dark:bg-slate-800 rounded-xl"
               aria-label="Close sidebar"
             >
               <Icons.X size={20} />

@@ -55,6 +55,19 @@ export default function Dashboard() {
     TOOLS.some(t => t.category === cat)
   );
   const [expandedCategories, setExpandedCategories] = useState<string[]>(categories);
+  const [recentTools, setRecentTools] = useState<Tool[]>([]);
+
+  React.useEffect(() => {
+    try {
+      const recentIds = JSON.parse(localStorage.getItem('seo_recent_tools') || '[]');
+      const found = recentIds
+        .map((id: string) => TOOLS.find(t => t.id === id))
+        .filter(Boolean) as Tool[];
+      setRecentTools(found);
+    } catch (e) {
+      // Ignore
+    }
+  }, []);
 
   const toggleCategory = (category: string) => {
     setExpandedCategories(prev => 
@@ -68,7 +81,7 @@ export default function Dashboard() {
     <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
       <Helmet>
         <title>SEO Score Suite | AI SEO Tools for 2026</title>
-        <meta name="description" content="Dominate search rankings with SEO Score Suite. Access 50+ free AI-powered SEO tools for keyword research, technical audits, backlink analysis, and content optimization using Google Gemini AI." />
+        <meta name="description" content="Dominate search rankings in 2026 with SEO Score Suite. Access 50+ free AI-powered SEO tools for keyword research, technical audits, and content optimization. Start for free!" />
         <meta name="keywords" content="free SEO tools, AI SEO analysis, Google Gemini SEO, keyword research tool, technical SEO audit, backlink checker, content optimizer, SEO suite 2026" />
         <link rel="canonical" href="https://seoscore.site/" />
       </Helmet>
@@ -85,7 +98,7 @@ export default function Dashboard() {
           animate={{ opacity: 1 }}
           className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl md:text-6xl mb-4"
         >
-          <span className="block">Next-Gen AI</span>
+          <span className="block">Free AI</span>
           <span className="block text-indigo-600 dark:text-indigo-400">SEO Score Suite</span>
         </motion.h1>
         <motion.p 
@@ -94,7 +107,7 @@ export default function Dashboard() {
           transition={{ delay: 0.2 }}
           className="mt-3 max-w-md mx-auto text-base sm:text-lg text-slate-600 dark:text-slate-400 md:mt-5 md:text-xl md:max-w-3xl px-4 leading-relaxed"
         >
-          Empower your digital growth with {TOOLS.length} professional-grade SEO tools. Engineered with Google Gemini AI for precision, speed, and actionable search intelligence. Our suite helps you identify technical errors, discover high-value keywords, and optimize your content for the 2026 search landscape.
+          Optimize your website rankings with the **SEO Score Suite**, a comprehensive collection of {TOOLS.length} professional-grade **AI SEO tools**. Powered by Google Gemini AI, our suite provides instant technical audits, keyword research, and content optimization to help you dominate the 2026 search landscape.
         </motion.p>
 
         <motion.div
@@ -105,13 +118,40 @@ export default function Dashboard() {
         >
           <div className="absolute inset-0 bg-indigo-500/10 blur-3xl rounded-full" />
           <img 
-            src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426&ixlib=rb-4.0.3" 
+            src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=60&w=1200&ixlib=rb-4.0.3" 
             alt="AI-Powered SEO Dashboard Analytics Visualization" 
             className="relative z-10 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full object-cover h-[200px] sm:h-[400px]"
             referrerPolicy="no-referrer"
+            loading="lazy"
+            width="1200"
+            height="400"
           />
         </motion.div>
       </header>
+
+      <AnimatePresence>
+        {recentTools.length > 0 && (
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-12 sm:mb-16"
+          >
+            <div className="flex items-center gap-3 mb-6 sm:mb-8">
+              <div className="p-2 bg-indigo-600 rounded-xl text-white shadow-lg shadow-indigo-100 dark:shadow-none">
+                <Icons.History size={20} />
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                Recently Used <span className="text-indigo-600">Tools</span>
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {recentTools.map((tool, index) => (
+                <ToolCard key={`recent-${tool.id}`} tool={tool} index={index} />
+              ))}
+            </div>
+          </motion.section>
+        )}
+      </AnimatePresence>
 
       <div className="space-y-6 sm:space-y-8">
         {categories.map((category, catIndex) => {
@@ -195,40 +235,76 @@ export default function Dashboard() {
         })}
       </div>
       <div className="mt-16 sm:mt-24 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 p-6 sm:p-10 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[3rem] border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
-            <Icons.Globe size={240} />
-          </div>
-          <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white mb-6 tracking-tight relative z-10">
-            Mastering Search in <span className="text-indigo-600">2026</span>
-          </h2>
-          <div className="prose prose-sm sm:prose-base dark:prose-invert max-w-none text-slate-600 dark:text-slate-400 leading-relaxed relative z-10">
-            <p className="text-base sm:text-lg font-medium mb-6">
-              The SEO landscape has shifted from simple pattern matching to deep semantic understanding. Today, search engines like Google prioritize **User Intent**, **Topical Authority**, and **Technical Excellence** above all else.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-              <div className="space-y-3">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <Icons.Cpu size={18} className="text-indigo-600" />
-                  AI-First Optimization
-                </h3>
-                <p className="text-sm">
-                  We use Google Gemini AI to simulate how search crawlers perceive your content. This allows us to identify semantic gaps that traditional tools miss, ensuring your content is both human-friendly and machine-readable.
-                </p>
+        <div className="lg:col-span-2 space-y-8">
+          <div className="p-6 sm:p-10 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[3rem] border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
+              <Icons.Globe size={240} />
+            </div>
+            <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white mb-6 tracking-tight relative z-10">
+              Mastering Search in <span className="text-indigo-600">2026</span>
+            </h2>
+            <div className="prose prose-sm sm:prose-base dark:prose-invert max-w-none text-slate-600 dark:text-slate-400 leading-relaxed relative z-10">
+              <p className="text-base sm:text-lg font-medium mb-6">
+                The SEO landscape has shifted from simple pattern matching to deep semantic understanding. Today, search engines like Google prioritize **User Intent**, **Topical Authority**, and **Technical Excellence** above all else. Our **SEO software** is designed to help you navigate these changes with ease. Stay ahead of the curve by exploring our <Link to="/blog" className="text-indigo-600 hover:underline font-bold">SEO Insights Blog</Link>.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                <div className="space-y-3">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <Icons.Cpu size={18} className="text-indigo-600" />
+                    AI-First Optimization
+                  </h3>
+                  <p className="text-sm">
+                    We use Google Gemini AI to simulate how search crawlers perceive your content. This allows us to identify semantic gaps that traditional **website analysis** tools miss, ensuring your content is both human-friendly and machine-readable.
+                  </p>
+                </div>
+                <div className="space-y-3">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <Icons.Zap size={18} className="text-indigo-600" />
+                    Technical Foundations
+                  </h3>
+                  <p className="text-sm">
+                    From **Core Web Vitals** to **Schema Markup**, our technical tools ensure your site's infrastructure is built for speed and clarity. A fast site isn't just a luxury; it's a core **ranking factor** in 2026.
+                  </p>
+                </div>
               </div>
-              <div className="space-y-3">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <Icons.Zap size={18} className="text-indigo-600" />
-                  Technical Foundations
-                </h3>
-                <p className="text-sm">
-                  From **Core Web Vitals** to **Schema Markup**, our technical tools ensure your site's infrastructure is built for speed and clarity. A fast site isn't just a luxury; it's a core ranking factor in 2026.
-                </p>
+              <p className="mt-8 italic border-l-4 border-indigo-600 pl-4 py-2 bg-indigo-50/50 dark:bg-indigo-900/20 rounded-r-xl">
+                "SEO is no longer about tricking the algorithm; it's about providing the most comprehensive and accessible answer to the user's query."
+              </p>
+            </div>
+          </div>
+
+          <div className="p-6 sm:p-10 bg-slate-50 dark:bg-slate-900/30 rounded-2xl sm:rounded-[3rem] border border-slate-100 dark:border-slate-800">
+            <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-6">Why Choose SEO Score Suite?</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="flex gap-4">
+                <div className="mt-1 text-indigo-600"><Icons.CheckCircle2 size={20} /></div>
+                <div>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-1">100% Free Access</h4>
+                  <p className="text-xs text-slate-500">No subscriptions, no hidden fees. Professional tools for everyone.</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="mt-1 text-indigo-600"><Icons.CheckCircle2 size={20} /></div>
+                <div>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-1">Gemini 3.1 Powered</h4>
+                  <p className="text-xs text-slate-500">Harness the power of Google's most advanced AI models.</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="mt-1 text-indigo-600"><Icons.CheckCircle2 size={20} /></div>
+                <div>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-1">Real-Time Analysis</h4>
+                  <p className="text-xs text-slate-500">Get instant feedback on your site's performance and SEO health.</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="mt-1 text-indigo-600"><Icons.CheckCircle2 size={20} /></div>
+                <div>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-1">Privacy Focused</h4>
+                  <p className="text-xs text-slate-500">We don't store your sensitive data or website credentials.</p>
+                </div>
               </div>
             </div>
-            <p className="mt-8 italic border-l-4 border-indigo-600 pl-4 py-2 bg-indigo-50/50 dark:bg-indigo-900/20 rounded-r-xl">
-              "SEO is no longer about tricking the algorithm; it's about providing the most comprehensive and accessible answer to the user's query."
-            </p>
           </div>
         </div>
 

@@ -34,8 +34,36 @@ export default function About() {
         <section className="mb-10 sm:mb-12">
           <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-4">Our Vision for 2026</h2>
           <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-            At SEO Score, we believe that high-quality search intelligence should not be locked behind expensive paywalls. In an era where AI is redefining how we find information, our mission is to provide every webmaster and marketer with the same advanced tools used by top-tier agencies. By harnessing Google's Gemini AI, we've developed {TOOLS.length} specialized tools that decode search algorithms with unprecedented accuracy.
+            At SEO Score, we believe that high-quality search intelligence should be accessible to everyone, not just those with massive marketing budgets. In an era where AI is redefining how we find information, our mission is to provide every webmaster, blogger, and small business owner with the same advanced tools used by top-tier agencies. 
           </p>
+          <p className="text-slate-600 dark:text-slate-400 leading-relaxed mt-4">
+            By harnessing Google's Gemini AI, we've developed {TOOLS.length} specialized tools that decode search algorithms with unprecedented accuracy, helping you focus on what matters most: **creating value for your audience.** You can learn more about our specific strategies in our <Link to="/blog" className="text-indigo-600 hover:underline font-bold">SEO Blog</Link> or find quick answers in our <Link to="/faq" className="text-indigo-600 hover:underline font-bold">Support Center</Link>.
+          </p>
+        </section>
+
+        <section className="mb-10 sm:mb-12">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-4">Why AI-Powered SEO?</h2>
+          <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
+            Traditional SEO tools often provide static data that becomes outdated the moment a search engine updates its algorithm. AI-powered SEO is different. It's dynamic, predictive, and understands **context**.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex gap-3">
+              <div className="mt-1 text-indigo-600"><Icons.CheckCircle2 size={18} /></div>
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">**Intent Analysis**: AI understands *why* people search, not just *what* they type.</p>
+            </div>
+            <div className="flex gap-3">
+              <div className="mt-1 text-indigo-600"><Icons.CheckCircle2 size={18} /></div>
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">**Semantic Depth**: Identify related topics that build your authority naturally.</p>
+            </div>
+            <div className="flex gap-3">
+              <div className="mt-1 text-indigo-600"><Icons.CheckCircle2 size={18} /></div>
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">**Real-Time Audits**: Spot technical issues instantly before they hurt your rankings.</p>
+            </div>
+            <div className="flex gap-3">
+              <div className="mt-1 text-indigo-600"><Icons.CheckCircle2 size={18} /></div>
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">**Human-First Content**: Optimize your writing without losing your unique voice.</p>
+            </div>
+          </div>
         </section>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-10 sm:mb-12">

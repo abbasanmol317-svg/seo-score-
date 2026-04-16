@@ -7,6 +7,9 @@ export interface BlogPost {
   author: string;
   image: string;
   content: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  readingTime?: string;
 }
 
 export const BLOG_POSTS: BlogPost[] = [
@@ -18,6 +21,9 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Guide",
     author: "SEO Suite Team",
     image: "https://picsum.photos/seed/website-seo-guide-2026/800/400",
+    metaTitle: "Website SEO Guide 2026: How to Rank Your Website on Google",
+    metaDescription: "Learn the latest website SEO strategies for 2026. Our complete guide covers on-page, off-page, and technical SEO to help you dominate search rankings.",
+    readingTime: "12 min read",
     content: `
 Search Engine Optimization (SEO) is the process of improving your website so that it appears higher in search engine results like Google. In today’s digital world, SEO is one of the most powerful strategies for getting free organic traffic, building authority, and growing an online business.
 
@@ -185,6 +191,9 @@ Ready to start? Run a [Complete SEO Audit](/ai-seo-audit-tool) now!
     category: "YouTube",
     author: "SEO Suite Team",
     image: "https://picsum.photos/seed/yt-seo-beginners/800/400",
+    metaTitle: "Free YouTube SEO Tool for Beginners: Rank Your Videos in 2026",
+    metaDescription: "Grow your YouTube channel with our free SEO tool. Optimize titles, tags, and descriptions for maximum visibility in 2026.",
+    readingTime: "4 min read",
     content: `
 Starting a YouTube channel is exciting, but getting your videos seen is the real challenge. Our **free YouTube SEO tool for beginners** is designed to help you rank higher in search results without needing to be a marketing expert.
 
@@ -214,6 +223,9 @@ Start growing your channel today with our [Free YouTube SEO Tool](/tool/youtube-
     category: "YouTube",
     author: "SEO Suite Team",
     image: "https://picsum.photos/seed/yt-keywords-2026/800/400",
+    metaTitle: "AI YouTube Keyword Research Tool 2026: Find Trending Topics",
+    metaDescription: "Discover high-traffic video keywords with our AI-powered YouTube keyword research tool. Stay ahead of trends in 2026.",
+    readingTime: "5 min read",
     content: `
 In 2026, the key to YouTube success is data-driven keyword research. Our **AI YouTube keyword research tool** analyzes trending topics and search volume to give you the edge over your competition.
 
@@ -625,6 +637,9 @@ Once you've completed your audit, use our [Keyword Research Tool](/keyword-resea
     category: "AI & SEO",
     author: "AI SEO Expert",
     image: "https://picsum.photos/seed/ai-seo/800/400",
+    metaTitle: "How Gemini AI is Revolutionizing SEO Analysis in 2026",
+    metaDescription: "Explore the impact of Google Gemini AI on search engine optimization. Learn how AI is changing keyword research and technical audits.",
+    readingTime: "8 min read",
     content: `
 Search Engine Optimization (SEO) has always been a game of cat and mouse between webmasters and search engine algorithms. However, the introduction of advanced AI models like **Google Gemini** has fundamentally shifted the landscape. In 2026, SEO is no longer just about keywords and backlinks; it's about semantic intent, user experience, and technical precision at scale.
 

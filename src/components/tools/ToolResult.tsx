@@ -15,6 +15,7 @@ interface ToolResultProps {
   handlePrint: () => void;
   handleDownloadPDF: () => void;
   handleCopy: () => void;
+  handleClear: () => void;
   handleShare: (platform: any) => void;
   isDownloading: boolean;
   isGeneratingPDF: boolean;
@@ -30,6 +31,7 @@ export const ToolResult = React.memo(({
   handlePrint,
   handleDownloadPDF,
   handleCopy,
+  handleClear,
   handleShare,
   isDownloading,
   isGeneratingPDF,
@@ -172,6 +174,14 @@ export const ToolResult = React.memo(({
           >
             {copied ? <Icons.Check size={14} /> : <Icons.Copy size={14} />}
             {copied ? "Copied!" : "Copy Report"}
+          </button>
+
+          <button 
+            onClick={handleClear}
+            className="p-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 hover:text-rose-600 dark:hover:text-rose-400 hover:border-rose-200 dark:hover:border-rose-800 transition-all flex items-center gap-2 text-[10px] sm:text-xs font-medium"
+          >
+            <Icons.Trash2 size={14} />
+            <span className="hidden xs:inline">Clear</span>
           </button>
         </div>
       </div>

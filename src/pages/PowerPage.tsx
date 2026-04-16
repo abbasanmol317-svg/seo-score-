@@ -97,10 +97,10 @@ const PowerPage = () => {
             Best AI SEO Tools & Resources <span className="text-indigo-600">(2026 Updated List)</span>
           </h1>
           <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto">
-            In today’s fast-growing digital world, SEO (Search Engine Optimization) is essential for ranking websites, growing YouTube channels, and increasing online visibility.
+            In today’s fast-growing digital world, SEO (Search Engine Optimization) is essential for ranking websites, growing YouTube channels, and increasing online visibility. 
           </p>
-          <p className="mt-4 text-slate-600 dark:text-slate-400">
-            To simplify the process, we have compiled a list of powerful AI SEO tools and resources that can help you analyze, optimize, and scale your online presence effectively.
+          <p className="mt-4 text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+            To simplify the process, we have compiled a list of powerful AI SEO tools and resources that can help you analyze, optimize, and scale your online presence effectively. **Write for humans first, and let our tools handle the search engine optimization.**
           </p>
         </motion.div>
 
@@ -120,7 +120,7 @@ const PowerPage = () => {
                 <div className="flex-grow">
                   <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{section.title}</h2>
                   <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
-                    {section.description}
+                    {section.description} Our AI-driven approach ensures you get actionable insights that prioritize user experience while meeting technical search requirements.
                   </p>
                   <Link 
                     to={section.linkPath}

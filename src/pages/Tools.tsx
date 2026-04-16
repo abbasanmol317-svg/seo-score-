@@ -26,10 +26,10 @@ export default function Tools() {
           <Icons.LayoutGrid size={32} className="sm:w-10 sm:h-10" />
         </div>
         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl">
-          Professional <span className="text-indigo-600 dark:text-indigo-400">SEO Intelligence</span>
+          Free AI <span className="text-indigo-600 dark:text-indigo-400">SEO Tools Directory</span>
         </h1>
         <p className="mt-4 text-base sm:text-xl text-slate-500 dark:text-slate-400 px-4 max-w-2xl mx-auto">
-          Access a complete suite of AI-driven SEO tools designed for technical precision and content excellence. Powered by Google Gemini.
+          Explore our complete directory of **AI SEO tools** designed for technical precision and content excellence. Access over 20 professional-grade tools to optimize your search rankings today.
         </p>
       </motion.div>
 
