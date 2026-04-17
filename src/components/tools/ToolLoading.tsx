@@ -63,14 +63,21 @@ export const ToolLoading: React.FC<ToolLoadingProps> = ({
               { label: 'Finalizing', threshold: 90, icon: Icons.FileCheck }
             ].map((m, i) => (
               <div key={i} className="flex flex-col items-center gap-1.5">
-                <div className={cn(
-                  "p-2 rounded-xl transition-all duration-500",
-                  progress >= m.threshold 
-                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40 scale-110" 
-                    : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600"
-                )}>
+                <motion.div 
+                  animate={progress >= m.threshold && progress < (i < 3 ? [20, 45, 70, 90][i+1] : 101) ? {
+                    scale: [1, 1.1, 1],
+                    boxShadow: ["0px 0px 0px rgba(79, 70, 229, 0)", "0px 0px 15px rgba(79, 70, 229, 0.4)", "0px 0px 0px rgba(79, 70, 229, 0)"]
+                  } : {}}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className={cn(
+                    "p-2 rounded-xl transition-all duration-500",
+                    progress >= m.threshold 
+                      ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40" 
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600"
+                  )}
+                >
                   <m.icon size={14} className="sm:w-4 sm:h-4" />
-                </div>
+                </motion.div>
                 <span className={cn(
                   "text-[8px] sm:text-[10px] font-black uppercase tracking-tighter sm:tracking-widest transition-colors duration-500",
                   progress >= m.threshold ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400 dark:text-slate-600"
@@ -90,23 +97,32 @@ export const ToolLoading: React.FC<ToolLoadingProps> = ({
           Our AI is deep-diving into your request to provide the most accurate SEO insights possible.
         </p>
 
-        <div className="h-24 sm:h-28 flex items-center justify-center">
+        <div className="h-32 sm:h-36 flex items-center justify-center">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentTip}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-              className="bg-indigo-50 dark:bg-indigo-900/20 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-indigo-100 dark:border-indigo-900/50 max-w-md mx-auto w-full"
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 1.05, y: -20 }}
+              transition={{ duration: 0.4, ease: "circOut" }}
+              className="bg-white dark:bg-slate-800 p-5 sm:p-6 rounded-3xl border border-indigo-100 dark:border-indigo-900/50 max-w-lg mx-auto w-full shadow-xl shadow-indigo-100/20 dark:shadow-none relative"
             >
-              <div className="flex items-center gap-2 mb-1.5 sm:mb-2 justify-center">
-                <Icons.Lightbulb size={12} className="sm:w-3.5 sm:h-3.5 text-indigo-600 dark:text-indigo-400" />
-                <span className="text-[9px] sm:text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">SEO Pro Tip</span>
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-600 px-4 py-1 rounded-full shadow-lg">
+                <div className="flex items-center gap-2">
+                  <Icons.Lightbulb size={12} className="text-white" fill="currentColor" />
+                  <span className="text-[9px] font-black text-white uppercase tracking-[0.2em]">SEO Pro Tip</span>
+                </div>
               </div>
-              <p className="text-[10px] sm:text-xs font-bold text-slate-600 dark:text-slate-300 italic">
+              <p className="text-xs sm:text-base font-bold text-slate-700 dark:text-slate-200 leading-relaxed mt-2 italic">
                 "{currentTip}"
               </p>
+              <div className="mt-3 flex justify-center">
+                <div className="flex gap-1">
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className={cn("w-1 h-1 rounded-full", i === 0 ? "bg-indigo-600" : "bg-slate-200 dark:bg-slate-700")} />
+                  ))}
+                </div>
+              </div>
             </motion.div>
           </AnimatePresence>
         </div>

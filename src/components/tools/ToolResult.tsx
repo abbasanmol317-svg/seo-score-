@@ -7,6 +7,8 @@ import { cn } from '../../lib/utils';
 import { Tool } from '../../services/gemini';
 import { renderMarkdownContent } from '../../lib/seo-utils';
 import { CoreWebVitalsUI } from './CoreWebVitalsUI';
+import { PerformanceBenchmarkChart } from '../charts/SEOPerformanceChart';
+import { BulkURLResultTable } from './BulkURLResultTable';
 
 interface ToolResultProps {
   tool: Tool;
@@ -45,13 +47,14 @@ export const ToolResult = React.memo(({
     if (!isContentOptimizer || !result) return null;
 
     const readabilityMatch = result.match(/Score:\s*(\d+)/i) || result.match(/Readability Score:\s*(\d+)/i);
-    const statusMatch = result.match(/\[(GOOD|AVERAGE|POOR)\]/i);
-    const keywordDensityMatch = result.match(/Density:\s*\[?([\d.]+%?)\]?/i) || result.match(/Keyword Density:\s*([\d.]+%?)/i);
+    const overallStatusMatch = result.match(/SEO Content Status\n?\[?(GOOD|AVERAGE|POOR)\]?/i) || result.match(/\[(GOOD|AVERAGE|POOR)\]/i);
+    const keywordDensityMatch = result.match(/Density:\s*\[?([\d.]+%?)\]?\s*\[?(GOOD|AVERAGE|POOR)\]?/i);
 
     return {
       readability: readabilityMatch ? parseInt(readabilityMatch[1]) : null,
-      status: statusMatch ? statusMatch[1].toUpperCase() as 'GOOD' | 'AVERAGE' | 'POOR' : null,
+      status: overallStatusMatch ? overallStatusMatch[1].toUpperCase() as 'GOOD' | 'AVERAGE' | 'POOR' : null,
       density: keywordDensityMatch ? keywordDensityMatch[1] : null,
+      densityStatus: keywordDensityMatch ? keywordDensityMatch[2].toUpperCase() as 'GOOD' | 'AVERAGE' | 'POOR' : null,
     };
   }, [isContentOptimizer, result]);
 
@@ -221,12 +224,40 @@ export const ToolResult = React.memo(({
             <p className="text-[10px] text-slate-500 mt-2 font-medium">Overall Content Health</p>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col items-center text-center group hover:border-amber-200 dark:hover:border-amber-900 transition-all">
-            <div className="p-3 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-2xl mb-4 group-hover:scale-110 transition-transform">
+          <div className={cn(
+            "bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col items-center text-center group transition-all",
+            metrics.densityStatus === 'GOOD' ? "hover:border-emerald-200 dark:hover:border-emerald-900" :
+            metrics.densityStatus === 'AVERAGE' ? "hover:border-amber-200 dark:hover:border-amber-900" :
+            metrics.densityStatus === 'POOR' ? "hover:border-rose-200 dark:hover:border-rose-900" :
+            "hover:border-indigo-200 dark:hover:border-indigo-900"
+          )}>
+            <div className={cn(
+              "p-3 rounded-2xl mb-4 group-hover:scale-110 transition-transform",
+              metrics.densityStatus === 'GOOD' ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400" :
+              metrics.densityStatus === 'AVERAGE' ? "bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400" :
+              metrics.densityStatus === 'POOR' ? "bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400" :
+              "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400"
+            )}>
               <Icons.Target size={24} />
             </div>
             <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Keyword Density</p>
-            <h3 className="text-2xl font-black text-slate-900 dark:text-white">{metrics.density || 'N/A'}</h3>
+            <h3 className={cn(
+               "text-2xl font-black",
+               metrics.densityStatus === 'GOOD' ? "text-emerald-600" :
+               metrics.densityStatus === 'AVERAGE' ? "text-amber-600" :
+               metrics.densityStatus === 'POOR' ? "text-rose-600" :
+               "text-slate-900 dark:text-white"
+            )}>
+              {metrics.density || 'N/A'}
+            </h3>
+            {metrics.densityStatus && (
+              <span className={cn(
+                "text-[9px] font-black uppercase tracking-widest mt-1",
+                metrics.densityStatus === 'GOOD' ? "text-emerald-500" : metrics.densityStatus === 'AVERAGE' ? "text-amber-500" : "text-rose-500"
+              )}>
+                {metrics.densityStatus}
+              </span>
+            )}
             <p className="text-[10px] text-slate-500 mt-2 font-medium">Primary Keyword Focus</p>
           </div>
         </motion.div>
@@ -246,6 +277,8 @@ export const ToolResult = React.memo(({
         const isLinking = titleLower.includes('linking') || titleLower.includes('internal');
         const isCoreWebVitals = titleLower.includes('core web vitals');
         const isRelatedKeywords = titleLower.includes('related keywords');
+        const isEasyWins = titleLower.includes('easy win');
+        const isNextSteps = titleLower.includes('next steps');
         const isChecklist = titleLower.includes('checklist') || titleLower.includes('tasks') || titleLower.includes('fixes') || titleLower.includes('optimization') || titleLower.includes('structure') || titleLower.includes('tags');
 
         const getHeaderIcon = () => {
@@ -257,6 +290,8 @@ export const ToolResult = React.memo(({
           if (isTechnical) return <Icons.Code className="text-purple-500" size={22} />;
           if (isLinking) return <Icons.Link className="text-blue-600" size={22} />;
           if (isRelatedKeywords) return <Icons.Target className="text-amber-600" size={22} />;
+          if (isEasyWins) return <Icons.Zap className="text-indigo-500" size={22} />;
+          if (isNextSteps) return <Icons.ArrowRightCircle className="text-indigo-600" size={22} />;
           return <Icons.ChevronRight className="text-slate-400" size={22} />;
         };
 
@@ -269,6 +304,8 @@ export const ToolResult = React.memo(({
           if (isTechnical) return "border-l-purple-500";
           if (isLinking) return "border-l-blue-600";
           if (isRelatedKeywords) return "border-l-amber-600";
+          if (isEasyWins) return "border-l-indigo-500 bg-indigo-50/10 dark:bg-indigo-900/5";
+          if (isNextSteps) return "border-l-indigo-600 bg-indigo-50/20 dark:bg-indigo-900/10";
           return "border-l-slate-300";
         };
 
@@ -304,18 +341,31 @@ export const ToolResult = React.memo(({
             )}>
               {isScore ? (
                 <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 py-4">
-                  <div className="relative w-28 h-28 sm:w-48 sm:h-48 flex items-center justify-center rounded-full bg-white dark:bg-slate-800 border-[6px] sm:border-[12px] border-amber-100 dark:border-amber-900 shadow-2xl shadow-amber-200/50 dark:shadow-amber-900/20">
-                    <div className="text-center">
-                      <span className="text-3xl sm:text-6xl font-black text-amber-600 dark:text-amber-400 block leading-none">
-                        {content.match(/\d+/)?.[0] || 'N/A'}
-                      </span>
-                      <span className="text-[8px] sm:text-xs font-bold text-amber-400 dark:text-amber-500 uppercase tracking-widest mt-1 block">Score</span>
-                    </div>
-                  </div>
+                  {(() => {
+                    const score = parseInt(content.match(/\d+/)?.[0] || '0');
+                    const colorClass = score >= 90 ? "text-emerald-500" : score >= 70 ? "text-amber-500" : score >= 50 ? "text-orange-500" : "text-rose-500";
+                    const borderClass = score >= 90 ? "border-emerald-100 dark:border-emerald-900/40" : score >= 70 ? "border-amber-100 dark:border-amber-900/40" : score >= 50 ? "border-orange-100 dark:border-orange-900/40" : "border-rose-100 dark:border-rose-900/40";
+                    const shadowClass = score >= 90 ? "shadow-emerald-200/50 dark:shadow-emerald-900/20" : score >= 70 ? "shadow-amber-200/50 dark:shadow-amber-900/20" : score >= 50 ? "shadow-orange-200/50 dark:shadow-orange-900/20" : "shadow-rose-200/50 dark:shadow-rose-900/20";
+                    
+                    return (
+                      <div className={cn("relative w-28 h-28 sm:w-48 sm:h-48 flex items-center justify-center rounded-full bg-white dark:bg-slate-800 border-[6px] sm:border-[12px] shadow-2xl transition-all duration-1000", borderClass, shadowClass)}>
+                        <div className="text-center">
+                          <motion.span 
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className={cn("text-4xl sm:text-7xl font-black block leading-none tracking-tighter", colorClass)}
+                          >
+                            {score || '0'}
+                          </motion.span>
+                          <span className={cn("text-[8px] sm:text-xs font-black uppercase tracking-widest mt-1 block opacity-60", colorClass)}>Score</span>
+                        </div>
+                      </div>
+                    );
+                  })()}
                   <div className="flex-grow text-center md:text-left">
                     <ReactMarkdown
                       components={{
-                        p: ({ children }) => <p className="text-lg sm:text-2xl text-slate-800 dark:text-slate-100 font-bold leading-tight mb-4">{children}</p>
+                        p: ({ children }) => <p className="text-lg sm:text-2xl text-slate-800 dark:text-slate-100 font-extrabold leading-tight mb-4 tracking-tight">{children}</p>
                       }}
                     >
                       {content.replace(/\d+/, '').trim()}
@@ -323,7 +373,20 @@ export const ToolResult = React.memo(({
                   </div>
                 </div>
               ) : isCoreWebVitals ? (
-                <CoreWebVitalsUI content={content} />
+                <div className="space-y-8">
+                  <CoreWebVitalsUI content={content} />
+                  {tool.id === 'site-speed' && (
+                    <PerformanceBenchmarkChart 
+                      currentSpeed={(() => {
+                        const lcpMatch = content.match(/LCP:\s*([\d.]+)/i);
+                        return lcpMatch ? parseFloat(lcpMatch[1]) : 2.4;
+                      })()} 
+                      industryAvg={3.1} 
+                    />
+                  )}
+                </div>
+              ) : tool.id === 'bulk-url' && title.toLowerCase().includes('table') ? (
+                <BulkURLResultTable content={content} />
               ) : (
                 <ReactMarkdown
                   components={{

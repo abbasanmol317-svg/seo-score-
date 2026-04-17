@@ -156,22 +156,36 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
                       transition={{ duration: 0.2 }}
                       className="overflow-hidden"
                     >
-                      <div className="pl-11 pr-2 py-1 space-y-1">
+                      <div className="pl-6 sm:pl-8 pr-2 py-1 space-y-1">
                         {categoryTools.map((tool) => {
                           const isActive = tool.id === currentToolId;
+                          const ToolIcon = (Icons as any)[tool.icon] || Icons.Zap;
                           return (
                             <Link
                               key={tool.id}
                               to={`/tool/${tool.id}`}
                               onClick={onClose}
                               className={cn(
-                                "block px-3 py-2 rounded-lg text-xs font-bold transition-all",
+                                "flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all group/item relative",
                                 isActive
-                                  ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 dark:shadow-indigo-900/40"
+                                  ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40 translate-x-1"
                                   : "text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30"
                               )}
                             >
-                              {tool.name}
+                              {isActive && (
+                                <motion.div 
+                                  layoutId="active-indicator"
+                                  className="absolute -left-2 w-1 h-4 bg-indigo-600 rounded-full"
+                                />
+                              )}
+                              <div className={cn(
+                                "p-1 rounded-md transition-colors",
+                                isActive ? "bg-white/20 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-400 group-hover/item:bg-white dark:group-hover/item:bg-slate-700 group-hover/item:text-indigo-600"
+                              )}>
+                                <ToolIcon size={12} strokeWidth={3} />
+                              </div>
+                              <span className="truncate">{tool.name}</span>
+                              {isActive && <Icons.ChevronRight size={10} className="ml-auto opacity-60" strokeWidth={4} />}
                             </Link>
                           );
                         })}

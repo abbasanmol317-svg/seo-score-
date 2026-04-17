@@ -99,9 +99,10 @@ export const TOOLS: Tool[] = [
     (Out of 100)
     
     ## ⏱️ Core Web Vitals
-    - LCP: (Value) [GOOD/AVERAGE/POOR]
-    - FID: (Value) [GOOD/AVERAGE/POOR]
-    - CLS: (Value) [GOOD/AVERAGE/POOR]
+    (Provide simulated values for LCP, FID, and CLS. MUST use this EXACT format:)
+    - LCP: [Value] [GOOD/AVERAGE/POOR]
+    - FID: [Value] [GOOD/AVERAGE/POOR]
+    - CLS: [Value] [GOOD/AVERAGE/POOR]
     
     ## 🐢 Performance Bottlenecks
     (List main issues slowing down the site)
@@ -295,34 +296,49 @@ export const TOOLS: Tool[] = [
     keywords: 'search,keywords,research',
     seoTitle: 'Free AI Keyword Research Tool: Find High-Volume Keywords (2026)',
     seoDescription: 'Discover high-traffic, low-competition keywords with our free AI Keyword Research tool. Build your topical authority and dominate the SERPs with expert insights.',
-    prompt: `Perform keyword research.
-    Format as a Keyword Strategy with these sections:
+    prompt: `Analyze the provided topic or seed keyword and generate a comprehensive Keyword Strategy.
+    Format your response with these EXACT sections:
+    
     ## 🎯 Primary Keywords
-    (High volume, relevant)
+    (List of high-volume, high-relevance keywords)
     
-    ## 📈 Keyword Analysis Table
-    (Keyword, Volume, Difficulty [GOOD/AVERAGE/POOR], Intent)
+    ## 📈 Keyword Analysis Detail
+    (A detailed breakdown including:)
+    - **Keyword**: [Keyword Name]
+    - **Volume**: [Estimated Monthly Volume]
+    - **Difficulty**: [Percentage 0-100] [GOOD/AVERAGE/POOR]
+    - **Search Intent**: [Informational/Transactional/Navigational]
     
-    ## 💡 Content Ideas
-    (Topics for these keywords)
+    ## 🚀 Easy Wins (Low Competition)
+    ### 💡 Why Easy Wins Matter
+    (Briefly explain why these low-competition keywords are critical for new websites or sites with lower domain authority—focusing on building initial momentum and ranking faster.)
     
-    ## 🏁 Easy Wins
-    (Low competition keywords to target now)
+    ### 🎯 Identified Easy Wins
+    Identify "Easy Win" keywords: these must have decent search volume but very low organic competition. 
+    Format each as:
+    - **[Keyword]**: [Reason why it's an easy win] | Volume: [X,XXX] | Difficulty: [Low]
     
-    ## 📉 Related Keywords (Low Competition)
-    Analyze the primary keywords provided and suggest 5 related keywords that have a lower competition score but similar search intent. Format as a list:
-    - **Keyword**: [Keyword Name] | **Difficulty**: [Estimated Difficulty 0-100] | **Intent**: [Search Intent]`,
+    ### 🏃 Prioritization Strategy
+    (Suggest how to prioritize these keywords in a content calendar—e.g., target them first to gain topical authority and early traffic.)
+    
+    ## 💡 Content Clusters & Topics
+    (Suggested content strategies to build topical authority)
+    
+    ## 📉 Related Semantic Keywords
+    (LSI and semantically related keywords to include in your content for better relevance)`,
     placeholder: 'Enter niche or seed keyword (e.g., "vegan dog food" or "SaaS marketing")'
   },
   {
     id: 'content-optimizer',
     name: 'Content Optimizer',
-    description: 'Analyze and improve content quality.',
+    description: 'Analyze and improve content quality with AI-powered suggestions and internal linking strategy.',
     category: 'Content & Keywords',
     icon: 'PenTool',
-    keywords: 'content,writing,optimization',
-    prompt: `Analyze this content for SEO.
-    Format as a Content Audit with these sections:
+    keywords: 'content,writing,optimization,internal linking,seo writing',
+    seoTitle: 'AI Content Optimizer Tool: Improve Writing & Internal SEO (2026)',
+    seoDescription: 'Optimize your content for search engines with our AI Content Optimizer. Get readability scores, keyword density analysis, and strategic internal linking suggestions to boost your topical authority.',
+    prompt: `Analyze this content for SEO and readability.
+    Format your response as a Content Audit with these EXACT sections:
     ## ✍️ Readability Score
     Score: [0-100]
     
@@ -331,80 +347,44 @@ export const TOOLS: Tool[] = [
     
     ## 🔑 Keyword Usage Analysis
     - Primary Keyword: [Keyword]
-    - Density: [X.X%]
+    - Density: [X.X%] [GOOD/AVERAGE/POOR]
     - Placement: [Details]
     
     ## 🛠️ Rewrite Suggestions
-    (Specific parts to improve)
+    (Specific parts or sentences to improve for better flow and impact)
     
     ## 📑 Heading Structure
-    (Is it optimized?)
+    (Analyze H1-H4 hierarchy and keyword placement)
     
     ## 🔗 Internal Linking Opportunities
-    Identify strategic opportunities to link to other tools and blog posts within the "SEO Score Suite" to enhance user value, topical authority, and internal SEO structure.
+    Identify strategic, high-value opportunities to link to other tools and blog posts within the "SEO Score Suite" platform. These links must improve user value, build topical authority, and reinforce internal SEO structure.
     
-    Guidelines for Internal Linking:
-    - **Contextual Relevance**: The anchor text MUST be a phrase that naturally occurs or fits perfectly within the flow of the content.
-    - **Descriptive & Natural**: Avoid generic phrases like "click here" or "use this tool". Instead, use descriptive keywords like "technical SEO audit", "mobile responsiveness", or "keyword difficulty analysis".
-    - **Variety**: Use a mix of exact match and partial match keywords for the anchor text.
-    - **Natural Integration**: The link should feel like a helpful resource for the reader, not a forced advertisement.
-    - **Topical Authority**: Link to blog posts that provide deeper educational value on the topic being discussed.
+    CRITICAL Guidelines for Internal Linking:
+    - **Natural Integration**: Suggestions MUST feel like an organic part of the text, not a forced insertion.
+    - **Contextual Anchor Text**: Use descriptive, keyword-rich phrases as anchor text (e.g., "comprehensive technical SEO audit" instead of "click here").
+    - **Topical Relevance**: Only suggest links that genuinely add value to the specific context of the content being analyzed.
+    - **Variety**: Mix exact-match and semantic-match anchor texts.
     
-    Target Tools & Resources List:
-    - Website SEO Analysis (website-seo)
-    - YouTube SEO Checker (youtube-seo)
-    - Site Speed Checker (site-speed)
-    - Backlink Checker (backlinks)
-    - Broken Link Checker (broken-links)
-    - SEO Audit Checklist (seo-audit)
-    - On-Page SEO Checklist (on-page-checklist)
-    - Mobile-Friendly Test (mobile-friendly)
-    - Bulk URL Analysis (bulk-url)
-    - Keyword Research Tool (keyword-research)
-    - Hashtag Generator (hashtag-generator)
-    - Meta Tag Generator (meta-tag)
-    - SERP Preview Tool (serp-preview)
-    - OG Preview Generator (og-preview)
-    - Schema Markup Generator (schema-markup)
-    - Image Alt Text Generator (image-alt-text)
-    - Sitemap & Robots.txt Generator (sitemap-robots)
-    - Compare Websites (compare-websites)
-    - AI SEO Chat (seo-chat)
-    - SEO Dashboard & History (seo-dashboard)
-    - SEO Resources & Guides (resources)
+    Highly Relevant Target Tools:
+    - Website SEO Analysis (website-seo): For site-wide health checks.
+    - Keyword Research Tool (keyword-research): For finding new ranking opportunities.
+    - Site Speed Checker (site-speed): For performance optimization.
+    - Broken Link Checker (broken-links): For cleaning up 404 errors.
+    - SEO Audit Checklist (seo-audit): For a complete technical review.
+    - Meta Tag Generator (meta-tag): For optimizing search appearance.
     
-    Target Blog Posts List:
+    Highly Relevant Blog Posts:
     - Website SEO: Complete Guide to Ranking Your Website in 2026 (blog-22)
-    - YouTube SEO Tool for Beginners Free (blog-15)
-    - AI YouTube Keyword Research Tool 2026 (blog-16)
-    - Video SEO Optimization Tool Free (blog-17)
-    - Website Speed Test AI Tool Free (blog-18)
-    - Free Backlink Checker Tool with Report (blog-19)
-    - Broken Link Checker Tool Online Free (blog-20)
-    - AI Tool to Fix 404 Errors Website (blog-21)
-    - Finding Low Competition Keywords (blog-6)
-    - AI Website SEO Audit Tool Free Online (blog-7)
-    - Free SEO Analysis Tool for Beginners 2026 (blog-8)
-    - Website SEO Checker with AI Report (blog-9)
-    - Instant SEO Audit Tool Without Signup (blog-10)
-    - AI SEO Analyzer for Small Businesses (blog-11)
-    - Bulk URL SEO Checker Tool Free (blog-12)
-    - Website Health Checker SEO Free Tool (blog-13)
-    - Technical SEO Audit Tool Online Free (blog-14)
-    - Best Free AI SEO Tools 2026 (blog-4)
     - How to do SEO Audit Step by Step (blog-5)
     - How Gemini AI is Revolutionizing SEO Analysis (blog-1)
-    - 10 Technical SEO Mistakes You're Probably Making (blog-2)
-    - The Future of Voice Search Optimization (blog-3)
     
     Format each suggestion as:
-    '[Contextual Anchor Text] -> [Tool ID or Blog ID] | [Brief Reason] | [Source Sentence with anchor text bolded]'
+    '[Contextual Anchor Text] -> [Tool ID or Blog ID] | [Brief Reason] | [Source Sentence with anchor text **bolded**]'
     
-    Example:
-    'technical SEO audit' -> seo-audit | Use this to identify the underlying technical issues mentioned in the second paragraph. | Before you publish, run a **technical SEO audit** to ensure your site is healthy.
-    'YouTube SEO guide' -> blog-15 | Provide users with a beginner-friendly tutorial on video optimization. | If you're new to video, check out our **YouTube SEO guide** for tips.
-    'SEO resources' -> resources | Direct users to our comprehensive list of AI SEO tools and guides. | For more information, check out our curated list of **SEO resources**.
-    'Website SEO Guide' -> blog-22 | Offer a complete roadmap for ranking websites in 2026. | To master the basics, read our comprehensive **Website SEO Guide**.`,
+    Make sure to provide at least 3-5 high-quality linking suggestions if the content length allows.
+    
+    ## 🏁 Next Steps & Recommended Tools
+    (Always include a clear Call-to-Action recommending the **Keyword Research Tool** (keyword-research) to find more high-value topics and relevant keywords to further optimize this content. Explain how identifying 'Easy Win' keywords specifically can accelerate their SEO performance.)`,
     placeholder: 'Paste your content or enter URL to optimize (e.g., "Our mission is...")'
   },
   {

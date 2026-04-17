@@ -11,6 +11,7 @@ const PowerPage = () => {
       description: "A complete SEO audit is the first step toward improving your website rankings. These tools help identify technical issues, optimize on-page SEO, and improve performance.",
       linkText: "Explore the full SEO Audit Tool here",
       linkPath: "/tool/seo-audit",
+      learnMorePath: "/blog/22",
       icon: Icons.SearchCode,
       color: "text-blue-600",
       bgColor: "bg-blue-50 dark:bg-blue-900/20"
@@ -20,6 +21,7 @@ const PowerPage = () => {
       description: "Finding the right keywords is the backbone of SEO success. These AI-powered tools help you discover low-competition and high-traffic keywords.",
       linkText: "Try the Keyword Research Tool",
       linkPath: "/tool/keyword-research",
+      learnMorePath: "/blog/6",
       icon: Icons.KeyRound,
       color: "text-emerald-600",
       bgColor: "bg-emerald-50 dark:bg-emerald-900/20"
@@ -29,6 +31,7 @@ const PowerPage = () => {
       description: "YouTube SEO is essential for content creators looking to increase their views and subscribers. These tools help optimize titles, descriptions, and tags.",
       linkText: "Use the YouTube SEO Tool",
       linkPath: "/tool/youtube-seo",
+      learnMorePath: "/blog/15",
       icon: Icons.Youtube,
       color: "text-red-600",
       bgColor: "bg-red-50 dark:bg-red-900/20"
@@ -38,6 +41,7 @@ const PowerPage = () => {
       description: "Website speed directly impacts user experience and search engine rankings. A fast-loading website keeps visitors engaged.",
       linkText: "Test your site speed here",
       linkPath: "/tool/site-speed",
+      learnMorePath: "/blog/18",
       icon: Icons.Zap,
       color: "text-amber-600",
       bgColor: "bg-amber-50 dark:bg-amber-900/20"
@@ -47,6 +51,7 @@ const PowerPage = () => {
       description: "Backlinks are one of the most important ranking factors in SEO. Monitoring your backlink profile helps improve authority and rankings.",
       linkText: "Analyze backlinks here",
       linkPath: "/tool/backlinks",
+      learnMorePath: "/blog/19",
       icon: Icons.Link,
       color: "text-indigo-600",
       bgColor: "bg-indigo-50 dark:bg-indigo-900/20"
@@ -122,13 +127,22 @@ const PowerPage = () => {
                   <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
                     {section.description} Our AI-driven approach ensures you get actionable insights that prioritize user experience while meeting technical search requirements.
                   </p>
-                  <Link 
-                    to={section.linkPath}
-                    className={`inline-flex items-center gap-2 font-bold ${section.color} hover:underline decoration-2 underline-offset-4`}
-                  >
-                    👉 {section.linkText}
-                    <Icons.ArrowRight size={16} />
-                  </Link>
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                    <Link 
+                      to={section.linkPath}
+                      className={`inline-flex items-center gap-2 font-bold ${section.color} hover:underline decoration-2 underline-offset-4`}
+                    >
+                      👉 {section.linkText}
+                      <Icons.ArrowRight size={16} />
+                    </Link>
+                    <Link 
+                      to={section.learnMorePath}
+                      className="inline-flex items-center gap-2 font-medium text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors text-sm hover:underline"
+                    >
+                      <Icons.Info size={14} />
+                      Learn More
+                    </Link>
+                  </div>
                 </div>
               </div>
             </motion.div>

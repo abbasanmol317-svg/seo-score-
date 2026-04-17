@@ -5,6 +5,8 @@ import * as Icons from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { TOOLS } from '../services/gemini';
 
+import { ToolCard } from '../components/ToolCard';
+
 export default function Tools() {
   const categories = Array.from(new Set(TOOLS.map(t => t.category)));
 
@@ -43,39 +45,10 @@ export default function Tools() {
               <div className="h-px flex-grow bg-slate-200 dark:border-slate-800" />
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {TOOLS.filter(t => t.category === category).map((tool, index) => {
-                const ToolIcon = (Icons as any)[tool.icon] || Icons.Zap;
-                return (
-                  <motion.div
-                    key={tool.id}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: (catIndex * 0.1) + (index * 0.05) }}
-                    whileHover={{ y: -5 }}
-                  >
-                    <Link
-                      to={`/tool/${tool.id}`}
-                      className="block h-full bg-white dark:bg-slate-900 p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-indigo-200 dark:hover:border-indigo-900 transition-all group"
-                    >
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                          <ToolIcon size={24} />
-                        </div>
-                        <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                          {tool.name}
-                        </h3>
-                      </div>
-                      <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6 line-clamp-2">
-                        {tool.description}
-                      </p>
-                      <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 text-xs font-black uppercase tracking-widest group-hover:gap-3 transition-all">
-                        Launch Tool <Icons.ArrowRight size={14} />
-                      </div>
-                    </Link>
-                  </motion.div>
-                );
-              })}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {TOOLS.filter(t => t.category === category).map((tool, index) => (
+                <ToolCard key={tool.id} tool={tool} index={index + (catIndex * 5)} />
+              ))}
             </div>
           </section>
         ))}

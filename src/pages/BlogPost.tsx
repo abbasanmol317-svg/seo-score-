@@ -40,6 +40,27 @@ export default function BlogPost() {
     .filter(p => p.category === post.category && p.id !== post.id)
     .slice(0, 3);
 
+  const externalResources = [
+    {
+      title: "The 2026 Guide to AI-First Indexing: How Search is Changing",
+      source: "Search Engine Land",
+      url: "https://searchengineland.com/seo-trends-2026",
+      excerpt: "Expert predictions on how Gemini and other LLMs are reshaping crawling, indexing, and ranking in the new search era."
+    },
+    {
+      title: "Strategic SEO Pivots for 2026: Navigating AI-Powered Search",
+      source: "Semrush",
+      url: "https://www.semrush.com/blog/seo-trends/",
+      excerpt: "Learn how to adapt your content strategy for generative AI overviews and maintain organic visibility."
+    },
+    {
+      title: "Advanced Technical SEO 2026: Maximizing Crawl Efficiency",
+      source: "Moz",
+      url: "https://moz.com/blog/category/technical-seo",
+      excerpt: "A deep dive into server-side optimization and semantic data structures required for modern AI search bots."
+    }
+  ];
+
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -203,6 +224,35 @@ export default function BlogPost() {
           </div>
         </div>
       )}
+
+      <div className="mt-20">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="p-2 bg-emerald-600 rounded-xl text-white">
+            <Icons.Globe size={20} />
+          </div>
+          <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-none">Expert Resources from the Web</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {externalResources.map((resource, i) => (
+            <a 
+              key={i}
+              href={resource.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group bg-slate-50 dark:bg-slate-900/50 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-emerald-200 dark:hover:border-emerald-900 hover:bg-white dark:hover:bg-slate-900 transition-all shadow-sm flex flex-col h-full"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest leading-none bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-md">{resource.source}</span>
+                <Icons.ExternalLink size={14} className="text-slate-300 dark:text-slate-600 group-hover:text-emerald-500 transition-colors" />
+              </div>
+              <h4 className="text-base font-bold text-slate-900 dark:text-white mb-3 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-tight">{resource.title}</h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-3 mb-0">
+                {resource.excerpt}
+              </p>
+            </a>
+          ))}
+        </div>
+      </div>
 
       <div className="mt-12 text-center">
         <Link 

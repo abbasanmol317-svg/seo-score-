@@ -87,7 +87,15 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
     "Decorative images should have an empty alt attribute (alt=\"\") to avoid distracting screen readers.",
     "Informational images need alt text that provides an equivalent experience to the visual content.",
     "Functional images (like buttons) should have alt text describing the action, not the icon itself.",
-    "Avoid starting alt text with 'image of' or 'picture of'—it's redundant for screen readers."
+    "Avoid starting alt text with 'image of' or 'picture of'—it's redundant for screen readers.",
+    "Keep LCP under 2.5 seconds for a fast and search-friendly experience.",
+    "The 45-character rule for Title Tags helps prevent truncation in mobile search.",
+    "Internal links with descriptive anchor text act as 'roads' for Google's crawlers.",
+    "Adding an FAQ section with structured data can significantly boost rich snippets.",
+    "Video SEO: Use transcripts to help AI 'read' your video content.",
+    "A 1-second delay in page load can lead to a 7% reduction in conversions.",
+    "Prioritize 'Low Difficulty' keywords to build topical authority faster.",
+    "Cumulative Layout Shift (CLS) should be less than 0.1 for maximum stability."
   ];
 
   useEffect(() => {
@@ -221,7 +229,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
 
       tipInterval = setInterval(() => {
         setCurrentTip(SEO_TIPS[Math.floor(Math.random() * SEO_TIPS.length)]);
-      }, 6000);
+      }, 4000);
     }
     return () => {
       clearInterval(interval);
@@ -426,6 +434,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
     const toolKeywords = tool.keywords.toLowerCase().split(',').map(k => k.trim());
     const toolId = tool.id.toLowerCase();
     const toolName = tool.name.toLowerCase();
+    const toolCategory = tool.category.toLowerCase();
 
     return BLOG_POSTS.map(post => {
       let score = 0;
@@ -443,21 +452,26 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
       if (title.includes(toolIdClean)) score += 40;
       if (excerpt.includes(toolIdClean)) score += 25;
 
-      // 3. Keyword matches
+      // 3. Category match (Strong)
+      if (category.includes(toolCategory) || toolCategory.includes(category)) {
+        score += 35;
+      }
+
+      // 4. Keyword matches
       toolKeywords.forEach(kw => {
         if (kw === 'seo' || kw === 'ai') {
           // Generic keywords get less score
           if (title.includes(kw)) score += 2;
           if (excerpt.includes(kw)) score += 1;
         } else {
-          if (title.includes(kw)) score += 10;
-          if (excerpt.includes(kw)) score += 5;
-          if (category.includes(kw)) score += 5;
+          if (title.includes(kw)) score += 15;
+          if (excerpt.includes(kw)) score += 8;
+          if (category.includes(kw)) score += 10;
         }
       });
 
-      // 4. Content mentions the tool path
-      if (content.includes(`/tool/${toolId}`)) score += 20;
+      // 5. Content mentions the tool path
+      if (content.includes(`/tool/${toolId}`)) score += 25;
 
       return { ...post, score };
     })
@@ -604,58 +618,6 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
             />
           </Suspense>
 
-          {relatedPosts.length > 0 && (
-            <div className={cn("mt-12 sm:mt-16", isGeneratingPDF && "hidden")}>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                <div>
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-3 tracking-tight">
-                    <Icons.BookOpen className="text-indigo-600" size={24} />
-                    Suggested Reading
-                  </h2>
-                  <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
-                    Expert guides to help you master {tool?.name}.
-                  </p>
-                </div>
-                <Link to="/blog" className="text-xs font-black text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 uppercase tracking-widest">
-                  All Articles <Icons.ArrowRight size={14} />
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {relatedPosts.map((post) => (
-                  <Link
-                    key={post.id}
-                    to={`/blog/${post.id}`}
-                    className="group bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden hover:border-indigo-200 dark:hover:border-indigo-900 transition-all hover:shadow-xl flex flex-col"
-                  >
-                    <div className="p-5 flex flex-col flex-grow">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-[8px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest px-2 py-0.5 bg-indigo-50 dark:bg-indigo-900/30 rounded-full border border-indigo-100 dark:border-indigo-800">
-                          {post.category}
-                        </span>
-                        {(post as any).score > 40 && (
-                          <span className="flex items-center gap-1 text-[8px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
-                            <Icons.Star size={8} fill="currentColor" /> Highly Relevant
-                          </span>
-                        )}
-                      </div>
-                      <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2">
-                        {post.title}
-                      </h3>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 mb-4 flex-grow">
-                        {post.excerpt}
-                      </p>
-                      <div className="flex items-center justify-between text-[10px] font-black text-slate-400 group-hover:text-indigo-600 transition-colors uppercase tracking-widest">
-                        <span>Read Article</span>
-                        <Icons.ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-
           <div className={cn("mt-12 sm:mt-20 space-y-12", isGeneratingPDF && "hidden")}>
             <section className="p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
@@ -776,6 +738,58 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                 ))}
               </div>
             </section>
+
+            {relatedPosts.length > 0 && (
+              <div className={cn("pt-12 border-t border-slate-200 dark:border-slate-800", isGeneratingPDF && "hidden")}>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                  <div>
+                    <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-3 tracking-tight">
+                      <Icons.BookOpen className="text-indigo-600" size={24} />
+                      Expert SEO Insights
+                    </h2>
+                    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
+                      Master {tool?.name} with our latest guides and expert strategies.
+                    </p>
+                  </div>
+                  <Link to="/blog" className="text-xs font-black text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 uppercase tracking-widest">
+                    All Guides <Icons.ArrowRight size={14} />
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {relatedPosts.map((post) => (
+                    <Link
+                      key={post.id}
+                      to={`/blog/${post.id}`}
+                      className="group bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 overflow-hidden hover:border-indigo-200 dark:hover:border-indigo-900 transition-all hover:shadow-2xl flex flex-col"
+                    >
+                      <div className="p-6 flex flex-col h-full">
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="text-[9px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest px-3 py-1 bg-indigo-50 dark:bg-indigo-900/30 rounded-full border border-indigo-100 dark:border-indigo-800">
+                            {post.category}
+                          </span>
+                          {(post as any).score > 40 && (
+                            <div className="flex items-center gap-1 text-[9px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+                              <Icons.Sparkles size={10} className="text-emerald-500" /> RECOMMENDED
+                            </div>
+                          )}
+                        </div>
+                        <h3 className="text-base font-bold text-slate-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 leading-snug">
+                          {post.title}
+                        </h3>
+                        <p className="text-[12px] text-slate-500 dark:text-slate-400 line-clamp-2 mb-6 flex-grow leading-relaxed">
+                          {post.excerpt}
+                        </p>
+                        <div className="flex items-center justify-between text-[10px] font-black text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors uppercase tracking-widest">
+                          <span>Read Full Guide</span>
+                          <Icons.ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className={cn("mt-12 sm:mt-20 pt-8 sm:pt-12 border-t border-slate-200 dark:border-slate-800", isGeneratingPDF && "hidden")}>
