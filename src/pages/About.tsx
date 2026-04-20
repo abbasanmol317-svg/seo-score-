@@ -97,7 +97,7 @@ export default function About() {
               return (
                 <Link 
                   key={tool.id} 
-                  to={`/tool/${tool.id}`}
+                  to={`/tools/${tool.slug}`}
                   className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all group"
                 >
                   <div className="p-2 bg-white dark:bg-slate-800 rounded-lg text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-colors">

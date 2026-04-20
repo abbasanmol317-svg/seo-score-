@@ -28,7 +28,7 @@ export const ToolCard = React.memo(({ tool, index, className }: ToolCardProps) =
       className={cn("h-full", className)}
     >
       <Link
-        to={`/tool/${tool.id}`}
+        to={`/tools/${tool.slug}`}
         className="group relative h-full bg-white dark:bg-slate-900 rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-2xl hover:shadow-indigo-500/10 dark:hover:shadow-indigo-900/30 hover:border-indigo-400 dark:hover:border-indigo-600 transition-all duration-500 flex flex-col overflow-hidden"
       >
         {/* Subtle Background Color Shift on Hover */}

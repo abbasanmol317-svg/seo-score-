@@ -64,7 +64,12 @@ export default function ToolSearch({ className, onSelect, autoFocus, isMobile: i
   }, []);
 
   const handleSelect = (toolId: string) => {
-    navigate(`/tool/${toolId}`);
+    const tool = TOOLS.find(t => t.id === toolId);
+    if (tool) {
+      navigate(`/tools/${tool.slug}`);
+    } else {
+      navigate(`/tool/${toolId}`);
+    }
     setIsOpen(false);
     setQuery('');
     if (onSelect) onSelect();

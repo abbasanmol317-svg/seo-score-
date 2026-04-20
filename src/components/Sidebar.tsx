@@ -13,8 +13,10 @@ interface SidebarProps {
 
 export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) {
   const location = useLocation();
-  const currentToolId = location.pathname.startsWith('/tool/') ? location.pathname.split('/')[2] : null;
-  const currentTool = currentToolId ? TOOLS.find(t => t.id === currentToolId) : null;
+  const currentToolId = location.pathname.startsWith('/tool/') || location.pathname.startsWith('/tools/') 
+    ? location.pathname.split('/').filter(Boolean).pop() 
+    : null;
+  const currentTool = currentToolId ? TOOLS.find(t => t.id === currentToolId || t.slug === currentToolId) : null;
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const categories = Object.keys(CATEGORY_CONFIG).filter(cat => 
@@ -49,7 +51,7 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
     );
   };
 
-  const isToolPage = location.pathname.startsWith('/tool/');
+  const isToolPage = location.pathname.startsWith('/tool/') || location.pathname.startsWith('/tools/');
 
   if (!isToolPage && !isMobile) return null;
 
@@ -99,7 +101,7 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
             const isExpanded = expandedCategories.includes(category);
             const CategoryIcon = (Icons as any)[config.icon] || Icons.Folder;
             const categoryTools = TOOLS.filter(t => t.category === category);
-            const hasActiveTool = categoryTools.some(t => t.id === currentToolId);
+            const hasActiveTool = categoryTools.some(t => t.id === currentToolId || t.slug === currentToolId);
             
             // Tooltip for collapsed state
             const tooltipContent = isCollapsed && !isMobile 
@@ -158,12 +160,12 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
                     >
                       <div className="pl-6 sm:pl-8 pr-2 py-1 space-y-1">
                         {categoryTools.map((tool) => {
-                          const isActive = tool.id === currentToolId;
+                          const isActive = tool.id === currentToolId || tool.slug === currentToolId;
                           const ToolIcon = (Icons as any)[tool.icon] || Icons.Zap;
                           return (
                             <Link
                               key={tool.id}
-                              to={`/tool/${tool.id}`}
+                              to={`/tools/${tool.slug}`}
                               onClick={onClose}
                               className={cn(
                                 "flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all group/item relative",

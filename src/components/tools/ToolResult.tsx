@@ -4,7 +4,7 @@ import * as Icons from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { cn } from '../../lib/utils';
-import { Tool } from '../../services/gemini';
+import { Tool, TOOLS } from '../../services/gemini';
 import { renderMarkdownContent } from '../../lib/seo-utils';
 import { CoreWebVitalsUI } from './CoreWebVitalsUI';
 import { PerformanceBenchmarkChart } from '../charts/SEOPerformanceChart';
@@ -409,10 +409,10 @@ export const ToolResult = React.memo(({
                         const sourceSentence = linkMatch[4];
 
                         const getToolPath = (tid: string) => {
-                          if (tid === 'seo-audit') return '/ai-seo-audit-tool';
-                          if (tid === 'keyword-research') return '/keyword-research-tool';
                           if (tid === 'resources') return '/resources';
                           if (tid.startsWith('blog-')) return `/blog/${tid.replace('blog-', '')}`;
+                          const tool = TOOLS.find(t => t.id === tid);
+                          if (tool) return `/tools/${tool.slug}`;
                           return `/tool/${tid}`;
                         };
 

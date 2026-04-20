@@ -17,6 +17,7 @@ export interface Tool {
   description: string;
   category: string;
   icon: string;
+  slug: string;
   prompt: string;
   placeholder: string;
   keywords: string;
@@ -31,9 +32,10 @@ export const TOOLS: Tool[] = [
     description: 'Analyze any website for SEO improvements.',
     category: 'SEO Analysis',
     icon: 'ScanSearch',
+    slug: 'free-website-seo-audit-tool',
     keywords: 'website,seo,analytics',
-    seoTitle: 'Free AI Website SEO Checker & Analysis Tool (2026)',
-    seoDescription: 'Analyze your website SEO for free with our AI checker. Get a detailed report with actionable fixes to improve your Google rankings and dominate search results.',
+    seoTitle: 'Free Website SEO Audit Tool – Full Technical & On-Page Analysis',
+    seoDescription: 'Run a free website SEO audit to find technical issues, on-page errors, and performance gaps. Get actionable insights to boost rankings.',
     prompt: `Analyze the SEO of this website. 
     Format your response as a professional SEO Report with these EXACT sections:
     ## 🏆 Overall SEO Score
@@ -60,9 +62,10 @@ export const TOOLS: Tool[] = [
     description: 'Check and optimize YouTube video SEO.',
     category: 'SEO Analysis',
     icon: 'CirclePlay',
+    slug: 'free-youtube-seo-tool',
     keywords: 'youtube,video,marketing',
-    seoTitle: 'YouTube SEO Tool: Optimize Video Rankings for Free (2026)',
-    seoDescription: 'Boost your YouTube views and channel growth with our free AI SEO tool. Get optimized titles, tags, and descriptions to rank #1 on YouTube search results today.',
+    seoTitle: 'Free YouTube SEO Tool – Optimize Titles, Tags & Descriptions',
+    seoDescription: 'Use our free YouTube SEO tool to generate optimized titles, tags, and descriptions to increase views and rankings.',
     prompt: `Analyze the SEO for this YouTube video or topic. 
     Format your response as a YouTube Optimization Guide with these sections:
     ## 📊 SEO Score
@@ -90,9 +93,10 @@ export const TOOLS: Tool[] = [
     description: 'AI-simulated page load speed analysis.',
     category: 'SEO Analysis',
     icon: 'Gauge',
+    slug: 'free-website-speed-test-tool',
     keywords: 'speed,fast,performance',
-    seoTitle: 'AI Site Speed Checker: Test Page Load Performance (2026)',
-    seoDescription: 'Check your website speed with our AI-powered performance tool. Get Core Web Vitals scores, identify bottlenecks, and get actionable speed optimization tips now.',
+    seoTitle: 'Best Website Speed Test Tool – Core Web Vitals Checker',
+    seoDescription: 'Test your website speed for free. Analyze Core Web Vitals, loading time, and performance to improve user experience.',
     prompt: `Simulate a page speed analysis for this URL.
     Format as a Speed Report with these sections:
     ## ⚡ Performance Score
@@ -125,9 +129,10 @@ export const TOOLS: Tool[] = [
     description: 'Analyze backlink profile and quality.',
     category: 'SEO Analysis',
     icon: 'Network',
+    slug: 'free-backlink-checker-tool',
     keywords: 'links,network,backlinks',
-    seoTitle: 'Free Backlink Checker: Analyze Domain Authority (2026)',
-    seoDescription: 'Check your backlink profile for free. Identify high-quality link opportunities, analyze anchor text, and find toxic backlinks to protect your SEO rankings today.',
+    seoTitle: 'Free Backlink Checker Tool – Analyze Domain Authority & Links',
+    seoDescription: 'Check backlinks for free. Analyze domain authority, link quality, and find new opportunities to improve SEO.',
     prompt: `Analyze the backlink profile for this domain.
     Format as a Backlink Audit with these sections:
     ## 🔗 Authority Score
@@ -161,9 +166,10 @@ export const TOOLS: Tool[] = [
     description: 'Scan for potential broken links and fixes.',
     category: 'SEO Analysis',
     icon: 'LinkOff',
+    slug: 'free-broken-link-checker-tool',
     keywords: 'broken,link,error',
-    seoTitle: 'Broken Link Checker: Find & Fix 404 Errors Fast (2026)',
-    seoDescription: 'Scan your website for broken links and 404 errors instantly. Get an AI-powered fixing guide to improve user experience, crawlability, and overall SEO health now.',
+    seoTitle: 'Advanced Broken Link Checker Tool – Find 404 Errors & Dead Links',
+    seoDescription: 'Scan your website for free and detect broken links, 404 errors, and dead pages to improve SEO and UX.',
     prompt: `Provide a broken link strategy.
     Format as a Link Health Report with these sections:
     ## 🚦 Overall Link Health
@@ -185,9 +191,10 @@ export const TOOLS: Tool[] = [
     description: 'Complete SEO audit for your site.',
     category: 'SEO Analysis',
     icon: 'SearchCode',
+    slug: 'free-seo-audit-checklist',
     keywords: 'audit,checklist,seo',
-    seoTitle: 'Complete SEO Audit Checklist: Free AI Site Review (2026)',
-    seoDescription: 'Run a full SEO audit for your website today. Get a comprehensive checklist of technical, on-page, and off-page SEO fixes to boost your search engine rankings.',
+    seoTitle: 'Free SEO Audit Checklist – Complete Technical & On-Page Guide',
+    seoDescription: 'Use this free SEO audit checklist to optimize your website. Cover technical SEO, on-page fixes, and ranking factors.',
     prompt: `Generate a complete SEO Audit Checklist.
     Format as a Checklist with these sections:
     ## 📝 Summary
@@ -215,9 +222,10 @@ export const TOOLS: Tool[] = [
     description: 'Optimize individual pages with a detailed on-page checklist.',
     category: 'SEO Analysis',
     icon: 'ClipboardCheck',
+    slug: 'free-on-page-seo-checklist',
     keywords: 'on-page,checklist,optimization,content',
-    seoTitle: 'On-Page SEO Checklist: Optimize Content for 2026',
-    seoDescription: 'Improve your on-page SEO with our AI-powered checklist. Optimize titles, headers, keywords, and internal links for maximum search visibility and higher rankings.',
+    seoTitle: 'Best On-Page SEO Checklist – Optimize Pages for Higher Rankings',
+    seoDescription: 'Improve your pages with a free on-page SEO checklist. Optimize titles, content, keywords, and internal links.',
     prompt: `Generate a detailed On-Page SEO Checklist for this page or topic.
     Format as a Checklist with these EXACT sections:
     ## 📝 Page Summary
@@ -248,9 +256,10 @@ export const TOOLS: Tool[] = [
     description: 'Check mobile responsiveness and UX.',
     category: 'SEO Analysis',
     icon: 'TabletSmartphone',
+    slug: 'free-mobile-friendly-test-tool',
     keywords: 'mobile,responsive,phone',
-    seoTitle: 'Mobile-Friendly Test: Check Responsive Web Design (2026)',
-    seoDescription: 'Is your website mobile-friendly? Test your site responsiveness and mobile UX with our free AI-powered mobile audit tool. Ensure a perfect user experience today.',
+    seoTitle: 'Free Mobile-Friendly Test Tool – Check Website Responsiveness',
+    seoDescription: 'Test your website’s mobile responsiveness for free. Ensure better UX and higher rankings on mobile devices.',
     prompt: `Evaluate mobile-friendliness.
     Format as a Mobile UX Audit with these sections:
     ## 📱 Mobile Score
@@ -272,9 +281,10 @@ export const TOOLS: Tool[] = [
     description: 'Analyze up to 10 URLs at once.',
     category: 'SEO Analysis',
     icon: 'ListChecks',
+    slug: 'free-bulk-url-seo-analysis-tool',
     keywords: 'bulk,data,list',
-    seoTitle: 'Bulk URL SEO Analysis: Scan Multiple Pages at Once (2026)',
-    seoDescription: 'Analyze SEO for up to 10 URLs simultaneously. Compare titles, meta tags, and SEO health across multiple pages in seconds to streamline your optimization workflow.',
+    seoTitle: 'Advanced Bulk URL SEO Analysis Tool – Analyze Multiple Pages',
+    seoDescription: 'Analyze multiple URLs for free. Get SEO insights, performance data, and optimization tips for better rankings.',
     prompt: `Analyze these URLs for SEO consistency.
     Format as a Comparison Table with these sections:
     ## 📊 Comparison Table
@@ -293,9 +303,10 @@ export const TOOLS: Tool[] = [
     description: 'Find high/medium/low competition keywords.',
     category: 'Content & Keywords',
     icon: 'KeyRound',
+    slug: 'free-keyword-research-tool',
     keywords: 'search,keywords,research',
-    seoTitle: 'Free AI Keyword Research Tool: Find High-Volume Keywords (2026)',
-    seoDescription: 'Discover high-traffic, low-competition keywords with our free AI Keyword Research tool. Build your topical authority and dominate the SERPs with expert insights.',
+    seoTitle: 'Free Keyword Research Tool – Find High Volume Low Competition Keywords',
+    seoDescription: 'Discover free keyword ideas with high search volume and low competition to improve SEO and rank faster.',
     prompt: `Analyze the provided topic or seed keyword and generate a comprehensive Keyword Strategy.
     Format your response with these EXACT sections:
     
@@ -334,9 +345,10 @@ export const TOOLS: Tool[] = [
     description: 'Analyze and improve content quality with AI-powered suggestions and internal linking strategy.',
     category: 'Content & Keywords',
     icon: 'PenTool',
+    slug: 'free-ai-content-optimization-tool',
     keywords: 'content,writing,optimization,internal linking,seo writing',
-    seoTitle: 'AI Content Optimizer Tool: Improve Writing & Internal SEO (2026)',
-    seoDescription: 'Optimize your content for search engines with our AI Content Optimizer. Get readability scores, keyword density analysis, and strategic internal linking suggestions to boost your topical authority.',
+    seoTitle: 'Best AI Content Optimization Tool – Improve SEO & Readability',
+    seoDescription: 'Optimize your content for free using AI. Improve readability, keyword usage, and internal linking for better SEO.',
     prompt: `Analyze this content for SEO and readability.
     Format your response as a Content Audit with these EXACT sections:
     ## ✍️ Readability Score
@@ -364,6 +376,12 @@ export const TOOLS: Tool[] = [
     - **Contextual Anchor Text**: Use descriptive, keyword-rich phrases as anchor text (e.g., "comprehensive technical SEO audit" instead of "click here").
     - **Topical Relevance**: Only suggest links that genuinely add value to the specific context of the content being analyzed.
     - **Variety**: Mix exact-match and semantic-match anchor texts.
+    
+    🚫 AVOID THESE MISTAKES:
+    - NO Anchor Text Spam: Never use the exact same anchor text repeatedly across different suggestions.
+    - NO Irrelevant Links: If a tool or blog post doesn't directly solve a problem mentioned in the text, do NOT suggest it.
+    - NO Link Overload: Suggest a maximum of 3-5 high-quality links. Do not crowd the content.
+    - NO Orphaned Entities: Ensure suggestions help connect "orphan" topics to relevant suite tools.
     
     Highly Relevant Target Tools:
     - Website SEO Analysis (website-seo): For site-wide health checks.
@@ -393,9 +411,10 @@ export const TOOLS: Tool[] = [
     description: 'Generate hashtags for YT, IG, TikTok.',
     category: 'Content & Keywords',
     icon: 'Tag',
+    slug: 'free-hashtag-generator-tool',
     keywords: 'hashtag,social,trending',
-    seoTitle: 'AI Hashtag Generator: Trending Tags for YT, IG & TikTok',
-    seoDescription: 'Generate trending hashtags for your social media posts. Boost your reach on YouTube, Instagram, and TikTok with our free AI hashtag tool. Get more engagement now.',
+    seoTitle: 'Free Hashtag Generator Tool – Trending Tags for Social Media',
+    seoDescription: 'Generate free trending hashtags for YouTube, Instagram, and TikTok to boost reach and engagement.',
     prompt: `Generate hashtags.
     Format as a Hashtag Kit with these sections:
     ## 🔥 Trending Tags
@@ -417,9 +436,10 @@ export const TOOLS: Tool[] = [
     description: 'Generate high-CTR meta tags with advanced SERP previews and real-time SEO analysis to boost rankings.',
     category: 'Generators',
     icon: 'ScrollText',
+    slug: 'free-meta-tag-generator',
     keywords: 'code,meta,tags',
-    seoTitle: 'AI Meta Tag Generator: Create High-CTR SEO Tags (2026)',
-    seoDescription: 'Create perfectly optimized meta titles and descriptions in seconds. Boost your search rankings and CTR with our free AI Meta Tag Generator. Start ranking higher!',
+    seoTitle: 'Free Meta Tag Generator – Create High CTR SEO Titles & Descriptions',
+    seoDescription: 'Generate SEO-friendly meta titles and descriptions for free to improve click-through rate and visibility.',
     prompt: `Analyze the provided page information and generate optimized SEO meta tags.
     Format your response as a Meta Tag Kit with these sections:
     
@@ -434,40 +454,26 @@ export const TOOLS: Tool[] = [
         3. [Suggestion to increase CTR 3]
     
     ## 🚀 High-CTR "Boosted" Versions
-    Generate 5 distinct variations of high-CTR meta tags. Each variation should focus on a different psychological trigger (e.g., Urgency, Curiosity, Benefit-Driven, Scarcity, Social Proof).
+    Generate 5 distinct variations of high-CTR meta tags. Each variation MUST focus on one of these specific psychological triggers:
+    1. **Urgency/FOMO**
+    2. **Curiosity/Open Loop**
+    3. **Benefit-Driven**
+    4. **Social Proof**
+    5. **Authority/Trust**
     
     For EACH variation, you MUST provide:
+    - **Trigger**: [Trigger Name]
     - **Title**: (Aggressive power words, high-impact)
     - **Description**: (Clear CTA, emotional trigger)
-    - **3 Specific CTR Suggestions**:
-        1. [Suggestion to increase CTR 1]
-        2. [Suggestion to increase CTR 2]
-        3. [Suggestion to increase CTR 3]
+    - **CTR Suggestions**: (Exactly 3 short, bulleted tips)
     
-    ### Variation 1: [Trigger Name]
+    ### Variation 1
+    - **Trigger**: Urgency/FOMO
     - **Title**: ...
     - **Description**: ...
-    - **3 Specific CTR Suggestions**: 1. ... 2. ... 3. ...
-    
-    ### Variation 2: [Trigger Name]
-    - **Title**: ...
-    - **Description**: ...
-    - **3 Specific CTR Suggestions**: 1. ... 2. ... 3. ...
-    
-    ### Variation 3: [Trigger Name]
-    - **Title**: ...
-    - **Description**: ...
-    - **3 Specific CTR Suggestions**: 1. ... 2. ... 3. ...
+    - **CTR Suggestions**: 1. ... 2. ... 3. ...
 
-    ### Variation 4: [Trigger Name]
-    - **Title**: ...
-    - **Description**: ...
-    - **3 Specific CTR Suggestions**: 1. ... 2. ... 3. ...
-
-    ### Variation 5: [Trigger Name]
-    - **Title**: ...
-    - **Description**: ...
-    - **3 Specific CTR Suggestions**: 1. ... 2. ... 3. ...
+    (Repeat for Variation 2: Curiosity, Variation 3: Benefit-Driven, Variation 4: Social Proof, Variation 5: Authority/Trust)
 
     ## 📈 CTR Analysis & Suggestions
     Provide a granular, deep-dive analysis of the generated (or provided) meta tags with highly specific, actionable recommendations to maximize Click-Through Rate (CTR):
@@ -543,9 +549,10 @@ export const TOOLS: Tool[] = [
     description: 'Google search result preview tool.',
     category: 'Generators',
     icon: 'MonitorPlay',
+    slug: 'free-serp-preview-tool',
     keywords: 'preview,google,serp',
-    seoTitle: 'Google SERP Preview Tool: Visualize Your Search Results',
-    seoDescription: 'See how your website appears in Google search results. Optimize your title and meta description for maximum clicks with our advanced AI SERP preview tool today.',
+    seoTitle: 'Advanced Google SERP Preview Tool – Optimize Title & Description',
+    seoDescription: 'Preview your website in Google search results for free. Optimize titles and meta descriptions for better CTR.',
     prompt: `Generate a SERP preview.
     Format as a Preview Report with these sections:
     ## 🖥️ Desktop Preview
@@ -567,9 +574,10 @@ export const TOOLS: Tool[] = [
     description: 'Social media share preview tool.',
     category: 'Generators',
     icon: 'Share2',
+    slug: 'free-open-graph-preview-tool',
     keywords: 'social,share,preview',
-    seoTitle: 'OG Preview Generator: Social Media Share Preview Tool',
-    seoDescription: 'Preview and generate Open Graph tags for Facebook, Twitter, and LinkedIn. Ensure your content looks perfect and drives more clicks when shared on social media.',
+    seoTitle: 'Free Open Graph Preview Tool – Social Media Share Preview',
+    seoDescription: 'Preview your content on social media for free. Optimize Open Graph tags for better sharing and engagement.',
     prompt: `Generate OG tags and preview.
     Format as a Social Share Audit with these sections:
     ## 🔗 OG Tags
@@ -588,9 +596,10 @@ export const TOOLS: Tool[] = [
     description: 'Generate JSON-LD structured data.',
     category: 'Generators',
     icon: 'CodeXml',
+    slug: 'free-schema-markup-generator',
     keywords: 'schema,json,structured',
-    seoTitle: 'AI Schema Markup Generator: JSON-LD Structured Data',
-    seoDescription: 'Generate valid JSON-LD schema markup for your website. Improve rich snippets, search visibility, and click-through rates with our free AI schema generator tool.',
+    seoTitle: 'Best Schema Markup Generator – JSON-LD Structured Data Tool',
+    seoDescription: 'Generate JSON-LD schema markup for free. Improve rich snippets and search visibility easily.',
     prompt: `Generate JSON-LD Schema.
     Format as a Schema Kit with these sections:
     ## 🛠️ Schema Type
@@ -612,9 +621,10 @@ export const TOOLS: Tool[] = [
     description: 'Generate descriptive alt text for images to improve accessibility and SEO.',
     category: 'Generators',
     icon: 'ImageDown',
+    slug: 'free-image-alt-text-generator',
     keywords: 'image,alt,accessibility,seo,generator',
-    seoTitle: 'AI Image Alt Text Generator: Improve Accessibility & SEO',
-    seoDescription: 'Generate descriptive and SEO-friendly alt text for your images. Improve web accessibility and image search rankings with our AI-powered alt text generator tool.',
+    seoTitle: 'Free AI Image Alt Text Generator – SEO & Accessibility Tool',
+    seoDescription: 'Create SEO-friendly alt text for images for free. Improve accessibility and search rankings.',
     prompt: `Generate descriptive and SEO-friendly alt text for an image.
     Format your response as an Alt Text Kit with these sections:
     
@@ -649,9 +659,10 @@ export const TOOLS: Tool[] = [
     description: 'Generate sitemap and robots.txt files.',
     category: 'Generators',
     icon: 'FileSymlink',
+    slug: 'free-sitemap-robots-txt-generator',
     keywords: 'sitemap,robots,technical',
-    seoTitle: 'Sitemap & Robots.txt Generator: Technical SEO Tools',
-    seoDescription: 'Generate optimized robots.txt and XML sitemaps for your website. Ensure search engines can crawl and index your site effectively to improve your search rankings.',
+    seoTitle: 'Advanced XML Sitemap Generator & Robots.txt Creator',
+    seoDescription: 'Generate sitemap and robots.txt files for free. Improve indexing and crawlability of your website.',
     prompt: `Generate robots.txt and sitemap.
     Format as a Technical File Kit with these sections:
     ## 🤖 Robots.txt
@@ -673,9 +684,10 @@ export const TOOLS: Tool[] = [
     description: 'Compare your site vs competitors.',
     category: 'Compare',
     icon: 'GitCompare',
+    slug: 'free-website-comparison-tool',
     keywords: 'compare,competitor,versus',
-    seoTitle: 'Compare Websites: AI Competitor SEO Analysis Tool',
-    seoDescription: 'Compare your website SEO against competitors. Identify keyword gaps, backlink profiles, and technical advantages to dominate your niche and rank higher in 2026.',
+    seoTitle: 'Best Website Comparison Tool – SEO Competitor Analysis',
+    seoDescription: 'Compare websites for free. Analyze competitors, keyword gaps, and backlinks to improve rankings.',
     prompt: `Compare two websites.
     Format as a Competitive Analysis with these sections:
     ## 🏁 Winner
@@ -700,9 +712,10 @@ export const TOOLS: Tool[] = [
     description: 'Ask any SEO related questions.',
     category: 'AI Assistant',
     icon: 'MessageCircleMore',
+    slug: 'free-ai-seo-assistant',
     keywords: 'chat,ai,assistant',
-    seoTitle: 'AI SEO Chat: Ask an Expert SEO Consultant Anything',
-    seoDescription: 'Get instant answers to your SEO questions with our AI-powered chat assistant. Get expert advice on rankings, keywords, and technical SEO to grow your site today.',
+    seoTitle: 'Free AI SEO Assistant – Instant SEO Help & Guidance',
+    seoDescription: 'Get free SEO advice instantly with AI. Solve SEO problems and improve your website rankings.',
     prompt: `You are an expert SEO consultant. 
     Always format your answers with these sections:
     ## 💡 Direct Answer
@@ -724,9 +737,10 @@ export const TOOLS: Tool[] = [
     description: 'View your analysis history and trends.',
     category: 'Insights',
     icon: 'LayoutGrid',
+    slug: 'free-seo-dashboard',
     keywords: 'dashboard,stats,insights',
-    seoTitle: 'SEO Dashboard: Track Your Site Analysis & Trends (2026)',
-    seoDescription: 'Monitor your SEO progress and analysis history with our intuitive dashboard. Track trends, save reports, and stay on top of your search engine rankings easily.',
+    seoTitle: 'Advanced SEO Dashboard – Track Rankings, Reports & Performance',
+    seoDescription: 'Monitor your SEO performance for free. Track rankings, reports, and website growth in one dashboard.',
     prompt: '',
     placeholder: ''
   }

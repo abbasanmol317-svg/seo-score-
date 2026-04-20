@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import * as Icons from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { ToolComponentProps } from './ToolComponentProps';
+import { TOOLS } from '../../services/gemini';
 
 export const SEODashboardUI: React.FC<ToolComponentProps & { history: any[] }> = ({
   history,
@@ -76,7 +77,7 @@ export const SEODashboardUI: React.FC<ToolComponentProps & { history: any[] }> =
               </div>
               <div className="text-right">
                 <p className="text-xs text-slate-400 dark:text-slate-500">{new Date(item.timestamp).toLocaleDateString()}</p>
-                <Link to={`/tool/${item.toolId}`} className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium">Run again</Link>
+                <Link to={`/tools/${TOOLS.find(t => t.id === item.toolId)?.slug || item.toolId}`} className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium">Run again</Link>
               </div>
             </motion.div>
           ))

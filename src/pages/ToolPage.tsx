@@ -29,7 +29,10 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
   const [isDownloading, setIsDownloading] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-  const tool = TOOLS.find(t => t.id === id);
+  const tool = useMemo(() => {
+    if (!id) return undefined;
+    return TOOLS.find(t => t.id === id || t.slug === id);
+  }, [id]);
 
   useEffect(() => {
     if (!tool) {
@@ -529,7 +532,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
           "@type": "ListItem",
           "position": 3,
           "name": tool.name,
-          "item": `https://seoscore.site/tool/${tool.id}`
+          "item": `https://seoscore.site/tools/${tool.slug}`
         }
       ]
     }
@@ -541,7 +544,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
         <title>{seoTitle}</title>
         <meta name="description" content={seoDescription} />
         <meta name="keywords" content={seoKeywords} />
-        <link rel="canonical" href={`https://seoscore.site/tool/${tool.id}`} />
+        <link rel="canonical" href={`https://seoscore.site/tools/${tool.slug}`} />
         <script type="application/ld+json">
           {JSON.stringify(toolSchema)}
         </script>
@@ -675,6 +678,29 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                       </div>
                     </div>
                   </div>
+
+                  {deepContent.mistakesToAvoid && (
+                    <div className="mt-12 space-y-6">
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                        <div className="p-2 bg-rose-600 rounded-lg text-white shadow-lg">
+                          <Icons.XCircle size={20} />
+                        </div>
+                        Mistakes to Avoid
+                      </h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {deepContent.mistakesToAvoid.map((mistake, idx) => (
+                          <div key={idx} className="flex items-start gap-4 p-4 bg-rose-50/30 dark:bg-rose-900/10 rounded-2xl border border-rose-100 dark:border-rose-900/20 group hover:border-rose-300 transition-all">
+                            <div className="mt-0.5 text-rose-500 group-hover:scale-110 transition-transform">
+                              <Icons.X size={16} strokeWidth={3} />
+                            </div>
+                            <p className="text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+                              {mistake}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   <div className="mt-12 p-6 sm:p-8 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-[2rem] border border-indigo-100/50 dark:border-indigo-800/30">
                     <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-3">
@@ -816,7 +842,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                 return (
                   <Link
                     key={relatedTool.id}
-                    to={`/tool/${relatedTool.id}`}
+                    to={`/tools/${relatedTool.slug}`}
                     className="group bg-white dark:bg-slate-900 p-6 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all hover:shadow-2xl hover:shadow-indigo-500/5 flex flex-col h-full relative overflow-hidden"
                   >
                     <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500 group-hover:scale-150 group-hover:-rotate-12">

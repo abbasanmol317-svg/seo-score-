@@ -7,6 +7,7 @@ interface ToolDeepContent {
   howTo: string[];
   whyItMatters: React.ReactNode;
   proTips: string[];
+  mistakesToAvoid?: string[];
   faqs: { q: string, a: React.ReactNode }[];
 }
 
@@ -14,7 +15,7 @@ export const TOOL_DEEP_CONTENT: Record<string, ToolDeepContent> = {
   'Generators': {
     about: (
       <>
-        Our AI-powered generators are designed to take the guesswork out of technical SEO. Whether you're crafting meta tags that demand clicks or building complex schema markups that help Google understand your business, these tools provide production-ready code in seconds. We don't just generate text; we engineer snippets that align with the latest search engine algorithms and user psychology. Our goal is to help you win the 'click' before the user even lands on your site. For a deeper dive into technical optimization, check out our <Link to="/tool/seo-audit" className="text-indigo-600 hover:underline font-bold">Website SEO Audit</Link> tool.
+        Our AI-powered generators are designed to take the guesswork out of technical SEO. Whether you're crafting meta tags that demand clicks or building complex schema markups that help Google understand your business, these tools provide production-ready code in seconds. We don't just generate text; we engineer snippets that align with the latest search engine algorithms and user psychology. Our goal is to help you win the 'click' before the user even lands on your site. For a deeper dive into technical optimization, check out our <Link to="/tools/free-website-seo-audit-tool" className="text-indigo-600 hover:underline font-bold">Website SEO Audit</Link> tool.
       </>
     ),
     howTo: [
@@ -29,6 +30,11 @@ export const TOOL_DEEP_CONTENT: Record<string, ToolDeepContent> = {
       "Use 'Power Words' (e.g., 'Proven', 'Instant', 'Free') to trigger emotional responses and increase CTR.",
       "Always validate your schema markup using Google's Rich Results Test after implementation to ensure it's error-free."
     ],
+    mistakesToAvoid: [
+      "Keyword stuffing in titles (focus on readability instead).",
+      "Using generic meta descriptions for every page.",
+      "Neglecting mobile SERP previews; many users only see the first 45 characters on mobile."
+    ],
     faqs: [
       { q: "Do meta tags still matter for SEO in 2026?", a: "Yes, while meta descriptions aren't a direct ranking factor, they significantly impact Click-Through Rate (CTR). A higher CTR signals to Google that your page is highly relevant to the user's query." },
       { q: "How long should my meta title be?", a: "Ideally between 50-60 characters. Anything longer will likely be truncated in search results, which can hide your call-to-action or primary keywords." },
@@ -38,7 +44,7 @@ export const TOOL_DEEP_CONTENT: Record<string, ToolDeepContent> = {
   'Content & Keywords': {
     about: (
       <>
-        Content is the soul of SEO, but without the right keywords, even the best writing can go unnoticed. Our Content & Keywords suite helps you bridge the gap between what you want to say and what users are actually searching for. Using advanced semantic analysis, we identify high-value opportunities and help you optimize your writing for maximum topical authority and readability. Pair this with our <Link to="/tool/seo-chat" className="text-indigo-600 hover:underline font-bold">AI SEO Chat</Link> for personalized content strategies.
+        Content is the soul of SEO, but without the right keywords, even the best writing can go unnoticed. Our Content & Keywords suite helps you bridge the gap between what you want to say and what users are actually searching for. Using advanced semantic analysis, we identify high-value opportunities and help you optimize your writing for maximum topical authority and readability. Pair this with our <Link to="/tools/free-ai-seo-assistant" className="text-indigo-600 hover:underline font-bold">AI SEO Chat</Link> for personalized content strategies.
       </>
     ),
     howTo: [
@@ -53,6 +59,12 @@ export const TOOL_DEEP_CONTENT: Record<string, ToolDeepContent> = {
       "Build 'Topic Clusters' by linking related articles together to boost your site's overall authority on a subject.",
       "Don't over-optimize; aim for a natural reading flow that provides genuine value to your readers."
     ],
+    mistakesToAvoid: [
+      "Same anchor text spam (using the exact same phrase for every internal link).",
+      "Linking to irrelevant tools or pages that don't add value to the reader.",
+      "Orphan pages (having important content that has no internal links pointing to it).",
+      "Too many links on one page (which dilutes 'link juice' and confuses users)."
+    ],
     faqs: [
       { q: "What is keyword difficulty?", a: "It's a metric that estimates how hard it would be to rank on the first page of Google for a specific keyword, based on the authority and quality of existing results." },
       { q: "How many keywords should I target per page?", a: "Focus on one primary keyword and 3-5 related semantic keywords (LSI) to maintain topical depth without confusing search engines or readers." },
@@ -62,7 +74,7 @@ export const TOOL_DEEP_CONTENT: Record<string, ToolDeepContent> = {
   'Audits & Analysis': {
     about: (
       <>
-        A successful SEO strategy starts with a clear understanding of where you stand. Our Audits & Analysis tools provide a 360-degree view of your website's health, from technical bottlenecks to competitor movements. We simulate a deep crawl of your site, identifying issues that might be holding you back from the first page of results and providing a clear roadmap for improvement. If you find technical issues, use our <Link to="/tool/site-speed" className="text-indigo-600 hover:underline font-bold">Site Speed Checker</Link> to diagnose performance lags.
+        A successful SEO strategy starts with a clear understanding of where you stand. Our Audits & Analysis tools provide a 360-degree view of your website's health, from technical bottlenecks to competitor movements. We simulate a deep crawl of your site, identifying issues that might be holding you back from the first page of results and providing a clear roadmap for improvement. If you find technical issues, use our <Link to="/tools/free-website-speed-test-tool" className="text-indigo-600 hover:underline font-bold">Site Speed Checker</Link> to diagnose performance lags.
       </>
     ),
     howTo: [
@@ -77,6 +89,11 @@ export const TOOL_DEEP_CONTENT: Record<string, ToolDeepContent> = {
       "Monitor your 'Core Web Vitals' regularly, as they are a direct ranking factor and critical for user experience.",
       "Keep an eye on competitor backlinks to find new outreach opportunities and understand their link-building strategy."
     ],
+    mistakesToAvoid: [
+      "Ignoring the 'overall SEO score' trend; consistent progress is better than a one-time fix.",
+      "Focusing only on high search volume keywords that you have zero chance of ranking for (ignore difficulty).",
+      "Assuming a site is 'done' with SEO; it's a continuous process of auditing and refinement."
+    ],
     faqs: [
       { q: "How often should I audit my website?", a: "We recommend a full technical audit at least once a quarter, or whenever you make significant changes to your site's structure, content, or hosting." },
       { q: "What are backlinks?", a: "Backlinks are links from other websites to yours. They act as 'votes of confidence' and are one of Google's strongest signals for determining authority and trust." },
@@ -86,7 +103,7 @@ export const TOOL_DEEP_CONTENT: Record<string, ToolDeepContent> = {
   'Technical': {
     about: (
       <>
-        Technical SEO is the foundation upon which all other efforts are built. If your site is slow, broken, or not mobile-friendly, even the best content won't rank. Our Technical suite provides deep-dive diagnostics into your site's infrastructure, helping you provide a seamless, fast, and secure experience for both users and search crawlers. For content-specific technical fixes, try our <Link to="/tool/meta-tag" className="text-indigo-600 hover:underline font-bold">Meta Tag Generator</Link>.
+        Technical SEO is the foundation upon which all other efforts are built. If your site is slow, broken, or not mobile-friendly, even the best content won't rank. Our Technical suite provides deep-dive diagnostics into your site's infrastructure, helping you provide a seamless, fast, and secure experience for both users and search crawlers. For content-specific technical fixes, try our <Link to="/tools/free-meta-tag-generator" className="text-indigo-600 hover:underline font-bold">Meta Tag Generator</Link>.
       </>
     ),
     howTo: [
@@ -100,6 +117,11 @@ export const TOOL_DEEP_CONTENT: Record<string, ToolDeepContent> = {
       "Optimize and compress all images before uploading them to your site to significantly improve load times.",
       "Use a Content Delivery Network (CDN) to speed up global load times by serving content from servers closer to the user.",
       "Ensure your site uses HTTPS for security, as it's a confirmed ranking signal and builds trust with your visitors."
+    ],
+    mistakesToAvoid: [
+      "Having slow server response times (TTFB) which can negate all other front-end optimizations.",
+      "Using massive image files that haven't been resized for web use.",
+      "Ignoring 404 errors for too long; they reflect poorly on your site's quality in the eyes of search crawlers."
     ],
     faqs: [
       { q: "What are Core Web Vitals?", a: "These are a set of specific factors that Google considers important in a webpage's overall user experience, focusing on loading speed, interactivity, and visual stability." },

@@ -51,16 +51,18 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
   const boostedText = boostedMatch ? boostedMatch[1].trim() : '';
   
   // Parse variations
-  const variations = boostedText.split(/### Variation \d+:/).filter(v => v.trim().length > 0).map(v => {
+  const variations = boostedText.split(/### Variation \d+/).filter(v => v.trim().length > 0).map(v => {
+    const triggerMatch = v.match(/- \*\*Trigger\*\*: (.*?)(?=\n|$)/);
     const tMatch = v.match(/- \*\*Title\*\*: (.*?)(?=\n- \*\*Description\*\*|$)/s);
-    const dMatch = v.match(/- \*\*Description\*\*: (.*?)(?=\n- \*\*CTR Improvements\*\*|$)/s);
-    const iMatch = v.match(/- \*\*CTR Improvements\*\*: (.*?)(?=\n|$)/s);
+    const dMatch = v.match(/- \*\*Description\*\*: (.*?)(?=\n- \*\*CTR Suggestions\*\*|$)/s);
+    const sMatch = v.match(/- \*\*CTR Suggestions\*\*: (.*?)(?=\n###|$)/s);
     
     // Fallback for old format if regex fails
     if (!tMatch && !dMatch) {
       const oldTitleMatch = v.match(/- Title: (.*?)(?=\n- Description:|$)/s);
       const oldDescMatch = v.match(/- Description: (.*?)(?=\n|$)/s);
       return {
+        trigger: triggerMatch ? triggerMatch[1].trim() : 'Boosted',
         title: oldTitleMatch ? oldTitleMatch[1].trim() : '',
         description: oldDescMatch ? oldDescMatch[1].trim() : v.trim(),
         improvements: ''
@@ -68,9 +70,10 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
     }
 
     return {
+      trigger: triggerMatch ? triggerMatch[1].trim() : 'Boosted',
       title: tMatch ? tMatch[1].trim() : '',
       description: dMatch ? dMatch[1].trim() : '',
-      improvements: iMatch ? iMatch[1].trim() : ''
+      improvements: sMatch ? sMatch[1].trim() : ''
     };
   }).filter(v => v.title || v.description);
 
@@ -84,6 +87,9 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
   const [previewMode, setPreviewMode] = React.useState<'desktop' | 'mobile'>('desktop');
   const [siteName, setSiteName] = React.useState('SEO Score Suite');
   const [siteUrl, setSiteUrl] = React.useState('https://seo-score-suite.com');
+
+  const [editableTitle, setEditableTitle] = React.useState('');
+  const [editableDescription, setEditableDescription] = React.useState('');
 
   // Product Schema Fields
   const [showProductFields, setShowProductFields] = React.useState(false);
@@ -210,8 +216,14 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
     ? variations[selectedVariation]?.description || description 
     : description;
 
-  const previewTitle = currentTitle.length > 60 ? currentTitle.substring(0, 57) + '...' : currentTitle;
-  const previewDescription = currentDescription.length > 160 ? currentDescription.substring(0, 157) + '...' : currentDescription;
+  // Sync initial AI results to editable state
+  React.useEffect(() => {
+    setEditableTitle(currentTitle);
+    setEditableDescription(currentDescription);
+  }, [currentTitle, currentDescription]);
+
+  const previewTitle = editableTitle.length > 61 ? editableTitle.substring(0, 58) + '...' : editableTitle;
+  const previewDescription = editableDescription.length > 161 ? editableDescription.substring(0, 158) + '...' : editableDescription;
 
   return (
     <ToolLayout
@@ -561,19 +573,20 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                       </div>
                       
                       {showBoosted && variations.length > 1 && (
-                        <div className="flex items-center justify-center gap-1.5">
-                          {variations.map((_, idx) => (
+                        <div className="flex flex-wrap items-center justify-center gap-2 max-w-md">
+                          {variations.map((v, idx) => (
                             <button
                               key={idx}
                               onClick={() => setSelectedVariation(idx)}
                               className={cn(
-                                "w-6 h-1.5 rounded-full transition-all",
+                                "px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
                                 selectedVariation === idx 
-                                  ? "bg-indigo-600 w-8" 
-                                  : "bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600"
+                                  ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40" 
+                                  : "bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-700"
                               )}
-                              title={`Variation ${idx + 1}`}
-                            />
+                            >
+                              {v.trigger}
+                            </button>
                           ))}
                         </div>
                       )}
@@ -592,6 +605,56 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                     {copiedCode ? "Code Copied!" : "Copy Meta Tags Code"}
                   </button>
                 )}
+                </div>
+              </div>
+
+              <div className="space-y-4 mb-6">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between ml-1">
+                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Page Title</label>
+                    <span className={cn(
+                      "text-[10px] font-bold",
+                      editableTitle.length > 60 || editableTitle.length < 30 ? "text-amber-500" : "text-emerald-500"
+                    )}>
+                      {editableTitle.length} / 60 characters
+                    </span>
+                  </div>
+                  <div className="relative group/title">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/title:text-indigo-500 transition-colors">
+                      <Icons.Type size={14} />
+                    </div>
+                    <input 
+                      type="text"
+                      value={editableTitle}
+                      onChange={(e) => setEditableTitle(e.target.value)}
+                      placeholder="Enter page title..."
+                      className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 pl-9 pr-4 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all dark:text-slate-200 font-medium"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between ml-1">
+                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Meta Description</label>
+                    <span className={cn(
+                      "text-[10px] font-bold",
+                      editableDescription.length > 160 || editableDescription.length < 120 ? "text-amber-500" : "text-emerald-500"
+                    )}>
+                      {editableDescription.length} / 160 characters
+                    </span>
+                  </div>
+                  <div className="relative group/desc">
+                    <div className="absolute left-3 top-4 text-slate-400 group-focus-within/desc:text-indigo-500 transition-colors">
+                      <Icons.AlignLeft size={14} />
+                    </div>
+                    <textarea 
+                      value={editableDescription}
+                      onChange={(e) => setEditableDescription(e.target.value)}
+                      placeholder="Enter meta description..."
+                      rows={2}
+                      className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 pl-9 pr-4 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all dark:text-slate-200 font-medium resize-none"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -682,10 +745,12 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                   >
                     <div className="flex items-center gap-2 mb-3">
                       <Icons.Sparkles size={14} className="text-indigo-500" />
-                      <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">3 Key CTR Improvements</span>
+                      <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                        CTR Improvements: {variations[selectedVariation].trigger}
+                      </span>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      {variations[selectedVariation].improvements.split(/\d\.\s+/).filter(Boolean).map((improvement, i) => (
+                      {variations[selectedVariation].improvements.split(/[\n,;]|\d\.\s+|[-*]\s+/).filter(i => i.trim().length > 5).slice(0, 3).map((improvement, i) => (
                         <div key={i} className="flex items-start gap-2 p-2 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-lg border border-indigo-100/50 dark:border-indigo-800/30">
                           <div className="mt-0.5 text-indigo-600 dark:text-indigo-400">
                             <Icons.CheckCircle2 size={12} />
@@ -841,9 +906,9 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                     <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Title Length</span>
                     <span className={cn(
                       "text-xs font-bold",
-                      currentTitle.length > 60 || currentTitle.length < 30 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
+                      editableTitle.length > 60 || editableTitle.length < 30 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
                     )}>
-                      {currentTitle.length}/60 chars
+                      {editableTitle.length}/60 chars
                     </span>
                   </div>
                 </div>
@@ -851,23 +916,23 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                 <div className="flex items-center gap-3">
                   <div className={cn(
                     "h-2 w-32 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800",
-                    currentDescription.length > 160 || currentDescription.length < 120 ? "bg-amber-100 dark:bg-amber-900/30" : "bg-emerald-100 dark:bg-emerald-900/30"
+                    editableDescription.length > 160 || editableDescription.length < 120 ? "bg-amber-100 dark:bg-amber-900/30" : "bg-emerald-100 dark:bg-emerald-900/30"
                   )}>
                     <div 
                       className={cn(
                         "h-full transition-all duration-500",
-                        currentDescription.length > 160 || currentDescription.length < 120 ? "bg-amber-500" : "bg-emerald-500"
+                        editableDescription.length > 160 || editableDescription.length < 120 ? "bg-amber-500" : "bg-emerald-500"
                       )}
-                      style={{ width: `${Math.min(100, (currentDescription.length / 160) * 100)}%` }}
+                      style={{ width: `${Math.min(100, (editableDescription.length / 160) * 100)}%` }}
                     />
                   </div>
                   <div className="flex flex-col">
                     <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Description Length</span>
                     <span className={cn(
                       "text-xs font-bold",
-                      currentDescription.length > 160 || currentDescription.length < 120 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
+                      editableDescription.length > 160 || editableDescription.length < 120 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
                     )}>
-                      {currentDescription.length}/160 chars
+                      {editableDescription.length}/160 chars
                     </span>
                   </div>
                 </div>

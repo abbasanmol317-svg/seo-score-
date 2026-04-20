@@ -35,8 +35,10 @@ const PageLoader = () => (
 function NavHeader() {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
-  const toolId = location.pathname.startsWith('/tool/') ? location.pathname.split('/')[2] : null;
-  const currentTool = toolId ? TOOLS.find(t => t.id === toolId) : null;
+  const toolId = location.pathname.startsWith('/tool/') || location.pathname.startsWith('/tools/') 
+    ? location.pathname.split('/').filter(Boolean).pop() 
+    : null;
+  const currentTool = toolId ? TOOLS.find(t => t.id === toolId || t.slug === toolId) : null;
   const ToolIcon = currentTool ? (Icons as any)[currentTool.icon] || Icons.Zap : Icons.Zap;
   const [isMobileSearchOpen, setIsMobileSearchOpen] = React.useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
@@ -178,6 +180,7 @@ function AnimatedRoutes() {
     <Routes>
       <Route path="/" element={<Dashboard />} />
       <Route path="/tools" element={<Tools />} />
+      <Route path="/tools/:id" element={<ToolPage />} />
       <Route path="/tool/:id" element={<ToolPage />} />
       <Route path="/ai-seo-audit-tool" element={<ToolPage idOverride="seo-audit" />} />
       <Route path="/keyword-research-tool" element={<ToolPage idOverride="keyword-research" />} />
@@ -341,7 +344,7 @@ export default function App() {
                         <h4 className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Popular Tools</h4>
                         <div className="grid grid-cols-2 gap-x-6 gap-y-2">
                           {TOOLS.slice(0, 4).map(tool => (
-                            <Link key={tool.id} to={`/tool/${tool.id}`} className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate max-w-[120px]">{tool.name}</Link>
+                            <Link key={tool.id} to={`/tools/${tool.slug}`} className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate max-w-[120px]">{tool.name}</Link>
                           ))}
                         </div>
                       </div>

@@ -65,7 +65,7 @@ export default function Tools() {
             Our AI SEO Chat can help you with custom analysis and specific search optimization questions.
           </p>
           <Link 
-            to="/tool/seo-chat" 
+            to="/tools/free-ai-seo-assistant" 
             className="inline-flex items-center gap-3 bg-white text-slate-900 px-8 py-4 rounded-2xl font-bold hover:bg-slate-100 transition-all shadow-xl"
           >
             <Icons.MessageSquare size={20} />

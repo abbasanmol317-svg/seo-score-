@@ -27,7 +27,7 @@ const FAQ_DATA: FAQItem[] = [
     question: "How can I use the tools effectively?",
     answer: (
       <>
-        We recommend a three-step approach: 1) Run a <Link to="/tool/seo-audit" className="text-indigo-600 hover:underline font-bold">Website SEO Audit</Link> for a high-level health score. 2) Use the <Link to="/tool/seo-audit-checklist" className="text-indigo-600 hover:underline font-bold">SEO Audit Checklist</Link> to fix critical technical errors. 3) Use the <Link to="/tool/content-optimizer" className="text-indigo-600 hover:underline font-bold">Content Optimizer</Link> and <Link to="/tool/keyword-research" className="text-indigo-600 hover:underline font-bold">Keyword Research</Link> tools to refine your top-performing pages. Consistency is key—we suggest checking your dashboard weekly to track progress.
+        We recommend a three-step approach: 1) Run a <Link to="/tools/free-website-seo-audit-tool" className="text-indigo-600 hover:underline font-bold">Website SEO Audit</Link> for a high-level health score. 2) Use the <Link to="/tools/free-seo-audit-checklist" className="text-indigo-600 hover:underline font-bold">SEO Audit Checklist</Link> to fix critical technical errors. 3) Use the <Link to="/tools/free-ai-content-optimization-tool" className="text-indigo-600 hover:underline font-bold">Content Optimizer</Link> and <Link to="/tools/free-keyword-research-tool" className="text-indigo-600 hover:underline font-bold">Keyword Research</Link> tools to refine your top-performing pages. Consistency is key—we suggest checking your dashboard weekly to track progress.
       </>
     )
   },
@@ -36,7 +36,7 @@ const FAQ_DATA: FAQItem[] = [
     question: "Is the AI analysis real-time?",
     answer: (
       <>
-        Yes! When you run a tool, our AI performs a live analysis based on the latest search engine guidelines and trends. For tools like the <Link to="/tool/site-speed" className="text-indigo-600 hover:underline font-bold">Site Speed Checker</Link>, it simulates performance metrics to give you an immediate understanding of your site's health. This allows you to see the impact of your changes almost instantly.
+        Yes! When you run a tool, our AI performs a live analysis based on the latest search engine guidelines and trends. For tools like the <Link to="/tools/free-website-speed-test-tool" className="text-indigo-600 hover:underline font-bold">Site Speed Checker</Link>, it simulates performance metrics to give you an immediate understanding of your site's health. This allows you to see the impact of your changes almost instantly.
       </>
     )
   },
@@ -222,7 +222,7 @@ export default function FAQ() {
               Our AI SEO expert is available 24/7 to help you with specific queries and advanced optimization strategies.
             </p>
             <Link
-              to="/tool/seo-chat"
+              to="/tools/free-ai-seo-assistant"
               className="inline-flex items-center gap-2 sm:gap-3 bg-white text-indigo-600 px-6 py-3 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl font-black uppercase tracking-widest hover:bg-indigo-50 transition-all hover:scale-105 active:scale-95 shadow-xl text-xs sm:text-base"
             >
               <Icons.MessageSquare size={18} className="sm:w-5 sm:h-5" />
