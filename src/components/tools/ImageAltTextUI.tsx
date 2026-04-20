@@ -38,7 +38,14 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
 
   const [sampleImage, setSampleImage] = useState<string | null>(null);
   const [selectedVariation, setSelectedVariation] = useState<'primary' | 'decorative' | 'informational' | 'functional'>('primary');
+  const [previewContext, setPreviewContext] = useState<'standard' | 'article' | 'social' | 'code'>('standard');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAnalyzeImage = () => {
+    if (sampleImage) {
+      handleRun(sampleImage);
+    }
+  };
 
   // Extract alt text variations from markdown result
   const getAltTextVariations = (text: string) => {
@@ -292,27 +299,39 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-indigo-50/50 dark:bg-indigo-900/10 rounded-3xl p-6 sm:p-8 border border-indigo-100 dark:border-indigo-900/30"
+              className="bg-emerald-50/30 dark:bg-emerald-900/10 rounded-3xl p-6 sm:p-8 border border-emerald-100 dark:border-emerald-800/20"
             >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-indigo-600 rounded-xl text-white">
-                  <Icons.ShieldCheck size={20} />
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-emerald-600 rounded-xl text-white shadow-lg shadow-emerald-200 dark:shadow-emerald-900/20">
+                  <Icons.CheckCircle2 size={24} />
                 </div>
-                <h3 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">Accessibility & SEO Best Practices</h3>
+                <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Best Practices Applied</h3>
               </div>
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid sm:grid-cols-2 gap-x-8 gap-y-6">
                 {variations.bestPractices.split('\n').filter(line => line.trim().startsWith('-')).map((practice, idx) => {
-                  const [title, desc] = practice.replace('- **', '').split('**: ');
+                  const cleanedLine = practice.replace(/^-\s*\*\*/, '').replace(/\*\*$/, '');
+                  const [title, desc] = cleanedLine.includes('**: ') 
+                    ? cleanedLine.split('**: ') 
+                    : [cleanedLine, ''];
+                  
                   return (
-                    <div key={idx} className="flex gap-3">
-                      <div className="mt-1">
-                        <Icons.CheckCircle2 size={16} className="text-emerald-500" />
+                    <motion.div 
+                      key={idx} 
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.1 }}
+                      className="flex gap-4 group"
+                    >
+                      <div className="mt-1 flex-shrink-0">
+                        <div className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-800 flex items-center justify-center group-hover:scale-125 transition-transform">
+                          <Icons.Check size={12} className="text-emerald-600 dark:text-emerald-400" strokeWidth={4} />
+                        </div>
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-slate-900 dark:text-white">{title}</p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">{desc}</p>
+                        <p className="text-base font-bold text-slate-900 dark:text-white mb-0.5">{title}</p>
+                        {desc && <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{desc}</p>}
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -364,6 +383,17 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
                       </p>
                       <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">Drag and drop or click to browse</p>
                     </div>
+                    {sampleImage && !loading && (
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAnalyzeImage();
+                        }}
+                        className="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-full text-xs font-black uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-lg"
+                      >
+                        Analyze This Image
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -374,6 +404,29 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
                       animate={{ opacity: 1, height: 'auto' }}
                       className="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-xl space-y-8"
                     >
+                      <div className="space-y-4">
+                        <h4 className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                          <Icons.Layout size={16} className="text-indigo-600" />
+                          Simulated Context
+                        </h4>
+                        <div className="grid grid-cols-2 gap-2">
+                          {(['standard', 'article', 'social', 'code'] as const).map((ctx) => (
+                            <button
+                              key={ctx}
+                              onClick={() => setPreviewContext(ctx)}
+                              className={cn(
+                                "px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border",
+                                previewContext === ctx
+                                  ? "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800"
+                                  : "bg-white dark:bg-slate-900 text-slate-400 dark:text-slate-500 border-slate-100 dark:border-slate-800 hover:border-slate-200 dark:hover:border-slate-700"
+                              )}
+                            >
+                              {ctx}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      
                       <div className="space-y-4">
                         <h4 className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
                           <Icons.Type size={16} className="text-indigo-600" />
@@ -431,28 +484,81 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
                   </div>
                 ) : (
                   <div className="space-y-6">
-                    <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border-8 border-white dark:border-slate-800 group/img bg-slate-100 dark:bg-slate-900 min-h-[200px] flex items-center justify-center">
-                      <img 
-                        src={sampleImage} 
-                        alt={currentAltText} 
-                        className="w-full h-auto block transition-transform duration-700 group-hover/img:scale-105"
-                        title={currentAltText}
-                        loading="lazy"
-                      />
-                      {/* Hover Overlay Simulation */}
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/img:opacity-100 transition-opacity duration-500 flex items-end p-6 sm:p-8">
-                        <motion.div 
-                          initial={{ y: 20, opacity: 0 }}
-                          whileInView={{ y: 0, opacity: 1 }}
-                          className="bg-white/10 backdrop-blur-xl p-6 rounded-2xl border border-white/20 w-full shadow-2xl"
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <p className="text-[10px] font-black text-white/60 uppercase tracking-[0.2em]">Previewing: {selectedVariation}</p>
-                            <Icons.Accessibility size={14} className="text-white/60" />
+                    <div className={cn(
+                      "relative rounded-[2rem] overflow-hidden shadow-2xl border-8 border-white dark:border-slate-800 transition-all duration-500",
+                      previewContext === 'article' && "max-w-md mx-auto bg-white dark:bg-slate-900 p-8",
+                      previewContext === 'social' && "max-w-sm mx-auto bg-slate-100 dark:bg-slate-950 p-4 pb-20",
+                      previewContext === 'code' && "bg-slate-900 p-6 font-mono text-[10px]"
+                    )}>
+                      {previewContext === 'standard' && (
+                        <div className="group/img bg-slate-100 dark:bg-slate-900 min-h-[200px] flex items-center justify-center">
+                          <img 
+                            src={sampleImage} 
+                            alt={currentAltText} 
+                            className="w-full h-auto block transition-transform duration-700 group-hover/img:scale-105"
+                            title={currentAltText}
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/img:opacity-100 transition-opacity duration-500 flex items-end p-6 sm:p-8">
+                            <motion.div 
+                              initial={{ y: 20, opacity: 0 }}
+                              whileInView={{ y: 0, opacity: 1 }}
+                              className="bg-white/10 backdrop-blur-xl p-6 rounded-2xl border border-white/20 w-full shadow-2xl"
+                            >
+                              <div className="flex items-center justify-between mb-2">
+                                <p className="text-[10px] font-black text-white/60 uppercase tracking-[0.2em]">Previewing: {selectedVariation}</p>
+                                <Icons.Accessibility size={14} className="text-white/60" />
+                              </div>
+                              <p className="text-white text-lg font-bold italic leading-tight">"{currentAltText || 'No text for this variation'}"</p>
+                            </motion.div>
                           </div>
-                          <p className="text-white text-lg font-bold italic leading-tight">"{currentAltText || 'No text for this variation'}"</p>
-                        </motion.div>
-                      </div>
+                        </div>
+                      )}
+
+                      {previewContext === 'article' && (
+                        <div className="space-y-4">
+                          <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-3/4" />
+                          <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-full" />
+                          <div className="py-2">
+                            <img 
+                              src={sampleImage} 
+                              alt={currentAltText} 
+                              className="w-full h-auto rounded-xl shadow-lg border border-slate-100 dark:border-slate-800"
+                            />
+                            <p className="text-[9px] text-slate-400 mt-2 italic text-center">Fig 1.1: {currentAltText}</p>
+                          </div>
+                          <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-full" />
+                          <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-5/6" />
+                        </div>
+                      )}
+
+                      {previewContext === 'social' && (
+                        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+                          <img src={sampleImage} alt={currentAltText} className="w-full aspect-[1.91/1] object-cover" />
+                          <div className="p-4 space-y-2">
+                            <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded w-full" />
+                            <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded w-2/3" />
+                          </div>
+                        </div>
+                      )}
+
+                      {previewContext === 'code' && (
+                        <div className="space-y-4 overflow-x-auto">
+                          <div className="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
+                            <span className="text-emerald-500 font-bold">HTML Implementation</span>
+                            <button onClick={() => navigator.clipboard.writeText(`<img src="image.jpg" alt="${currentAltText}" />`)} className="text-slate-500 hover:text-white">
+                              <Icons.Copy size={12} />
+                            </button>
+                          </div>
+                          <pre className="text-slate-300">
+                            <span className="text-pink-500">&lt;img</span>{" "}
+                            <span className="text-orange-400">src</span>=<span className="text-emerald-400">"image.jpg"</span>{"\n"}
+                            <span className="text-orange-400">  alt</span>=<span className="text-emerald-400">"{currentAltText}"</span>{"\n"}
+                            <span className="text-orange-400">  loading</span>=<span className="text-emerald-400">"lazy"</span>{" "}
+                            <span className="text-pink-500">/&gt;</span>
+                          </pre>
+                        </div>
+                      )}
                     </div>
                     <div className="flex items-start gap-4 text-sm text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
                       <div className="p-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg shrink-0">

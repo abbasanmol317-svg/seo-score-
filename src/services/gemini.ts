@@ -755,7 +755,22 @@ export async function runTool(toolId: ToolId, input: string) {
   }
 
   const model = "gemini-3-flash-preview";
-  const fullPrompt = `${tool.prompt}\n\nInput: ${input}`;
+  let contents: any[] = [];
+
+  // Check if input is a data URL (image upload)
+  if (input.startsWith('data:image/')) {
+    const [header, base64Data] = input.split(',');
+    const mimeType = header.match(/:(.*?);/)?.[1] || 'image/png';
+    contents = [{
+      role: 'user',
+      parts: [
+        { inlineData: { mimeType, data: base64Data } },
+        { text: tool.prompt }
+      ]
+    }];
+  } else {
+    contents = [{ role: 'user', parts: [{ text: `${tool.prompt}\n\nInput: ${input}` }] }];
+  }
 
   // Retry logic for 503 errors
   let attempts = 0;
@@ -765,7 +780,7 @@ export async function runTool(toolId: ToolId, input: string) {
     try {
       const response = await ai.models.generateContent({
         model,
-        contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
+        contents,
         config: {
           tools: [{ urlContext: {} }]
         }

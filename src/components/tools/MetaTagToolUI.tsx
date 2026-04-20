@@ -131,10 +131,10 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
     setBulkResults([]);
     setBulkProgress(0);
 
-    const results = [];
+    const results: any[] = [];
     for (let i = 0; i < urls.length; i++) {
       try {
-        setBulkProgress(Math.round(((i) / urls.length) * 100));
+        setBulkProgress(Math.round((i / urls.length) * 100));
         const res = await runTool('meta-tag', urls[i]);
         
         // Parse result
@@ -155,9 +155,9 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
           status: 'Failed'
         });
       }
+      setBulkResults([...results]);
     }
 
-    setBulkResults(results);
     setBulkProgress(100);
     setIsBulkRunning(false);
   };
@@ -185,6 +185,12 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const clearBulk = () => {
+    setBulkInput('');
+    setBulkResults([]);
+    setBulkError(null);
   };
 
   const schemaMatch = result.match(/## 🛠️ Schema Markup \(JSON-LD\)\n[\s\S]*?```json\n([\s\S]*?)\n```/s);
@@ -407,23 +413,49 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
           )}
         </div>
       }
-      loading={loading}
+      loading={loading || isBulkRunning}
       loadingSection={
-        <ToolLoading
-          loadingMessage={loadingMessage}
-          progress={progress}
-          currentTip={currentTip}
-        />
+        isBulkRunning ? (
+          <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-12 text-center border-2 border-indigo-100 dark:border-indigo-800 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 left-0 h-1 bg-gradient-to-r from-indigo-500 to-blue-500 transition-all duration-300" style={{ width: `${bulkProgress}%` }} />
+            <div className="relative z-10 space-y-6">
+              <div className="w-24 h-24 bg-indigo-100 dark:bg-indigo-900/30 rounded-3xl flex items-center justify-center mx-auto animate-pulse">
+                <Icons.Layers className="text-indigo-600 dark:text-indigo-400" size={40} />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Bulk Processing Meta Tags</h3>
+                <p className="text-slate-500 dark:text-slate-400 font-medium">Analyzing {bulkResults.length} of {bulkInput.split('\n').filter(u => u.trim()).length} URLs</p>
+              </div>
+              <div className="max-w-md mx-auto h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200 dark:border-slate-700">
+                <motion.div 
+                  className="h-full bg-indigo-600"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${bulkProgress}%` }}
+                />
+              </div>
+              <p className="text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-[0.2em]">{bulkProgress}% Complete</p>
+            </div>
+          </div>
+        ) : (
+          <ToolLoading
+            loadingMessage={loadingMessage}
+            progress={progress}
+            currentTip={currentTip}
+          />
+        )
       }
-      error={error}
+      error={error || bulkError}
       errorSection={
         <ToolError
-          error={error || ''}
-          handleRun={handleRun}
-          handleClear={handleClear}
+          error={error || bulkError || ''}
+          handleRun={handleRunMeta}
+          handleClear={() => {
+            handleClear();
+            clearBulk();
+          }}
         />
       }
-      result={result}
+      result={result || bulkResults.length > 0}
       resultSection={
         <div className="space-y-8">
           {isBulkMode && bulkResults.length > 0 && (
@@ -434,41 +466,58 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
             >
               <div className="p-6 sm:p-8 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-indigo-600 rounded-xl text-white">
+                  <div className="p-2 bg-indigo-600 rounded-xl text-white shadow-lg">
                     <Icons.Table size={20} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">Bulk Results</h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">{bulkResults.length} URLs processed</p>
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">Bulk Meta Analysis</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{bulkResults.length} URLs Processed Successfully</p>
                   </div>
                 </div>
-                <button
-                  onClick={downloadCSV}
-                  className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold transition-all shadow-lg shadow-emerald-200 dark:shadow-emerald-900/20 active:scale-95"
-                >
-                  <Icons.Download size={18} />
-                  Download CSV
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={clearBulk}
+                    className="px-4 py-3 text-slate-500 hover:text-rose-500 font-black text-[10px] uppercase tracking-widest transition-colors"
+                  >
+                    Clear Results
+                  </button>
+                  <button
+                    onClick={downloadCSV}
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold transition-all shadow-lg shadow-emerald-200 dark:shadow-emerald-900/20 active:scale-95"
+                  >
+                    <Icons.Download size={18} />
+                    Export to CSV
+                  </button>
+                </div>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
+                <table className="w-full text-left border-collapse table-fixed min-w-[800px]">
                   <thead>
                     <tr className="bg-slate-50 dark:bg-slate-800/50">
-                      <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800">URL</th>
-                      <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800">Title</th>
-                      <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800">Description</th>
-                      <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800">Status</th>
+                      <th className="w-1/4 px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800">URL Target</th>
+                      <th className="w-1/4 px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800">Optimized Title</th>
+                      <th className="w-1/3 px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800">Meta Description</th>
+                      <th className="w-24 px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800">Status</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                     {bulkResults.map((res, idx) => (
                       <tr key={idx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                        <td className="px-6 py-4 text-xs font-mono text-slate-500 dark:text-slate-400 truncate max-w-[200px]">{res.url}</td>
-                        <td className="px-6 py-4 text-xs font-bold text-slate-900 dark:text-white">{res.title}</td>
-                        <td className="px-6 py-4 text-xs text-slate-600 dark:text-slate-400 line-clamp-2 max-w-[300px]">{res.description}</td>
                         <td className="px-6 py-4">
+                          <div className="flex items-center gap-2">
+                            <Icons.Link size={12} className="text-slate-300 shrink-0" />
+                            <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 truncate w-full" title={res.url}>{res.url}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <p className="text-xs font-bold text-slate-900 dark:text-white line-clamp-2">{res.title}</p>
+                        </td>
+                        <td className="px-6 py-4">
+                          <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">{res.description}</p>
+                        </td>
+                        <td className="px-6 py-4 text-center">
                           <span className={cn(
-                            "px-2 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
+                            "px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-widest",
                             res.status === 'Success' ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400" : "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
                           )}>
                             {res.status}
