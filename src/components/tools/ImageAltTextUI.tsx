@@ -409,19 +409,25 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
                           <Icons.Layout size={16} className="text-indigo-600" />
                           Simulated Context
                         </h4>
-                        <div className="grid grid-cols-2 gap-2">
-                          {(['standard', 'article', 'social', 'code'] as const).map((ctx) => (
+                        <div className="grid grid-cols-2 gap-3">
+                          {[
+                            { id: 'standard', label: 'Standard', icon: <Icons.Layout size={14} /> },
+                            { id: 'article', label: 'Article', icon: <Icons.FileText size={14} /> },
+                            { id: 'social', label: 'Social Post', icon: <Icons.Share2 size={14} /> },
+                            { id: 'code', label: 'HTML Code', icon: <Icons.Code size={14} /> },
+                          ].map((ctx) => (
                             <button
-                              key={ctx}
-                              onClick={() => setPreviewContext(ctx)}
+                              key={ctx.id}
+                              onClick={() => setPreviewContext(ctx.id as any)}
                               className={cn(
-                                "px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border",
-                                previewContext === ctx
-                                  ? "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800"
+                                "flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border shrink-0",
+                                previewContext === ctx.id
+                                  ? "bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800 shadow-sm"
                                   : "bg-white dark:bg-slate-900 text-slate-400 dark:text-slate-500 border-slate-100 dark:border-slate-800 hover:border-slate-200 dark:hover:border-slate-700"
                               )}
                             >
-                              {ctx}
+                              {ctx.icon}
+                              {ctx.label}
                             </button>
                           ))}
                         </div>
@@ -516,47 +522,134 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
                       )}
 
                       {previewContext === 'article' && (
-                        <div className="space-y-4">
-                          <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-3/4" />
-                          <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-full" />
-                          <div className="py-2">
-                            <img 
-                              src={sampleImage} 
-                              alt={currentAltText} 
-                              className="w-full h-auto rounded-xl shadow-lg border border-slate-100 dark:border-slate-800"
-                            />
-                            <p className="text-[9px] text-slate-400 mt-2 italic text-center">Fig 1.1: {currentAltText}</p>
+                        <div className="space-y-6">
+                          <header className="space-y-2">
+                            <div className="h-6 bg-slate-100 dark:bg-slate-800 rounded-lg w-full" />
+                            <div className="h-6 bg-slate-100 dark:bg-slate-800 rounded-lg w-2/3" />
+                          </header>
+                          <div className="flex items-center gap-3 py-2 border-y border-slate-100 dark:border-slate-800">
+                            <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700" />
+                            <div className="space-y-1">
+                              <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full w-24" />
+                              <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full w-16" />
+                            </div>
                           </div>
-                          <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-full" />
-                          <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-5/6" />
+                          <div className="py-4 space-y-4">
+                            <div className="h-4 bg-slate-50 dark:bg-slate-800/50 rounded w-full" />
+                            <div className="h-4 bg-slate-50 dark:bg-slate-800/50 rounded w-full" />
+                            <div className="relative group/article-img pt-2">
+                              <img 
+                                src={sampleImage} 
+                                alt={currentAltText} 
+                                className="w-full h-auto rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800 transition-transform duration-500 group-hover/article-img:scale-[1.02]"
+                                loading="lazy"
+                              />
+                              <div className="mt-3 px-4 py-3 bg-indigo-50/50 dark:bg-indigo-900/20 rounded-2xl border border-indigo-100/50 dark:border-indigo-800/30 flex items-start gap-2">
+                                <Icons.Info size={12} className="text-indigo-500 mt-0.5 shrink-0" />
+                                <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium italic leading-relaxed">
+                                  <span className="font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mr-1 not-italic">Figure 1.1:</span>
+                                  {currentAltText || "Alternative text description"}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="h-4 bg-slate-50 dark:bg-slate-800/50 rounded w-full" />
+                            <div className="h-4 bg-slate-50 dark:bg-slate-800/50 rounded w-4/5" />
+                          </div>
                         </div>
                       )}
 
                       {previewContext === 'social' && (
-                        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-                          <img src={sampleImage} alt={currentAltText} className="w-full aspect-[1.91/1] object-cover" />
-                          <div className="p-4 space-y-2">
-                            <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded w-full" />
-                            <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded w-2/3" />
+                        <div className="max-w-[400px] mx-auto bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-2xl">
+                          <div className="p-5 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-black text-xs shadow-lg">
+                                SEO
+                              </div>
+                              <div className="space-y-1">
+                                <p className="text-sm font-black text-slate-900 dark:text-white leading-none">SEO Score Suite</p>
+                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Sponsored • 2m ago</p>
+                              </div>
+                            </div>
+                            <Icons.Ellipsis className="text-slate-400" size={16} />
+                          </div>
+                          
+                          <div className="px-5 pb-4">
+                            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+                              Optimizing your brand's visual identity has never been easier. Check out our latest design insights! 🚀
+                            </p>
+                            <div className="relative rounded-[1.5rem] overflow-hidden border border-slate-100 dark:border-slate-800 shadow-lg group/social-img">
+                              <img 
+                                src={sampleImage} 
+                                alt={currentAltText} 
+                                className="w-full aspect-[16/9] object-cover transition-transform duration-700 group-hover/social-img:scale-110" 
+                                loading="lazy"
+                              />
+                              <div className="absolute top-3 right-3 px-2 py-1 bg-black/60 backdrop-blur-md rounded-lg text-[8px] font-black text-white uppercase tracking-widest border border-white/20">
+                                Alt Text Applied
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="px-5 py-4 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
+                            <div className="flex -space-x-2">
+                              <div className="w-6 h-6 rounded-full bg-blue-500 border-2 border-white dark:border-slate-800 flex items-center justify-center">
+                                <Icons.ThumbsUp size={10} className="text-white" />
+                              </div>
+                              <div className="w-6 h-6 rounded-full bg-rose-500 border-2 border-white dark:border-slate-800 flex items-center justify-center">
+                                <Icons.Heart size={10} className="text-white" />
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-4 text-[10px] font-bold text-slate-400">
+                              <span>392 Likes</span>
+                              <span>•</span>
+                              <span>12 Comments</span>
+                            </div>
                           </div>
                         </div>
                       )}
 
                       {previewContext === 'code' && (
-                        <div className="space-y-4 overflow-x-auto">
-                          <div className="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
-                            <span className="text-emerald-500 font-bold">HTML Implementation</span>
-                            <button onClick={() => navigator.clipboard.writeText(`<img src="image.jpg" alt="${currentAltText}" />`)} className="text-slate-500 hover:text-white">
+                        <div className="bg-slate-950 rounded-[2rem] border border-slate-800 shadow-2xl overflow-hidden flex flex-col">
+                          <div className="px-6 py-4 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                              <div className="flex gap-1.5">
+                                <div className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+                                <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                              </div>
+                              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                                <Icons.Code size={12} className="text-indigo-400" />
+                                index.html
+                              </span>
+                            </div>
+                            <button 
+                              onClick={() => {
+                                navigator.clipboard.writeText(`<img src="optimized-image.jpg" alt="${currentAltText}" loading="lazy" />`);
+                              }}
+                              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-[10px] font-bold text-white transition-all flex items-center gap-2 border border-slate-700"
+                            >
                               <Icons.Copy size={12} />
+                              Copy Snippet
                             </button>
                           </div>
-                          <pre className="text-slate-300">
-                            <span className="text-pink-500">&lt;img</span>{" "}
-                            <span className="text-orange-400">src</span>=<span className="text-emerald-400">"image.jpg"</span>{"\n"}
-                            <span className="text-orange-400">  alt</span>=<span className="text-emerald-400">"{currentAltText}"</span>{"\n"}
-                            <span className="text-orange-400">  loading</span>=<span className="text-emerald-400">"lazy"</span>{" "}
-                            <span className="text-pink-500">/&gt;</span>
-                          </pre>
+                          
+                          <div className="p-8 font-mono text-[11px] sm:text-[13px] leading-relaxed overflow-x-auto custom-scrollbar">
+                            <pre className="text-slate-400 whitespace-pre">
+                              <span className="text-slate-600 italic">// Optimized Image with AI Alt Text{"\n"}</span>
+                              <span className="text-indigo-400">&lt;img</span>{"\n"}
+                              <span className="text-blue-400">  src</span>=<span className="text-emerald-400">"optimized-image.jpg"</span>{"\n"}
+                              <span className="text-blue-400">  alt</span>=<span className="text-emerald-400">"{currentAltText || '...waiting for analysis'}"</span>{"\n"}
+                              <span className="text-blue-400">  loading</span>=<span className="text-emerald-400">"lazy"</span>{"\n"}
+                              <span className="text-blue-400">  width</span>=<span className="text-amber-400">"1200"</span>{"\n"}
+                              <span className="text-blue-400">  height</span>=<span className="text-amber-400">"630"</span>{"\n"}
+                              <span className="text-indigo-400">/&gt;</span>
+                            </pre>
+                          </div>
+
+                          <div className="px-6 py-3 bg-indigo-600 flex items-center justify-between">
+                            <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">Validated Schema • WCAG 2.1 Compliant</span>
+                            <Icons.CheckCircle size={12} className="text-white" />
+                          </div>
                         </div>
                       )}
                     </div>

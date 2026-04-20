@@ -9,6 +9,7 @@ import { renderMarkdownContent } from '../../lib/seo-utils';
 import { CoreWebVitalsUI } from './CoreWebVitalsUI';
 import { PerformanceBenchmarkChart } from '../charts/SEOPerformanceChart';
 import { BulkURLResultTable } from './BulkURLResultTable';
+import { MarkdownTableChart } from '../charts/MarkdownTableChart';
 
 interface ToolResultProps {
   tool: Tool;
@@ -41,7 +42,7 @@ export const ToolResult = React.memo(({
   showShareMenu,
   setShowShareMenu,
 }: ToolResultProps) => {
-  const isContentOptimizer = tool.id === 'content-optimizer';
+  const isContentOptimizer = tool.id === 'content-optimizer' || tool.id === 'content-analysis';
 
   const metrics = useMemo(() => {
     if (!isContentOptimizer || !result) return null;
@@ -339,6 +340,7 @@ export const ToolResult = React.memo(({
               "p-4 sm:p-8 markdown-body transition-colors duration-300",
               isTechnical && "bg-slate-900 dark:bg-black text-slate-100"
             )}>
+              {content.includes('|') && content.split('\n').some(l => l.includes('|---')) && <MarkdownTableChart content={content} />}
               {isScore ? (
                 <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 py-4">
                   {(() => {

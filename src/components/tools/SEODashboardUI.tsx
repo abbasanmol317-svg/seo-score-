@@ -5,6 +5,7 @@ import * as Icons from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { ToolComponentProps } from './ToolComponentProps';
 import { TOOLS } from '../../services/gemini';
+import { UserActivityChart } from '../charts/SEOPerformanceChart';
 
 export const SEODashboardUI: React.FC<ToolComponentProps & { history: any[] }> = ({
   history,
@@ -56,6 +57,10 @@ export const SEODashboardUI: React.FC<ToolComponentProps & { history: any[] }> =
             {history.length > 0 ? new Date(history[0].timestamp).toLocaleString() : 'N/A'}
           </p>
         </motion.div>
+      </div>
+
+      <div className="mb-12">
+        <UserActivityChart history={history} />
       </div>
 
       <h2 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">Recent Activity</h2>

@@ -7,7 +7,7 @@ export const ai = new GoogleGenAI({ apiKey });
 export type ToolId = 
   | 'website-seo' | 'youtube-seo' | 'site-speed' | 'backlinks' 
   | 'broken-links' | 'seo-audit' | 'mobile-friendly' | 'bulk-url'
-  | 'keyword-research' | 'content-optimizer' | 'hashtag-generator'
+  | 'keyword-research' | 'content-optimizer' | 'content-analysis' | 'hashtag-generator'
   | 'meta-tag' | 'serp-preview' | 'og-preview' | 'schema-markup' | 'image-alt-text'
   | 'sitemap-robots' | 'compare-websites' | 'seo-chat' | 'seo-dashboard' | 'on-page-checklist';
 
@@ -205,6 +205,9 @@ export const TOOLS: Tool[] = [
     
     ## ✍️ On-Page SEO
     (List tasks with [GOOD/AVERAGE/POOR])
+    
+    ## 📖 Content Quality & Analysis
+    (Analyze main pages for readability, keyword density, and provide optimization ideas. Suggest using the 'content-analysis' tool for deep-dives.)
     
     ## 🌐 Off-Page SEO
     (List tasks with [GOOD/AVERAGE/POOR])
@@ -406,6 +409,50 @@ export const TOOLS: Tool[] = [
     placeholder: 'Paste your content or enter URL to optimize (e.g., "Our mission is...")'
   },
   {
+    id: 'content-analysis',
+    name: 'Content Analysis',
+    description: 'Deep audit of content for readability, keyword density, and actionable SEO improvements.',
+    category: 'Content & Keywords',
+    icon: 'FileSearch',
+    slug: 'free-content-analysis-seo-tool',
+    keywords: 'content,analysis,readability,density,optimization',
+    seoTitle: 'Free Content Analysis Tool – Readability & Keyword Density Checker',
+    seoDescription: 'Analyze your content for readability, keyword density, and SEO quality. Get AI-powered suggestions to improve content rankings.',
+    prompt: `Perform a deep Content Analysis on the provided text or URL.
+    Your analysis MUST focus on readability, keyword density, and actionable semantic improvements.
+    
+    Format your response as a Comprehensive Content Review with these EXACT sections:
+    
+    ## 🎯 Analysis Summary
+    (2-3 sentences overview of the content's voice, intent, and overall SEO potential)
+    
+    ## ✍️ Readability Score
+    Score: [0-100]
+    (Provide a score based on Flesch-Kincaid logic. Explain if it's Easy, Moderate, or Difficult.)
+    
+    ## 🔑 Keyword Density Audit
+    Provide a detailed breakdown of keyword usage:
+    - **Primary Keyword**: [Detected or Target Keyword]
+    - **Density**: [X.X%] [GOOD/AVERAGE/POOR]
+    - **Usage Status**: [Details on placement in H1, first 100 words, and conclusion]
+    
+    ## 📊 Semantic Performance
+    (A table showing top 5 used keywords and their frequencies)
+    | Keyword | Count | Density | Status |
+    |---------|-------|---------|--------|
+    | ...     | ...   | ...     | ...    |
+    
+    ## 🛠️ Optimization Suggestions
+    (List at least 5 specific, high-impact improvements for readability and keyword focus)
+    
+    ## 🚦 SEO Content Status
+    [GOOD], [AVERAGE], or [POOR]
+    
+    ## 🏁 Implementation Guide
+    (Step-by-step instructions on what to change first for the biggest ranking boost)`,
+    placeholder: 'Paste content or enter URL for detailed analysis...'
+  },
+  {
     id: 'hashtag-generator',
     name: 'Hashtag Generator',
     description: 'Generate hashtags for YT, IG, TikTok.',
@@ -497,14 +544,19 @@ export const TOOLS: Tool[] = [
     - **Micro-Copy Improvement:** Suggest small tweaks to the CTA to make it feel more personal or urgent (e.g., changing "Learn More" to "Discover Your Potential").
     
     ### 📝 Meta Description Audit
-    - **Clarity & Intent Analysis:** (Analyze how well the description matches the user's likely search intent. Is it too vague or highly specific?)
-    - **Keyword Integration Strategy:** (Evaluate how the primary keyword is integrated. Suggest better placement, such as front-loading, to ensure it bolds in search results.)
-    - **CTA Effectiveness & Hook:** (Analyze the closing hook. Provide 2-3 specific, high-conversion CTA alternatives that create urgency or curiosity.)
-    - **3 Key CTR Improvements:**
-        1. [Power Word/Emotional Trigger improvement]
-        2. [Clarity/Readability improvement]
-        3. [Call-to-Action/Intent improvement]
-    - **Optimized Master Version:** (Provide a final, perfectly balanced meta description that incorporates all the above improvements within 155 characters.)
+    #### 🎯 Clarity & Intent Analysis
+    [Analyze how well the description matches the user's likely search intent. Evaluate if it's too vague or highly specific. Provide concrete examples on how to improve the core message for maximum clarity and user relevance.]
+
+    #### 🔑 Keyword Integration Strategy
+    [Evaluate how the primary and secondary keywords are integrated. Suggest better placement, such as front-loading or natural semantic variations, to ensure bolding in search results and thematic relevance.]
+
+    #### 🚀 Key CTR Improvements
+    1. [Power Word/Emotional Trigger improvement]
+    2. [Clarity/Readability improvement]
+    3. [Call-to-Action/Intent improvement]
+    
+    #### 🏁 Final Optimized Version
+    (Provide a final, perfectly balanced meta description that incorporates all the above improvements within 155 characters.)
     
     ### 📏 Length & Visibility Check
     - **Title:** (Is it between 50-60 characters?)

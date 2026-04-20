@@ -9,9 +9,15 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
-  Cell
+  Cell,
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis
 } from 'recharts';
 import { cn } from '../../lib/utils';
+import * as Icons from 'lucide-react';
 
 const MOCK_TREND_DATA = [
   { day: 'Day 1', score: 65, traffic: 1200 },
@@ -181,6 +187,111 @@ export const TrafficDistributionChart = () => {
             <span className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">{item.name}: {item.value}%</span>
           </div>
         ))}
+      </div>
+    </div>
+  );
+};
+
+export const UserActivityChart = ({ history }: { history: any[] }) => {
+  const chartData = React.useMemo(() => {
+    const last7Days = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      return d.toLocaleDateString();
+    }).reverse();
+
+    const counts = history.reduce((acc, item) => {
+      const date = new Date(item.timestamp).toLocaleDateString();
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return last7Days.map(date => ({
+      date: date.split('/')[1] + '/' + date.split('/')[0], // Simple MM/DD format
+      count: counts[date] || 0
+    }));
+  }, [history]);
+
+  return (
+    <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Activity Trend</h3>
+          <p className="text-xs text-slate-500 font-medium">Tool usage over last 7 days</p>
+        </div>
+        <div className="p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl text-indigo-600">
+          <Icons.TrendingUp size={20} />
+        </div>
+      </div>
+
+      <div className="h-[200px] w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={chartData}>
+            <defs>
+              <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#6366f1" stopOpacity={0.1}/>
+                <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+              </linearGradient>
+            </defs>
+            <XAxis 
+              dataKey="date" 
+              axisLine={false} 
+              tickLine={false} 
+              tick={{ fill: '#94a3b8', fontSize: 10 }}
+            />
+            <Tooltip 
+              contentStyle={{ borderRadius: '12px', border: 'none', backgroundColor: '#1e293b', color: '#fff' }}
+            />
+            <Area 
+              type="monotone" 
+              dataKey="count" 
+              stroke="#6366f1" 
+              strokeWidth={3}
+              fill="url(#colorCount)"
+              animationDuration={1000}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+};
+
+export const SEOHealthRadarChart = () => {
+  const data = [
+    { subject: 'Technical', A: 120, fullMark: 150 },
+    { subject: 'Content', A: 98, fullMark: 150 },
+    { subject: 'Speed', A: 86, fullMark: 150 },
+    { subject: 'Authority', A: 99, fullMark: 150 },
+    { subject: 'Experience', A: 85, fullMark: 150 },
+    { subject: 'Mobile', A: 65, fullMark: 150 },
+  ];
+
+  return (
+    <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 border border-slate-200 dark:border-slate-800 shadow-sm h-full flex flex-col">
+      <div className="mb-6">
+        <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight leading-none mb-2">SEO Health Matrix</h3>
+        <p className="text-xs text-slate-500 font-medium">Multi-dimensional authority analysis</p>
+      </div>
+      <div className="flex-grow flex items-center justify-center min-h-[300px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
+            <PolarGrid stroke="#e2e8f0" />
+            <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 10 }} />
+            <PolarRadiusAxis hide angle={30} domain={[0, 150]} />
+            <Radar
+              name="Current Site"
+              dataKey="A"
+              stroke="#6366f1"
+              strokeWidth={3}
+              fill="#6366f1"
+              fillOpacity={0.15}
+            />
+            <Tooltip 
+              contentStyle={{ borderRadius: '12px', border: 'none', backgroundColor: '#0f172a', color: '#fff', fontSize: '10px' }}
+            />
+          </RadarChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );

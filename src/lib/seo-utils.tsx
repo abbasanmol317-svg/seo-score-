@@ -48,16 +48,20 @@ export const renderMarkdownContent = (content: string) => {
 export const getErrorMessage = (error: string) => {
   const err = error.toLowerCase();
   
-  if (err.includes('429') || err.includes('quota')) {
-    return 'Rate Limit Exceeded: You\'ve sent too many requests in a short time.';
+  if (err.includes('429') || err.includes('quota') || err.includes('rate limit')) {
+    return 'Rate Limit Exceeded: You\'ve reached the maximum number of requests allowed for your API key. Google\'s free tier has specific limits per minute.';
   }
   
   if (err.includes('503') || err.includes('overloaded') || err.includes('service unavailable')) {
-    return 'Server Overloaded: The AI service is temporarily busy handling other requests.';
+    return 'AI Service Busy: The Google Gemini servers are currently overloaded. This usually happens during peak usage times.';
   }
 
-  if (err.includes('400') || err.includes('bad request')) {
-    return 'Invalid Request: The input provided might be too long or in an incorrect format.';
+  if (err.includes('400') || err.includes('bad request') || err.includes('invalid field') || err.includes('malformed')) {
+    return 'Invalid Input: The request couldn\'t be processed. This often happens if the text is too long, the URL is invalid, or the format is incorrect.';
+  }
+
+  if (err.includes('empty input') || err.includes('provide a value')) {
+    return 'Missing Information: Please enter a URL, topic, or content before running the analysis.';
   }
 
   if (err.includes('401') || err.includes('403') || err.includes('unauthorized') || err.includes('forbidden')) {
@@ -100,25 +104,28 @@ export const getErrorSolutions = (error: string) => {
   
   if (err.includes('rate limit') || err.includes('429') || err.includes('quota')) {
     return [
-      'Wait for 60 seconds and try again; the quota usually resets quickly.',
-      'If you are using a free tier key, consider upgrading for higher limits.',
-      'Reduce the frequency of your requests to stay within the allowed limits.'
+      'Wait exactly 60 seconds and try again—the Google AI Studio free tier resets every minute.',
+      'Check your project settings to ensure you are not using a restricted API key.',
+      'If you need higher limits, consider setting up a Pay-as-you-go billing account in Google Cloud.',
+      'Avoid rapid-fire clicks; allow a few seconds between different tool uses.'
     ];
   }
 
   if (err.includes('503') || err.includes('overloaded') || err.includes('service unavailable') || err.includes('500')) {
     return [
-      'Wait for 10-20 seconds and click "Try Again".',
-      'The server might be temporarily down; try again in a few minutes.',
-      'Check the Google Cloud Status page if the problem persists.'
+      'Wait for 15 seconds and click "Try Again".',
+      'If the service is down globally, check the Google Cloud Status Dashboard.',
+      'Try analyzing a different URL or providing a shorter text snippet.',
+      'Refreshing your browser can sometimes clear transient connection issues.'
     ];
   }
 
-  if (err.includes('400') || err.includes('bad request') || err.includes('invalid')) {
+  if (err.includes('400') || err.includes('bad request') || err.includes('invalid') || err.includes('empty') || err.includes('malformed')) {
     return [
-      'Try shortening your input text or providing a simpler URL.',
-      'Ensure the input doesn\'t contain any unusual special characters.',
-      'If you are analyzing a URL, make sure it is a valid, public website.'
+      'Ensure the URL starts with https:// or http:// and is a valid live website.',
+      'If pasting content, try reducing the length to under 20,000 characters.',
+      'Remove any complex emojis or non-standard characters from your input.',
+      'Check if the website you are analyzing is blocking automated crawlers.'
     ];
   }
 
@@ -151,4 +158,17 @@ export const getErrorSolutions = (error: string) => {
     'Try refreshing the page to reset the application state.',
     'If the issue persists, wait a few minutes and try again.'
   ];
+};
+
+export type ErrorCategory = 'QUOTA' | 'SERVICE' | 'INPUT' | 'AUTH' | 'NETWORK' | 'SAFETY' | 'UNKNOWN';
+
+export const getErrorCategory = (error: string): ErrorCategory => {
+  const err = error.toLowerCase();
+  if (err.includes('429') || err.includes('quota') || err.includes('rate limit')) return 'QUOTA';
+  if (err.includes('503') || err.includes('500') || err.includes('service unavailable') || err.includes('internal server error')) return 'SERVICE';
+  if (err.includes('400') || err.includes('bad request') || err.includes('empty') || err.includes('provide a value') || err.includes('invalid field') || err.includes('malformed')) return 'INPUT';
+  if (err.includes('401') || err.includes('403') || err.includes('auth') || err.includes('key')) return 'AUTH';
+  if (err.includes('fetch') || err.includes('network') || err.includes('timeout') || err.includes('deadline') || err.includes('504')) return 'NETWORK';
+  if (err.includes('safety') || err.includes('blocked') || err.includes('candidate')) return 'SAFETY';
+  return 'UNKNOWN';
 };

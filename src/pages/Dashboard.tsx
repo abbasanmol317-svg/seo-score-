@@ -7,7 +7,7 @@ import { Tool, TOOLS } from '../services/gemini';
 import { cn } from '../lib/utils';
 import { ToolCard } from '../components/ToolCard';
 import { CATEGORY_CONFIG } from '../constants';
-import { SEOPerformanceChart, TrafficDistributionChart } from '../components/charts/SEOPerformanceChart';
+import { SEOPerformanceChart, TrafficDistributionChart, SEOHealthRadarChart } from '../components/charts/SEOPerformanceChart';
 
 export default function Dashboard() {
   const categories = Object.keys(CATEGORY_CONFIG).filter(cat => 
@@ -88,12 +88,15 @@ export default function Dashboard() {
         </motion.div>
       </header>
 
-      <div className="mb-16 grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+      <div className="mb-16 grid grid-cols-1 lg:grid-cols-4 gap-6 sm:gap-8">
         <div className="lg:col-span-2">
           <SEOPerformanceChart />
         </div>
         <div className="lg:col-span-1">
           <TrafficDistributionChart />
+        </div>
+        <div className="lg:col-span-1">
+          <SEOHealthRadarChart />
         </div>
       </div>
 

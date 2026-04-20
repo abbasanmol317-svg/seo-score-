@@ -79,6 +79,15 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
 
   const ctrAnalysis = ctrMatch ? ctrMatch[1].trim() : '';
   const descAudit = descAuditMatch ? descAuditMatch[1].trim() : '';
+  
+  const clarityMatch = descAudit.match(/#### 🎯 Clarity & Intent Analysis\n(.*?)(?=\n####|$)/s);
+  const keywordMatch = descAudit.match(/#### 🔑 Keyword Integration Strategy\n(.*?)(?=\n####|$)/s);
+  const improvementsMatch = descAudit.match(/#### 🚀 Key CTR Improvements\n(.*?)(?=\n####|$)/s);
+  
+  const clarityAnalysis = clarityMatch ? clarityMatch[1].trim() : '';
+  const keywordStrategy = keywordMatch ? keywordMatch[1].trim() : '';
+  const keyImprovementsRaw = improvementsMatch ? improvementsMatch[1].trim() : '';
+  
   const codeSnippet = codeMatch ? codeMatch[1].trim() : '';
 
   // Google Search Preview Truncation
@@ -557,437 +566,458 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                   animate={{ opacity: 1, y: 0 }}
                   className="max-w-4xl mx-auto mt-8 p-4 sm:p-8 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden group print:hidden"
                 >
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-600 rounded-lg text-white shadow-lg">
-                    <Icons.Search size={20} />
-                  </div>
-                  <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">Google Search Preview</h3>
-                </div>
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-blue-600 rounded-2xl text-white shadow-lg rotate-3">
+                        <Icons.Search size={24} />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Search Result Preview</h3>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-0.5">Real-time Google SERP Simulation</p>
+                      </div>
+                    </div>
 
-                <div className="flex flex-wrap items-center gap-4">
-                  <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
-                    <button
-                      onClick={() => setPreviewMode('desktop')}
-                      className={cn(
-                        "px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5",
-                        previewMode === 'desktop' 
-                          ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
-                          : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
-                      )}
-                    >
-                      <Icons.Monitor size={12} />
-                      Desktop
-                    </button>
-                    <button
-                      onClick={() => setPreviewMode('mobile')}
-                      className={cn(
-                        "px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5",
-                        previewMode === 'mobile' 
-                          ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
-                          : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
-                      )}
-                    >
-                      <Icons.Smartphone size={12} />
-                      Mobile
-                    </button>
-                  </div>
-
-                  {variations.length > 0 && (
-                    <div className="flex flex-col gap-2">
-                      <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                    <div className="flex flex-wrap items-center gap-4">
+                      <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
                         <button
-                          onClick={() => setShowBoosted(false)}
+                          onClick={() => setPreviewMode('desktop')}
                           className={cn(
-                            "px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
-                            !showBoosted 
+                            "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
+                            previewMode === 'desktop' 
                               ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
                               : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
                           )}
                         >
-                          Standard
+                          <Icons.Monitor size={14} />
+                          Desktop
                         </button>
                         <button
-                          onClick={() => setShowBoosted(true)}
+                          onClick={() => setPreviewMode('mobile')}
                           className={cn(
-                            "px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5",
-                            showBoosted 
-                              ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40" 
+                            "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
+                            previewMode === 'mobile' 
+                              ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
                               : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
                           )}
                         >
-                          <Icons.Zap size={10} className={showBoosted ? "text-white" : "text-indigo-500"} />
-                          Boosted
+                          <Icons.Smartphone size={14} />
+                          Mobile
                         </button>
                       </div>
-                      
-                      {showBoosted && variations.length > 1 && (
-                        <div className="flex flex-wrap items-center justify-center gap-2 max-w-md">
-                          {variations.map((v, idx) => (
-                            <button
-                              key={idx}
-                              onClick={() => setSelectedVariation(idx)}
-                              className={cn(
-                                "px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
-                                selectedVariation === idx 
-                                  ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40" 
-                                  : "bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-700"
-                              )}
-                            >
-                              {v.trigger}
-                            </button>
-                          ))}
-                        </div>
+
+                      {codeSnippet && (
+                        <button
+                          onClick={handleCopyCode}
+                          className={cn(
+                            "px-6 py-3 rounded-xl font-black uppercase tracking-widest text-xs flex items-center gap-2 transition-all active:scale-95 shadow-lg",
+                            copiedCode ? "bg-emerald-500 text-white shadow-emerald-500/20" : "bg-slate-900 dark:bg-slate-800 text-white hover:bg-slate-800 dark:hover:bg-slate-700 shadow-slate-900/20"
+                          )}
+                        >
+                          {copiedCode ? <Icons.CheckCircle2 size={18} /> : <Icons.Code size={18} />}
+                          {copiedCode ? "Copied!" : "Copy Code"}
+                        </button>
                       )}
+                    </div>
+                  <div className="grid lg:grid-cols-2 gap-10 sm:gap-14">
+                    {/* Editor Section */}
+                    <div className="space-y-8">
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between ml-1">
+                            <label className="text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Page Title</label>
+                            <span className={cn(
+                              "text-[10px] font-bold px-2 py-0.5 rounded-full",
+                              editableTitle.length > 61 || editableTitle.length < 30 
+                                ? "bg-amber-100/50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400" 
+                                : "bg-emerald-100/50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
+                            )}>
+                              {editableTitle.length} / 60 Chars
+                            </span>
+                          </div>
+                          <div className="relative group/title">
+                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/title:text-indigo-500 transition-colors">
+                              <Icons.Type size={16} />
+                            </div>
+                            <input 
+                              type="text"
+                              value={editableTitle}
+                              onChange={(e) => setEditableTitle(e.target.value)}
+                              placeholder="Enter SEO title..."
+                              className="w-full bg-slate-50 dark:bg-slate-800/30 border-2 border-slate-100 dark:border-slate-800 rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all dark:text-slate-200 font-bold tracking-tight"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between ml-1">
+                            <label className="text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Meta Description</label>
+                            <span className={cn(
+                              "text-[10px] font-bold px-2 py-0.5 rounded-full",
+                              editableDescription.length > 161 || editableDescription.length < 120 
+                                ? "bg-amber-100/50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400" 
+                                : "bg-emerald-100/50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
+                            )}>
+                              {editableDescription.length} / 160 Chars
+                            </span>
+                          </div>
+                          <div className="relative group/desc">
+                            <div className="absolute left-4 top-4 text-slate-400 group-focus-within/desc:text-indigo-500 transition-colors">
+                              <Icons.AlignLeft size={16} />
+                            </div>
+                            <textarea 
+                              value={editableDescription}
+                              onChange={(e) => setEditableDescription(e.target.value)}
+                              placeholder="Enter SEO description..."
+                              rows={3}
+                              className="w-full bg-slate-50 dark:bg-slate-800/30 border-2 border-slate-100 dark:border-slate-800 rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all dark:text-slate-200 font-medium leading-relaxed resize-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-6 pt-4">
+                        <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                          <Icons.Globe size={12} className="text-indigo-500" />
+                          Brand & URL Settings
+                        </h4>
+                        
+                        <div className="grid sm:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Site Name</label>
+                            <div className="relative group/sitename">
+                              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/sitename:text-indigo-500 transition-colors">
+                                <Icons.Building2 size={14} />
+                              </div>
+                              <input 
+                                type="text"
+                                value={siteName}
+                                onChange={(e) => setSiteName(e.target.value)}
+                                placeholder="e.g. My Agency"
+                                className="w-full bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 pl-9 pr-3 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all dark:text-slate-200"
+                              />
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Slug / Display URL</label>
+                            <div className="relative group/siteurl">
+                              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/siteurl:text-indigo-500 transition-colors">
+                                <Icons.Link size={14} />
+                              </div>
+                              <input 
+                                type="text"
+                                value={siteUrl}
+                                onChange={(e) => setSiteUrl(e.target.value)}
+                                placeholder="e.g. site.com/page"
+                                className="w-full bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 pl-9 pr-3 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all dark:text-slate-200"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Preview Section */}
+                    <div className="space-y-6">
+                      <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                        <Icons.Eye size={12} className="text-indigo-500" />
+                        Live Result
+                      </h4>
+                      
+                      <div className={cn(
+                        "bg-white dark:bg-slate-900 p-8 sm:p-10 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-2xl relative overflow-hidden transition-all duration-700 min-h-[180px] flex flex-col justify-center",
+                        previewMode === 'mobile' ? "max-w-[420px] mx-auto ring-[12px] ring-slate-100 dark:ring-slate-800/50" : "w-full"
+                      )}>
+                        <div className="absolute top-0 right-0 p-6 opacity-[0.05] pointer-events-none">
+                          {previewMode === 'desktop' ? <Icons.Monitor size={140} /> : <Icons.Smartphone size={140} />}
+                        </div>
+
+                        <div className="relative z-10 font-sans group/serp">
+                          {/* Modern Google SERP Header */}
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400 shrink-0 overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700 transition-transform group-hover/serp:scale-110">
+                              {siteUrl ? (
+                                <img 
+                                  src={`https://www.google.com/s2/favicons?sz=64&domain=${siteUrl.includes('://') ? siteUrl : `https://${siteUrl}`}`} 
+                                  alt="" 
+                                  className="w-full h-full object-contain p-1.5"
+                                  referrerPolicy="no-referrer"
+                                  onError={(e) => {
+                                    (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>';
+                                  }}
+                                />
+                              ) : (
+                                <Icons.Globe size={16} />
+                              )}
+                            </div>
+                            <div className="flex flex-col min-w-0">
+                              <div className="flex items-center gap-1.5">
+                                <span className={cn(
+                                  "font-medium text-slate-900 dark:text-slate-200 truncate",
+                                  previewMode === 'mobile' ? "text-xs" : "text-sm"
+                                )}>
+                                  {siteName || 'Enter Site Name'}
+                                </span>
+                                <Icons.ChevronDown size={12} className="text-slate-400" />
+                              </div>
+                              <span className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate opacity-80">{siteUrl || 'example.com/slug'}</span>
+                            </div>
+                          </div>
+
+                          {/* Title */}
+                          <button className={cn(
+                            "text-[#1a0dab] dark:text-[#8ab4f8] hover:underline text-left cursor-pointer mb-2 leading-tight font-medium line-clamp-2",
+                            previewMode === 'mobile' ? "text-xl" : "text-[20px]"
+                          )}>
+                            {previewTitle || 'Optimized Page Title Will Appear Here'}
+                          </button>
+
+                          {/* Description */}
+                          <div className={cn(
+                            "text-[#4d5156] dark:text-[#bdc1c6] leading-relaxed line-clamp-2 opacity-90",
+                            previewMode === 'mobile' ? "text-xs" : "text-sm"
+                          )}>
+                            {previewDescription || 'Your meta description will appear here. It should be between 150-160 characters for optimal visibility in search results.'}
+                          </div>
+                        </div>
+
+                        {showBoosted && variations[selectedVariation]?.improvements && (
+                          <motion.div 
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-700 relative z-10"
+                          >
+                            <div className="flex items-center gap-2 mb-3">
+                              <Icons.Sparkles size={14} className="text-indigo-500" />
+                              <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                                CTR Improvements: {variations[selectedVariation].trigger}
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                              {variations[selectedVariation].improvements.split(/[\n,;]|\d\.\s+|[-*]\s+/).filter(i => i.trim().length > 5).slice(0, 3).map((improvement, i) => (
+                                <div key={i} className="flex items-start gap-2 p-2 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-lg border border-indigo-100/50 dark:border-indigo-800/30">
+                                  <div className="mt-0.5 text-indigo-600 dark:text-indigo-400">
+                                    <Icons.CheckCircle2 size={12} />
+                                  </div>
+                                  <p className="text-[10px] font-medium text-slate-600 dark:text-slate-400 leading-tight">
+                                    {improvement.trim()}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </div>
+
+                      <div className="bg-indigo-50/50 dark:bg-indigo-900/10 p-4 rounded-2xl border border-indigo-100/50 dark:border-indigo-800/30 flex items-start gap-3">
+                        <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400 shrink-0">
+                          <Icons.Info size={16} />
+                        </div>
+                        <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                          This preview uses Google's latest SERP layout. Aim for <span className="text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-widest">30-60 characters</span> for titles and <span className="text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-widest">120-160 characters</span> for descriptions to avoid truncation.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {ctrAnalysis && (
+                    <div className="mt-8 p-6 bg-indigo-50/50 dark:bg-indigo-900/20 rounded-2xl border border-indigo-100 dark:border-indigo-800/50">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="p-1.5 bg-indigo-600 rounded-lg text-white">
+                          <Icons.TrendingUp size={16} />
+                        </div>
+                        <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">CTR Booster Suggestions</h4>
+                      </div>
+                      <div className="prose prose-sm dark:prose-invert max-w-none text-slate-600 dark:text-slate-400">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {ctrAnalysis.split('\n').filter(line => line.trim().startsWith('-') || line.trim().startsWith('*') || /^\d\./.test(line.trim())).map((suggestion, i) => {
+                            const text = suggestion.replace(/^[-*]\s*|^\d\.\s*/, '');
+                            const isFunnel = /TOFU|MOFU|BOFU/.test(text);
+                            const stage = text.match(/TOFU|MOFU|BOFU/)?.[0];
+                            
+                            return (
+                              <div key={i} className={cn(
+                                "flex gap-3 p-3 rounded-xl border shadow-sm transition-all",
+                                isFunnel 
+                                  ? "bg-white dark:bg-slate-900 border-indigo-200 dark:border-indigo-800 ring-1 ring-indigo-50 dark:ring-indigo-900/20" 
+                                  : "bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800"
+                              )}>
+                                <div className={cn(
+                                  "mt-1",
+                                  stage === 'TOFU' ? "text-sky-500" :
+                                  stage === 'MOFU' ? "text-indigo-500" :
+                                  stage === 'BOFU' ? "text-rose-500" :
+                                  "text-indigo-600 dark:text-indigo-400"
+                                )}>
+                                  {isFunnel ? <Icons.Filter size={14} /> : <Icons.Zap size={14} />}
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                  {isFunnel && (
+                                    <span className={cn(
+                                      "text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md w-fit",
+                                      stage === 'TOFU' ? "bg-sky-50 text-sky-600 dark:bg-sky-900/30 dark:text-sky-400" :
+                                      stage === 'MOFU' ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400" :
+                                      "bg-rose-50 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400"
+                                    )}>
+                                      {stage === 'TOFU' ? 'Awareness' : stage === 'MOFU' ? 'Consideration' : 'Conversion'} Stage
+                                    </span>
+                                  )}
+                                  <p className={cn("text-xs font-medium leading-relaxed", isFunnel && "text-slate-900 dark:text-white")}>
+                                    {text.replace(/\*\*(TOFU|MOFU|BOFU).*?\*\*:\s*/, '')}
+                                  </p>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        {!ctrAnalysis.includes('-') && !ctrAnalysis.includes('*') && !/^\d\./.test(ctrAnalysis) && (
+                          <p className="text-xs leading-relaxed">{ctrAnalysis}</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {descAudit && (
+                    <div className="mt-8 p-6 bg-emerald-50/50 dark:bg-emerald-900/20 rounded-2xl border border-emerald-100 dark:border-emerald-800/50">
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="p-1.5 bg-emerald-600 rounded-lg text-white">
+                          <Icons.TrendingUp size={16} />
+                        </div>
+                        <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Meta Description Optimization Audit</h4>
+                      </div>
+
+                      <div className="space-y-6">
+                        {clarityAnalysis && (
+                          <div className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-emerald-800/50 shadow-sm">
+                            <div className="flex items-center gap-2 mb-3">
+                              <Icons.Focus size={14} className="text-emerald-600" />
+                              <h5 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Clarity & Intent Analysis</h5>
+                            </div>
+                            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+                              {clarityAnalysis}
+                            </p>
+                          </div>
+                        )}
+
+                        {keywordStrategy && (
+                          <div className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-emerald-100 dark:border-emerald-800/50 shadow-sm">
+                            <div className="flex items-center gap-2 mb-3">
+                              <Icons.KeyRound size={14} className="text-emerald-600" />
+                              <h5 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Keyword Integration Strategy</h5>
+                            </div>
+                            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+                              {keywordStrategy}
+                            </p>
+                          </div>
+                        )}
+
+                        <div className="prose prose-sm dark:prose-invert max-w-none text-slate-600 dark:text-slate-400">
+                          <div className="grid grid-cols-1 gap-4">
+                            {(keyImprovementsRaw || descAudit).split('\n').filter(line => line.trim().startsWith('-') || line.trim().startsWith('*') || /^\d\./.test(line.trim())).map((item, i) => {
+                              const isImprovement = /^\d\./.test(item.trim());
+                              return (
+                                <div key={i} className={cn(
+                                  "flex gap-3 p-3 rounded-xl border shadow-sm transition-all",
+                                  isImprovement 
+                                    ? "bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800 scale-[1.02]" 
+                                    : "bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800"
+                                )}>
+                                  <div className={cn("mt-1", isImprovement ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400")}>
+                                    {isImprovement ? <Icons.Zap size={14} /> : <Icons.CheckCircle2 size={14} />}
+                                  </div>
+                                  <p className={cn("text-xs font-medium leading-relaxed", isImprovement && "text-slate-900 dark:text-white font-bold")}>
+                                    {item.replace(/^[-*]\s*|^\d\.\s*/, '')}
+                                  </p>
+                                </div>
+                              );
+                            })}
+                          </div>
+                          {!descAudit.includes('-') && !descAudit.includes('*') && !/^\d\./.test(descAudit) && !clarityAnalysis && (
+                            <p className="text-xs leading-relaxed">{descAudit}</p>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   )}
                   
-                  {codeSnippet && (
-                  <button
-                    onClick={handleCopyCode}
-                    className={cn(
-                      "px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all active:scale-95 shadow-lg",
-                      copiedCode ? "bg-emerald-500 text-white" : "bg-slate-900 dark:bg-slate-800 text-white hover:bg-slate-800 dark:hover:bg-slate-700"
-                    )}
-                  >
-                    {copiedCode ? <Icons.Check size={18} /> : <Icons.Code size={18} />}
-                    {copiedCode ? "Code Copied!" : "Copy Meta Tags Code"}
-                  </button>
-                )}
-                </div>
-              </div>
-
-              <div className="space-y-4 mb-6">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between ml-1">
-                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Page Title</label>
-                    <span className={cn(
-                      "text-[10px] font-bold",
-                      editableTitle.length > 60 || editableTitle.length < 30 ? "text-amber-500" : "text-emerald-500"
-                    )}>
-                      {editableTitle.length} / 60 characters
-                    </span>
-                  </div>
-                  <div className="relative group/title">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/title:text-indigo-500 transition-colors">
-                      <Icons.Type size={14} />
-                    </div>
-                    <input 
-                      type="text"
-                      value={editableTitle}
-                      onChange={(e) => setEditableTitle(e.target.value)}
-                      placeholder="Enter page title..."
-                      className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 pl-9 pr-4 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all dark:text-slate-200 font-medium"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between ml-1">
-                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Meta Description</label>
-                    <span className={cn(
-                      "text-[10px] font-bold",
-                      editableDescription.length > 160 || editableDescription.length < 120 ? "text-amber-500" : "text-emerald-500"
-                    )}>
-                      {editableDescription.length} / 160 characters
-                    </span>
-                  </div>
-                  <div className="relative group/desc">
-                    <div className="absolute left-3 top-4 text-slate-400 group-focus-within/desc:text-indigo-500 transition-colors">
-                      <Icons.AlignLeft size={14} />
-                    </div>
-                    <textarea 
-                      value={editableDescription}
-                      onChange={(e) => setEditableDescription(e.target.value)}
-                      placeholder="Enter meta description..."
-                      rows={2}
-                      className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 pl-9 pr-4 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all dark:text-slate-200 font-medium resize-none"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Site Name</label>
-                  <div className="relative">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                      <Icons.Type size={14} />
-                    </div>
-                    <input 
-                      type="text"
-                      value={siteName}
-                      onChange={(e) => setSiteName(e.target.value)}
-                      placeholder="e.g. My Awesome Site"
-                      className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl py-2 pl-9 pr-4 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all dark:text-slate-200"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Site URL</label>
-                  <div className="relative">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                      <Icons.Link size={14} />
-                    </div>
-                    <input 
-                      type="text"
-                      value={siteUrl}
-                      onChange={(e) => setSiteUrl(e.target.value)}
-                      placeholder="e.g. https://example.com"
-                      className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl py-2 pl-9 pr-4 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all dark:text-slate-200"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className={cn(
-                "bg-white dark:bg-slate-800 p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-slate-100 dark:border-slate-700 shadow-inner relative overflow-hidden transition-all duration-500",
-                previewMode === 'mobile' ? "max-w-[400px] mx-auto" : "w-full"
-              )}>
-                <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
-                  {previewMode === 'desktop' ? <Icons.Monitor size={120} /> : <Icons.Smartphone size={120} />}
-                </div>
-
-                {showBoosted && (
-                  <div className="absolute top-4 right-4 z-20">
-                    <div className="px-3 py-1 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg flex items-center gap-1.5 animate-pulse">
-                      <Icons.Zap size={10} />
-                      High-CTR Mode
-                    </div>
-                  </div>
-                )}
-                
-                <div className="relative z-10 font-sans">
-                  {/* Modern Google SERP Header */}
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-7 h-7 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-400 shrink-0 overflow-hidden">
-                      <Icons.Globe size={14} />
-                    </div>
-                    <div className="flex flex-col min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-sm font-medium text-slate-900 dark:text-slate-200 truncate">{siteName}</span>
-                        <Icons.ChevronDown size={12} className="text-slate-400" />
-                      </div>
-                      <span className="text-xs text-slate-500 dark:text-slate-400 truncate">{siteUrl}</span>
-                    </div>
-                  </div>
-
-                  {/* Title */}
-                  <div className={cn(
-                    "text-[#1a0dab] dark:text-[#8ab4f8] hover:underline cursor-pointer mb-1 leading-tight",
-                    previewMode === 'mobile' ? "text-lg" : "text-xl font-medium"
-                  )}>
-                    {previewTitle || 'Your Page Title Will Appear Here'}
-                  </div>
-
-                  {/* Description */}
-                  <div className="text-[#4d5156] dark:text-[#bdc1c6] text-sm leading-relaxed line-clamp-2">
-                    {previewDescription || 'Your meta description will appear here. It should be between 150-160 characters for optimal visibility in search results.'}
-                  </div>
-                </div>
-
-                {showBoosted && variations[selectedVariation]?.improvements && (
-                  <motion.div 
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-700 relative z-10"
-                  >
-                    <div className="flex items-center gap-2 mb-3">
-                      <Icons.Sparkles size={14} className="text-indigo-500" />
-                      <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-                        CTR Improvements: {variations[selectedVariation].trigger}
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      {variations[selectedVariation].improvements.split(/[\n,;]|\d\.\s+|[-*]\s+/).filter(i => i.trim().length > 5).slice(0, 3).map((improvement, i) => (
-                        <div key={i} className="flex items-start gap-2 p-2 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-lg border border-indigo-100/50 dark:border-indigo-800/30">
-                          <div className="mt-0.5 text-indigo-600 dark:text-indigo-400">
-                            <Icons.CheckCircle2 size={12} />
-                          </div>
-                          <p className="text-[10px] font-medium text-slate-600 dark:text-slate-400 leading-tight">
-                            {improvement.trim()}
-                          </p>
+                  {schemaSnippet && (
+                    <div className="mt-8 space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="p-1.5 bg-amber-600 rounded-lg text-white">
+                          <Icons.Code2 size={16} />
                         </div>
-                      ))}
+                        <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">JSON-LD Schema Markup</h4>
+                      </div>
+                      <div className="relative group/schema">
+                        <div className="p-4 bg-slate-900 dark:bg-black rounded-2xl border border-slate-800 overflow-hidden">
+                          <pre className="text-[10px] sm:text-xs font-mono text-emerald-400 overflow-x-auto leading-relaxed">
+                            <code>{schemaSnippet}</code>
+                          </pre>
+                        </div>
+                        <button
+                          onClick={handleCopySchema}
+                          className={cn(
+                            "absolute top-3 right-3 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 shadow-2xl backdrop-blur-md",
+                            copiedSchema 
+                              ? "bg-emerald-500 text-white" 
+                              : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10 opacity-0 group-hover/schema:opacity-100"
+                          )}
+                        >
+                          {copiedSchema ? <Icons.Check size={14} /> : <Icons.Copy size={14} />}
+                          {copiedSchema ? "Copied!" : "Copy Schema"}
+                        </button>
+                      </div>
                     </div>
-                  </motion.div>
-                )}
-              </div>
-
-              {ctrAnalysis && (
-                <div className="mt-8 p-6 bg-indigo-50/50 dark:bg-indigo-900/20 rounded-2xl border border-indigo-100 dark:border-indigo-800/50">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-1.5 bg-indigo-600 rounded-lg text-white">
-                      <Icons.TrendingUp size={16} />
+                  )}
+                  
+                  <div className="mt-8 flex flex-wrap items-center gap-8">
+                    <div className="flex items-center gap-3">
+                      <div className={cn(
+                        "h-2 w-32 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800",
+                        editableTitle.length > 60 || editableTitle.length < 30 ? "bg-amber-100 dark:bg-amber-900/30" : "bg-emerald-100 dark:bg-emerald-900/30"
+                      )}>
+                        <div 
+                          className={cn(
+                            "h-full transition-all duration-500",
+                            editableTitle.length > 60 || editableTitle.length < 30 ? "bg-amber-500" : "bg-emerald-500"
+                          )}
+                          style={{ width: `${Math.min(100, (editableTitle.length / 60) * 100)}%` }}
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Title Length</span>
+                        <span className={cn(
+                          "text-xs font-bold",
+                          editableTitle.length > 60 || editableTitle.length < 30 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
+                        )}>
+                          {editableTitle.length}/60 chars
+                        </span>
+                      </div>
                     </div>
-                    <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">CTR Booster Suggestions</h4>
+                    
+                    <div className="flex items-center gap-3">
+                      <div className={cn(
+                        "h-2 w-32 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800",
+                        editableDescription.length > 160 || editableDescription.length < 120 ? "bg-amber-100 dark:bg-amber-900/30" : "bg-emerald-100 dark:bg-emerald-900/30"
+                      )}>
+                        <div 
+                          className={cn(
+                            "h-full transition-all duration-500",
+                            editableDescription.length > 160 || editableDescription.length < 120 ? "bg-amber-500" : "bg-emerald-500"
+                          )}
+                          style={{ width: `${Math.min(100, (editableDescription.length / 160) * 100)}%` }}
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Description Length</span>
+                        <span className={cn(
+                          "text-xs font-bold",
+                          editableDescription.length > 160 || editableDescription.length < 120 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
+                        )}>
+                          {editableDescription.length}/160 chars
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="prose prose-sm dark:prose-invert max-w-none text-slate-600 dark:text-slate-400">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {ctrAnalysis.split('\n').filter(line => line.trim().startsWith('-') || line.trim().startsWith('*') || /^\d\./.test(line.trim())).map((suggestion, i) => {
-                        const text = suggestion.replace(/^[-*]\s*|^\d\.\s*/, '');
-                        const isFunnel = /TOFU|MOFU|BOFU/.test(text);
-                        const stage = text.match(/TOFU|MOFU|BOFU/)?.[0];
-                        
-                        return (
-                          <div key={i} className={cn(
-                            "flex gap-3 p-3 rounded-xl border shadow-sm transition-all",
-                            isFunnel 
-                              ? "bg-white dark:bg-slate-900 border-indigo-200 dark:border-indigo-800 ring-1 ring-indigo-50 dark:ring-indigo-900/20" 
-                              : "bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800"
-                          )}>
-                            <div className={cn(
-                              "mt-1",
-                              stage === 'TOFU' ? "text-sky-500" :
-                              stage === 'MOFU' ? "text-indigo-500" :
-                              stage === 'BOFU' ? "text-rose-500" :
-                              "text-indigo-600 dark:text-indigo-400"
-                            )}>
-                              {isFunnel ? <Icons.Filter size={14} /> : <Icons.Zap size={14} />}
-                            </div>
-                            <div className="flex flex-col gap-1">
-                              {isFunnel && (
-                                <span className={cn(
-                                  "text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md w-fit",
-                                  stage === 'TOFU' ? "bg-sky-50 text-sky-600 dark:bg-sky-900/30 dark:text-sky-400" :
-                                  stage === 'MOFU' ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400" :
-                                  "bg-rose-50 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400"
-                                )}>
-                                  {stage === 'TOFU' ? 'Awareness' : stage === 'MOFU' ? 'Consideration' : 'Conversion'} Stage
-                                </span>
-                              )}
-                              <p className={cn("text-xs font-medium leading-relaxed", isFunnel && "text-slate-900 dark:text-white")}>
-                                {text.replace(/\*\*(TOFU|MOFU|BOFU).*?\*\*:\s*/, '')}
-                              </p>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                    {!ctrAnalysis.includes('-') && !ctrAnalysis.includes('*') && !/^\d\./.test(ctrAnalysis) && (
-                      <p className="text-xs leading-relaxed">{ctrAnalysis}</p>
-                    )}
-                  </div>
-                </div>
+                </motion.div>
               )}
-
-              {descAudit && (
-                <div className="mt-8 p-6 bg-emerald-50/50 dark:bg-emerald-900/20 rounded-2xl border border-emerald-100 dark:border-emerald-800/50">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-1.5 bg-emerald-600 rounded-lg text-white">
-                      <Icons.TrendingUp size={16} />
-                    </div>
-                    <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">CTR Optimization Audit</h4>
-                  </div>
-                  <div className="prose prose-sm dark:prose-invert max-w-none text-slate-600 dark:text-slate-400">
-                    <div className="grid grid-cols-1 gap-4">
-                      {descAudit.split('\n').filter(line => line.trim().startsWith('-') || line.trim().startsWith('*') || /^\d\./.test(line.trim())).map((item, i) => {
-                        const isImprovement = /^\d\./.test(item.trim());
-                        return (
-                          <div key={i} className={cn(
-                            "flex gap-3 p-3 rounded-xl border shadow-sm transition-all",
-                            isImprovement 
-                              ? "bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800 scale-[1.02]" 
-                              : "bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800"
-                          )}>
-                            <div className={cn("mt-1", isImprovement ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400")}>
-                              {isImprovement ? <Icons.Zap size={14} /> : <Icons.CheckCircle2 size={14} />}
-                            </div>
-                            <p className={cn("text-xs font-medium leading-relaxed", isImprovement && "text-slate-900 dark:text-white font-bold")}>
-                              {item.replace(/^[-*]\s*|^\d\.\s*/, '')}
-                            </p>
-                          </div>
-                        );
-                      })}
-                    </div>
-                    {!descAudit.includes('-') && !descAudit.includes('*') && !/^\d\./.test(descAudit) && (
-                      <p className="text-xs leading-relaxed">{descAudit}</p>
-                    )}
-                  </div>
-                </div>
-              )}
-              
-              {schemaSnippet && (
-                <div className="mt-8 space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-1.5 bg-amber-600 rounded-lg text-white">
-                      <Icons.Code2 size={16} />
-                    </div>
-                    <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">JSON-LD Schema Markup</h4>
-                  </div>
-                  <div className="relative group/schema">
-                    <div className="p-4 bg-slate-900 dark:bg-black rounded-2xl border border-slate-800 overflow-hidden">
-                      <pre className="text-[10px] sm:text-xs font-mono text-emerald-400 overflow-x-auto leading-relaxed">
-                        <code>{schemaSnippet}</code>
-                      </pre>
-                    </div>
-                    <button
-                      onClick={handleCopySchema}
-                      className={cn(
-                        "absolute top-3 right-3 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 shadow-2xl backdrop-blur-md",
-                        copiedSchema 
-                          ? "bg-emerald-500 text-white" 
-                          : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10 opacity-0 group-hover/schema:opacity-100"
-                      )}
-                    >
-                      {copiedSchema ? <Icons.Check size={14} /> : <Icons.Copy size={14} />}
-                      {copiedSchema ? "Copied!" : "Copy Schema"}
-                    </button>
-                  </div>
-                </div>
-              )}
-              
-              <div className="mt-8 flex flex-wrap items-center gap-8">
-                <div className="flex items-center gap-3">
-                  <div className={cn(
-                    "h-2 w-32 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800",
-                    currentTitle.length > 60 || currentTitle.length < 30 ? "bg-amber-100 dark:bg-amber-900/30" : "bg-emerald-100 dark:bg-emerald-900/30"
-                  )}>
-                    <div 
-                      className={cn(
-                        "h-full transition-all duration-500",
-                        currentTitle.length > 60 || currentTitle.length < 30 ? "bg-amber-500" : "bg-emerald-500"
-                      )}
-                      style={{ width: `${Math.min(100, (currentTitle.length / 60) * 100)}%` }}
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Title Length</span>
-                    <span className={cn(
-                      "text-xs font-bold",
-                      editableTitle.length > 60 || editableTitle.length < 30 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
-                    )}>
-                      {editableTitle.length}/60 chars
-                    </span>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-3">
-                  <div className={cn(
-                    "h-2 w-32 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800",
-                    editableDescription.length > 160 || editableDescription.length < 120 ? "bg-amber-100 dark:bg-amber-900/30" : "bg-emerald-100 dark:bg-emerald-900/30"
-                  )}>
-                    <div 
-                      className={cn(
-                        "h-full transition-all duration-500",
-                        editableDescription.length > 160 || editableDescription.length < 120 ? "bg-amber-500" : "bg-emerald-500"
-                      )}
-                      style={{ width: `${Math.min(100, (editableDescription.length / 160) * 100)}%` }}
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Description Length</span>
-                    <span className={cn(
-                      "text-xs font-bold",
-                      editableDescription.length > 160 || editableDescription.length < 120 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
-                    )}>
-                      {editableDescription.length}/160 chars
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
             </>
           )}
         </div>
