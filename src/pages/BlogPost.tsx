@@ -7,9 +7,8 @@ import Markdown from 'react-markdown';
 import { BLOG_POSTS } from '../constants/blogData';
 
 export default function BlogPost() {
-  const { id } = useParams<{ id: string }>();
-  const postId = Number(id);
-  const post = BLOG_POSTS.find(p => p.id === postId);
+  const { slug } = useParams<{ slug: string }>();
+  const post = BLOG_POSTS.find(p => p.slug === slug);
   const [copied, setCopied] = React.useState(false);
 
   if (!post) {
@@ -69,11 +68,11 @@ export default function BlogPost() {
     "image": post.image,
     "author": {
       "@type": "Organization",
-      "name": "SEO Score Suite"
+      "name": "SEO Score"
     },
     "publisher": {
       "@type": "Organization",
-      "name": "SEO Score Suite",
+      "name": "SEO Score",
       "logo": {
         "@type": "ImageObject",
         "url": "https://seoscore.site/logo.png"
@@ -82,14 +81,14 @@ export default function BlogPost() {
     "datePublished": post.date,
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://seoscore.site/blog/${post.id}`
+      "@id": `https://seoscore.site/blog/${post.slug}`
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12 sm:py-20">
       <Helmet>
-        <title>{post.metaTitle || post.title} | SEO Score Suite Blog</title>
+        <title>{post.metaTitle || post.title} | SEO Score Blog</title>
         <meta name="description" content={post.metaDescription || post.excerpt} />
         <script type="application/ld+json">
           {JSON.stringify(articleSchema)}
@@ -210,7 +209,7 @@ export default function BlogPost() {
             {relatedPosts.map(rp => (
               <Link 
                 key={rp.id} 
-                to={`/blog/${rp.id}`}
+                to={`/blog/${rp.slug}`}
                 className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 hover:shadow-xl transition-all group"
               >
                 <span className="text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-3 block">{rp.category}</span>

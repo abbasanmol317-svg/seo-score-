@@ -566,7 +566,7 @@ export const ImageAltTextUI: React.FC<ToolComponentProps> = (props) => {
                                 SEO
                               </div>
                               <div className="space-y-1">
-                                <p className="text-sm font-black text-slate-900 dark:text-white leading-none">SEO Score Suite</p>
+                                <p className="text-sm font-black text-slate-900 dark:text-white leading-none">SEO Score</p>
                                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Sponsored • 2m ago</p>
                               </div>
                             </div>

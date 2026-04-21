@@ -372,7 +372,7 @@ export const TOOLS: Tool[] = [
     (Analyze H1-H4 hierarchy and keyword placement)
     
     ## 🔗 Internal Linking Opportunities
-    Identify strategic, high-value opportunities to link to other tools and blog posts within the "SEO Score Suite" platform. These links must improve user value, build topical authority, and reinforce internal SEO structure.
+    Identify strategic, high-value opportunities to link to other tools and blog posts within the "SEO Score" platform. These links must improve user value, build topical authority, and reinforce internal SEO structure.
     
     CRITICAL Guidelines for Internal Linking:
     - **Natural Integration**: Suggestions MUST feel like an organic part of the text, not a forced insertion.
@@ -567,7 +567,7 @@ export const TOOLS: Tool[] = [
     (For social media)
     
     ## 🛠️ Schema Markup (JSON-LD)
-    If product details (name, price, reviews) are provided, generate a valid Product JSON-LD schema. Otherwise, generate a WebPage or Article schema based on the content.
+    If "Product Schema Details", "Article Schema Details", or "Local Business Schema Details" are provided in the input, generate the corresponding JSON-LD schema (Product, Article, or LocalBusiness). If no specific details are provided, generate a WebPage or Article schema based on the content.
     
     \u0060\u0060\u0060json
     {
@@ -618,7 +618,7 @@ export const TOOLS: Tool[] = [
     
     ## 🛠️ Click-Through Improvements
     (How to get more clicks)`,
-    placeholder: 'Enter Title and Description to preview (e.g., "SEO Score Suite | AI Tools")'
+    placeholder: 'Enter Title and Description to preview (e.g., "SEO Score | AI Tools")'
   },
   {
     id: 'og-preview',

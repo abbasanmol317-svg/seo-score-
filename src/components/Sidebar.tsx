@@ -60,22 +60,42 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
   return (
     <aside className={cn(
       isMobile 
-        ? "flex flex-col h-full bg-white dark:bg-slate-900 overflow-y-auto" 
+        ? "flex flex-col h-full bg-white dark:bg-slate-900" 
         : cn("hidden lg:flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 h-[calc(100vh-64px)] sticky top-16 overflow-y-auto transition-all duration-300", sidebarWidth)
     )}>
-      <div className={cn("p-6", isCollapsed && !isMobile && "px-4")}>
-        <div className={cn("flex items-center mb-6 sm:mb-8", isCollapsed && !isMobile ? "justify-center" : "justify-between")}>
-          {(!isCollapsed || isMobile) && (
-            <div className="flex items-center gap-3">
-              <div className="bg-indigo-600 p-1.5 sm:p-2 rounded-lg sm:rounded-xl text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/40">
-                <Icons.Zap size={18} className="sm:w-5 sm:h-5" fill="currentColor" />
-              </div>
-              <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight uppercase tracking-[0.1em]">
-                SEO Tools
-              </h2>
+      {isMobile && (
+        <div className="flex items-center justify-between p-6 border-b border-slate-50 dark:border-slate-800">
+          <div className="flex items-center gap-3">
+            <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-100 dark:shadow-none">
+              <Icons.Zap size={20} fill="currentColor" />
             </div>
-          )}
-          {!isMobile ? (
+            <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase">
+              SEO Tools
+            </h2>
+          </div>
+          <button 
+            onClick={onClose}
+            className="p-3 text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 transition-all bg-slate-50 dark:bg-slate-800 rounded-xl active:scale-95"
+            aria-label="Close sidebar"
+          >
+            <Icons.X size={24} />
+          </button>
+        </div>
+      )}
+
+      <div className={cn("overflow-y-auto flex-1 p-6", isCollapsed && !isMobile && "px-4", isMobile && "pt-4")}>
+        {!isMobile && (
+          <div className={cn("flex items-center mb-6 sm:mb-8", isCollapsed && !isMobile ? "justify-center" : "justify-between")}>
+            {(!isCollapsed) && (
+              <div className="flex items-center gap-3">
+                <div className="bg-indigo-600 p-1.5 sm:p-2 rounded-lg sm:rounded-xl text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/40">
+                  <Icons.Zap size={18} className="sm:w-5 sm:h-5" fill="currentColor" />
+                </div>
+                <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight uppercase tracking-[0.1em]">
+                  SEO Tools
+                </h2>
+              </div>
+            )}
             <button 
               onClick={() => setIsCollapsed(!isCollapsed)}
               className="p-2 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-xl transition-all"
@@ -84,16 +104,8 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
             >
               {isCollapsed ? <Icons.PanelLeftOpen size={20} /> : <Icons.PanelLeftClose size={20} />}
             </button>
-          ) : (
-            <button 
-              onClick={onClose}
-              className="p-3 -mr-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors bg-slate-50 dark:bg-slate-800 rounded-xl"
-              aria-label="Close sidebar"
-            >
-              <Icons.X size={20} />
-            </button>
-          )}
-        </div>
+          </div>
+        )}
 
         <div className="space-y-2">
           {categories.map((category) => {

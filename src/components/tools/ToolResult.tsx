@@ -68,7 +68,7 @@ export const ToolResult = React.memo(({
               <Icons.Zap size={40} />
             </div>
             <div>
-              <h1 className="text-4xl font-black text-slate-900 dark:text-white">AI SEO Score Suite</h1>
+              <h1 className="text-4xl font-black text-slate-900 dark:text-white">SEO Score</h1>
               <p className="text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-widest text-sm">{tool?.name} Analysis Report</p>
             </div>
           </div>
@@ -527,8 +527,8 @@ export const ToolResult = React.memo(({
 
       {isGeneratingPDF && (
         <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 text-center">
-          <p className="text-slate-400 dark:text-slate-500 text-xs font-bold uppercase tracking-[0.2em]">© 2026 AI SEO Score Suite • All Rights Reserved</p>
-          <p className="text-indigo-600 dark:text-indigo-400 text-[10px] font-black mt-1 tracking-widest">WWW.SEO-SCORE-SUITE.COM</p>
+          <p className="text-slate-400 dark:text-slate-500 text-xs font-bold uppercase tracking-[0.2em]">© {new Date().getFullYear()} SEO Score • All Rights Reserved</p>
+          <p className="text-indigo-600 dark:text-indigo-400 text-[10px] font-black mt-1 tracking-widest uppercase">www.seoscore.site</p>
         </div>
       )}
     </div>

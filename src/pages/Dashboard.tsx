@@ -15,6 +15,7 @@ export default function Dashboard() {
   );
   const [expandedCategories, setExpandedCategories] = useState<string[]>(categories);
   const [recentTools, setRecentTools] = useState<Tool[]>([]);
+  const [userGoals, setUserGoals] = useState<string[]>([]);
 
   React.useEffect(() => {
     try {
@@ -23,10 +24,32 @@ export default function Dashboard() {
         .map((id: string) => TOOLS.find(t => t.id === id))
         .filter(Boolean) as Tool[];
       setRecentTools(found);
+
+      const goals = JSON.parse(localStorage.getItem('seo_score_user_goals') || '[]');
+      setUserGoals(goals);
     } catch (e) {
       // Ignore
     }
   }, []);
+
+  const getRecommendedTools = () => {
+    if (userGoals.length === 0) return [];
+
+    const goalToTools: Record<string, string[]> = {
+      traffic: ['free-keyword-research-tool', 'free-backlink-checker-tool', 'free-serp-preview-tool'],
+      content: ['free-ai-content-optimization-tool', 'free-content-analysis-seo-tool', 'free-meta-tag-generator', 'free-image-alt-text-generator'],
+      technical: ['free-website-seo-audit-tool', 'free-website-speed-test-tool', 'free-broken-link-checker-tool', 'free-sitemap-robots-txt-generator'],
+      youtube: ['free-youtube-seo-tool'],
+      local: ['free-keyword-research-tool', 'free-website-seo-audit-tool']
+    };
+
+    const recommendedIds = Array.from(new Set(userGoals.flatMap(goal => goalToTools[goal] || [])));
+    return recommendedIds
+      .map(id => TOOLS.find(t => t.id === id || t.slug === id))
+      .filter(Boolean) as Tool[];
+  };
+
+  const recommendedTools = getRecommendedTools();
 
   const toggleCategory = (category: string) => {
     setExpandedCategories(prev => 
@@ -37,36 +60,35 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+    <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12 sm:px-6 lg:px-8">
       <Helmet>
-        <title>SEO Score Suite | AI SEO Tools for 2026</title>
-        <meta name="description" content="Dominate search rankings in 2026 with SEO Score Suite. Access 50+ free AI-powered SEO tools for keyword research, technical audits, and content optimization. Start for free!" />
+        <title>SEO Score – Free SEO Tools for Website Audit, Keywords & Ranking</title>
+        <meta name="description" content="Use SEO Score to access free SEO tools for website audit, keyword research, backlinks, site speed, and more. Analyze, optimize, and boost your rankings easily." />
         <meta name="keywords" content="free SEO tools, AI SEO analysis, Google Gemini SEO, keyword research tool, technical SEO audit, backlink checker, content optimizer, SEO suite 2026" />
         <link rel="canonical" href="https://seoscore.site/" />
       </Helmet>
-      <header className="text-center mb-12 sm:mb-16">
+      <header className="text-center mb-10 sm:mb-16">
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="inline-flex items-center justify-center p-3 sm:p-4 bg-indigo-600 rounded-2xl sm:rounded-3xl text-white mb-4 sm:mb-6 shadow-xl shadow-indigo-200"
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="inline-flex items-center justify-center p-3 sm:p-4 bg-indigo-600 rounded-2xl sm:rounded-3xl text-white mb-4 sm:mb-6 shadow-xl shadow-indigo-200 dark:shadow-indigo-900/40"
         >
-          <Icons.Sparkles size={32} className="sm:w-10 sm:h-10" />
+          <Icons.Sparkles size={32} className="w-8 h-8 sm:w-10 sm:h-10" />
         </motion.div>
         <motion.h1 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl md:text-6xl mb-4"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-2xl font-black tracking-tight text-slate-900 dark:text-white sm:text-4xl md:text-5xl lg:text-6xl mb-4 leading-[1.1]"
         >
-          <span className="block">Free AI</span>
-          <span className="block text-indigo-600 dark:text-indigo-400">SEO Score Suite</span>
+          SEO Score – Free SEO Tools for Website Audit, Keywords & Ranking
         </motion.h1>
         <motion.p 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="mt-3 max-w-md mx-auto text-base sm:text-lg text-slate-600 dark:text-slate-400 md:mt-5 md:text-xl md:max-w-3xl px-4 leading-relaxed"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mt-3 max-w-md mx-auto text-sm sm:text-lg text-slate-600 dark:text-slate-400 md:mt-5 md:text-xl md:max-w-3xl px-2 sm:px-4 leading-relaxed font-medium"
         >
-          Optimize your website rankings with the **SEO Score Suite**, a comprehensive collection of {TOOLS.length} professional-grade **AI SEO tools**. Powered by Google Gemini AI, our suite provides instant technical audits, keyword research, and content optimization to help you dominate the 2026 search landscape.
+          Use **SEO Score** to access free SEO tools for website audit, keyword research, backlinks, site speed, and more. Analyze, optimize, and boost your rankings easily with {TOOLS.length} professional-grade AI tools.
         </motion.p>
 
         <motion.div
@@ -118,6 +140,36 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {recentTools.map((tool, index) => (
                 <ToolCard key={`recent-${tool.id}`} tool={tool} index={index} />
+              ))}
+            </div>
+          </motion.section>
+        )}
+
+        {recommendedTools.length > 0 && (
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-12 sm:mb-16"
+          >
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-orange-500 rounded-xl text-white shadow-lg shadow-orange-100 dark:shadow-none">
+                  <Icons.Target size={20} />
+                </div>
+                <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                  Recommended for <span className="text-orange-500">Your Goals</span>
+                </h2>
+              </div>
+              <Link 
+                to="/faq" 
+                className="text-xs font-black uppercase tracking-widest text-slate-400 hover:text-indigo-600 transition-colors flex items-center gap-2"
+              >
+                Change Goals <Icons.ArrowRight size={14} />
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {recommendedTools.slice(0, 4).map((tool, index) => (
+                <ToolCard key={`recommended-${tool.id}`} tool={tool} index={index} />
               ))}
             </div>
           </motion.section>
@@ -245,7 +297,7 @@ export default function Dashboard() {
           </div>
 
           <div className="p-6 sm:p-10 bg-slate-50 dark:bg-slate-900/30 rounded-2xl sm:rounded-[3rem] border border-slate-100 dark:border-slate-800">
-            <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-6">Why Choose SEO Score Suite?</h2>
+            <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-6">Why Choose SEO Score?</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="flex gap-4">
                 <div className="mt-1 text-indigo-600"><Icons.CheckCircle2 size={20} /></div>

@@ -75,7 +75,7 @@ export default function Blog() {
               whileHover={{ y: -8 }}
               className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden group transition-all hover:shadow-xl hover:border-indigo-200 dark:hover:border-indigo-900"
             >
-              <Link to={`/blog/${post.id}`} className="block h-full">
+              <Link to={`/blog/${post.slug}`} className="block h-full">
                 <div className="p-6 sm:p-8">
                   <div className="flex items-center gap-2 mb-4">
                     <span className="px-2.5 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[8px] sm:text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-100 dark:border-indigo-800">

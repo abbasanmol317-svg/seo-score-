@@ -10,9 +10,9 @@ export default function About() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
       <Helmet>
-        <title>About SEO Score Suite | Why We Built the Best Free AI SEO Platform</title>
-        <meta name="description" content="Learn how SEO Score Suite is democratizing search intelligence with Gemini AI. Discover our mission and start using professional tools for free." />
-        <meta name="keywords" content="about SEO Score Suite, AI SEO mission, free SEO tools, Google Gemini SEO, SEO democratization" />
+        <title>About SEO Score | Why We Built the Best Free AI SEO Platform</title>
+        <meta name="description" content="Learn how SEO Score is democratizing search intelligence with Gemini AI. Discover our mission and start using professional tools for free." />
+        <meta name="keywords" content="about SEO Score, AI SEO mission, free SEO tools, Google Gemini SEO, SEO democratization" />
       </Helmet>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -112,8 +112,37 @@ export default function About() {
           </div>
         </section>
 
+        <section className="mb-10 sm:mb-12">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-4">Contact Us</h2>
+          <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
+            Have questions about our tools or interested in collaborating? We'd love to hear from you. Our support team is here to help you get the most out of SEO Score.
+          </p>
+          <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl border border-slate-200 dark:border-slate-800">
+            <div className="flex flex-col sm:flex-row gap-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-white dark:bg-slate-800 rounded-lg text-indigo-600">
+                  <Icons.Mail size={20} />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500 uppercase font-black tracking-widest">Email Support</p>
+                  <p className="text-sm font-bold text-slate-900 dark:text-white">support@seoscore.site</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-white dark:bg-slate-800 rounded-lg text-indigo-600">
+                  <Icons.MessageSquare size={20} />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500 uppercase font-black tracking-widest">Community</p>
+                  <p className="text-sm font-bold text-slate-900 dark:text-white">Join our SEO Forum</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section className="bg-indigo-600 rounded-3xl sm:rounded-[2.5rem] p-8 sm:p-12 text-white text-center">
-          <h2 className="text-2xl sm:text-3xl font-black mb-3 sm:mb-4">Ready to dominate search?</h2>
+          <h2 className="text-2xl sm:text-3xl font-black mb-3 sm:mb-4">Ready to dominate search rankings?</h2>
           <p className="text-indigo-100 mb-6 sm:mb-8 max-w-xl mx-auto text-sm sm:text-base">
             Join thousands of marketers who use SEO Score to improve their rankings and drive more organic traffic.
           </p>

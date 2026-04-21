@@ -9,6 +9,7 @@ import { ToolError } from './ToolError';
 import { ToolPlaceholder } from './ToolPlaceholder';
 import { cn } from '../../lib/utils';
 import { runTool } from '../../services/gemini';
+import { SERPPreview } from './SERPPreview';
 
 const ToolResult = lazy(() => import('./ToolResult').then(m => ({ default: m.ToolResult })));
 
@@ -94,19 +95,33 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
   const [showBoosted, setShowBoosted] = React.useState(false);
   const [selectedVariation, setSelectedVariation] = React.useState(0);
   const [previewMode, setPreviewMode] = React.useState<'desktop' | 'mobile'>('desktop');
-  const [siteName, setSiteName] = React.useState('SEO Score Suite');
-  const [siteUrl, setSiteUrl] = React.useState('https://seo-score-suite.com');
+  const [siteName, setSiteName] = React.useState('SEO Score');
+  const [siteUrl, setSiteUrl] = React.useState('https://seoscore.site');
 
   const [editableTitle, setEditableTitle] = React.useState('');
   const [editableDescription, setEditableDescription] = React.useState('');
 
+  // Schema Markup State
+  const [showSchemaFields, setShowSchemaFields] = React.useState(false);
+  const [schemaType, setSchemaType] = React.useState<'product' | 'article' | 'local_business'>('product');
+
   // Product Schema Fields
-  const [showProductFields, setShowProductFields] = React.useState(false);
   const [productName, setProductName] = React.useState('');
   const [productPrice, setProductPrice] = React.useState('');
   const [productCurrency, setProductCurrency] = React.useState('USD');
   const [productRating, setProductRating] = React.useState('5');
   const [productReviews, setProductReviews] = React.useState('10');
+
+  // Article Schema Fields
+  const [articleAuthor, setArticleAuthor] = React.useState('');
+  const [articleDate, setArticleDate] = React.useState(new Date().toISOString().split('T')[0]);
+  const [articleImage, setArticleImage] = React.useState('');
+
+  // Local Business Schema Fields
+  const [businessName, setBusinessName] = React.useState('');
+  const [businessAddress, setBusinessAddress] = React.useState('');
+  const [businessPhone, setBusinessPhone] = React.useState('');
+  const [businessOpeningHours, setBusinessOpeningHours] = React.useState('Mo-Fr 09:00-17:00');
 
   // Bulk Mode State
   const [isBulkMode, setIsBulkMode] = useState(false);
@@ -122,9 +137,17 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
       return;
     }
     let finalInput = input;
-    if (showProductFields && productName) {
-      finalInput = `${input}\n\nProduct Details:\n- Name: ${productName}\n- Price: ${productPrice} ${productCurrency}\n- Rating: ${productRating}/5\n- Reviews: ${productReviews}`;
+    
+    if (showSchemaFields) {
+      if (schemaType === 'product' && productName) {
+        finalInput = `${input}\n\nProduct Schema Details:\n- Name: ${productName}\n- Price: ${productPrice} ${productCurrency}\n- Rating: ${productRating}/5\n- Reviews: ${productReviews}`;
+      } else if (schemaType === 'article') {
+        finalInput = `${input}\n\nArticle Schema Details:\n- Author: ${articleAuthor}\n- Published Date: ${articleDate}\n- Image URL: ${articleImage}`;
+      } else if (schemaType === 'local_business' && businessName) {
+        finalInput = `${input}\n\nLocal Business Schema Details:\n- Name: ${businessName}\n- Address: ${businessAddress}\n- Phone: ${businessPhone}\n- Hours: ${businessOpeningHours}`;
+      }
     }
+    
     handleRun(finalInput);
   };
 
@@ -237,8 +260,20 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
     setEditableDescription(currentDescription);
   }, [currentTitle, currentDescription]);
 
-  const previewTitle = editableTitle.length > 61 ? editableTitle.substring(0, 58) + '...' : editableTitle;
-  const previewDescription = editableDescription.length > 161 ? editableDescription.substring(0, 158) + '...' : editableDescription;
+  // Sync site URL from input
+  React.useEffect(() => {
+    if (input && !isBulkMode) {
+      try {
+        const urlStr = input.trim();
+        if (urlStr.includes('.') || urlStr.startsWith('http')) {
+          const url = new URL(urlStr.includes('://') ? urlStr : `https://${urlStr}`);
+          setSiteUrl(url.hostname + (url.pathname !== '/' ? url.pathname : ''));
+        }
+      } catch (e) {
+        // Not a full URL structure, ignore
+      }
+    }
+  }, [input, isBulkMode]);
 
   return (
     <ToolLayout
@@ -328,93 +363,202 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
               
               <div className="bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 sm:p-6">
                 <button 
-                  onClick={() => setShowProductFields(!showProductFields)}
+                  onClick={() => setShowSchemaFields(!showSchemaFields)}
                   className="flex items-center justify-between w-full group"
                 >
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-lg">
-                      <Icons.ShoppingBag size={18} />
+                      <Icons.Code2 size={18} />
                     </div>
                     <div className="text-left">
-                      <h4 className="text-sm font-bold text-slate-900 dark:text-white">Product Schema Details</h4>
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white">Additional Schema Markup</h4>
                       <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-black">Optional • Boost Rich Snippets</p>
                     </div>
                   </div>
                   <div className={cn(
                     "p-1.5 rounded-lg transition-all",
-                    showProductFields ? "bg-amber-600 text-white" : "bg-slate-200 dark:bg-slate-700 text-slate-500"
+                    showSchemaFields ? "bg-amber-600 text-white" : "bg-slate-200 dark:bg-slate-700 text-slate-500"
                   )}>
-                    {showProductFields ? <Icons.ChevronUp size={16} /> : <Icons.ChevronDown size={16} />}
+                    {showSchemaFields ? <Icons.ChevronUp size={16} /> : <Icons.ChevronDown size={16} />}
                   </div>
                 </button>
 
-                {showProductFields && (
+                {showSchemaFields && (
                   <motion.div 
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
-                    className="pt-6 space-y-4"
+                    className="pt-6 space-y-6"
                   >
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="space-y-1.5">
-                        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Product Name</label>
-                        <input 
-                          type="text"
-                          value={productName}
-                          onChange={(e) => setProductName(e.target.value)}
-                          placeholder="e.g. Premium Running Shoes"
-                          className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
-                        />
+                    <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                      {[
+                        { id: 'product', label: 'Product', icon: Icons.Package },
+                        { id: 'article', label: 'Article', icon: Icons.FileText },
+                        { id: 'local_business', label: 'Local Business', icon: Icons.MapPin }
+                      ].map((type) => (
+                        <button
+                          key={type.id}
+                          onClick={() => setSchemaType(type.id as any)}
+                          className={cn(
+                            "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all",
+                            schemaType === type.id 
+                              ? "bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400 shadow-sm" 
+                              : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                          )}
+                        >
+                          <type.icon size={14} />
+                          {type.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    {schemaType === 'product' && (
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Product Name</label>
+                            <input 
+                              type="text"
+                              value={productName}
+                              onChange={(e) => setProductName(e.target.value)}
+                              placeholder="e.g. Premium Running Shoes"
+                              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
+                            />
+                          </div>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Price</label>
+                              <input 
+                                type="number"
+                                value={productPrice}
+                                onChange={(e) => setProductPrice(e.target.value)}
+                                placeholder="99.99"
+                                className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
+                              />
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Currency</label>
+                              <select 
+                                value={productCurrency}
+                                onChange={(e) => setProductCurrency(e.target.value)}
+                                className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
+                              >
+                                <option value="USD">USD ($)</option>
+                                <option value="EUR">EUR (€)</option>
+                                <option value="GBP">GBP (£)</option>
+                                <option value="INR">INR (₹)</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Rating (1-5)</label>
+                            <input 
+                              type="number"
+                              min="1"
+                              max="5"
+                              step="0.1"
+                              value={productRating}
+                              onChange={(e) => setProductRating(e.target.value)}
+                              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
+                            />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Review Count</label>
+                            <input 
+                              type="number"
+                              value={productReviews}
+                              onChange={(e) => setProductReviews(e.target.value)}
+                              placeholder="128"
+                              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <div className="grid grid-cols-2 gap-3">
+                    )}
+
+                    {schemaType === 'article' && (
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Author Name</label>
+                            <input 
+                              type="text"
+                              value={articleAuthor}
+                              onChange={(e) => setArticleAuthor(e.target.value)}
+                              placeholder="e.g. John Doe"
+                              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
+                            />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Published Date</label>
+                            <input 
+                              type="date"
+                              value={articleDate}
+                              onChange={(e) => setArticleDate(e.target.value)}
+                              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
+                            />
+                          </div>
+                        </div>
                         <div className="space-y-1.5">
-                          <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Price</label>
+                          <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Main Image URL</label>
                           <input 
-                            type="number"
-                            value={productPrice}
-                            onChange={(e) => setProductPrice(e.target.value)}
-                            placeholder="99.99"
+                            type="url"
+                            value={articleImage}
+                            onChange={(e) => setArticleImage(e.target.value)}
+                            placeholder="https://example.com/image.jpg"
+                            className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {schemaType === 'local_business' && (
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Business Name</label>
+                            <input 
+                              type="text"
+                              value={businessName}
+                              onChange={(e) => setBusinessName(e.target.value)}
+                              placeholder="e.g. Joe's Coffee Shop"
+                              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
+                            />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Phone Number</label>
+                            <input 
+                              type="tel"
+                              value={businessPhone}
+                              onChange={(e) => setBusinessPhone(e.target.value)}
+                              placeholder="+1 234 567 890"
+                              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Full Address</label>
+                          <input 
+                            type="text"
+                            value={businessAddress}
+                            onChange={(e) => setBusinessAddress(e.target.value)}
+                            placeholder="123 Street Name, City, Country"
                             className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Currency</label>
-                          <select 
-                            value={productCurrency}
-                            onChange={(e) => setProductCurrency(e.target.value)}
+                          <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Opening Hours</label>
+                          <input 
+                            type="text"
+                            value={businessOpeningHours}
+                            onChange={(e) => setBusinessOpeningHours(e.target.value)}
+                            placeholder="Mo-Fr 09:00-17:00"
                             className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
-                          >
-                            <option value="USD">USD ($)</option>
-                            <option value="EUR">EUR (€)</option>
-                            <option value="GBP">GBP (£)</option>
-                            <option value="INR">INR (₹)</option>
-                          </select>
+                          />
                         </div>
                       </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-1.5">
-                        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Rating (1-5)</label>
-                        <input 
-                          type="number"
-                          min="1"
-                          max="5"
-                          step="0.1"
-                          value={productRating}
-                          onChange={(e) => setProductRating(e.target.value)}
-                          className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Review Count</label>
-                        <input 
-                          type="number"
-                          value={productReviews}
-                          onChange={(e) => setProductReviews(e.target.value)}
-                          placeholder="128"
-                          className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
-                        />
-                      </div>
-                    </div>
+                    )}
                   </motion.div>
                 )}
               </div>
@@ -578,33 +722,6 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-4">
-                      <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
-                        <button
-                          onClick={() => setPreviewMode('desktop')}
-                          className={cn(
-                            "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
-                            previewMode === 'desktop' 
-                              ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
-                              : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
-                          )}
-                        >
-                          <Icons.Monitor size={14} />
-                          Desktop
-                        </button>
-                        <button
-                          onClick={() => setPreviewMode('mobile')}
-                          className={cn(
-                            "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
-                            previewMode === 'mobile' 
-                              ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
-                              : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
-                          )}
-                        >
-                          <Icons.Smartphone size={14} />
-                          Mobile
-                        </button>
-                      </div>
-
                       {codeSnippet && (
                         <button
                           onClick={handleCopyCode}
@@ -618,203 +735,58 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                         </button>
                       )}
                     </div>
-                  <div className="grid lg:grid-cols-2 gap-10 sm:gap-14">
-                    {/* Editor Section */}
-                    <div className="space-y-8">
-                        <div className="space-y-3">
-                          <div className="flex items-center justify-between ml-1">
-                            <label className="text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Page Title</label>
-                            <span className={cn(
-                              "text-[10px] font-bold px-2 py-0.5 rounded-full",
-                              editableTitle.length > 61 || editableTitle.length < 30 
-                                ? "bg-amber-100/50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400" 
-                                : "bg-emerald-100/50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
-                            )}>
-                              {editableTitle.length} / 60 Chars
-                            </span>
-                          </div>
-                          <div className="relative group/title">
-                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/title:text-indigo-500 transition-colors">
-                              <Icons.Type size={16} />
-                            </div>
-                            <input 
-                              type="text"
-                              value={editableTitle}
-                              onChange={(e) => setEditableTitle(e.target.value)}
-                              placeholder="Enter SEO title..."
-                              className="w-full bg-slate-50 dark:bg-slate-800/30 border-2 border-slate-100 dark:border-slate-800 rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all dark:text-slate-200 font-bold tracking-tight"
-                            />
-                          </div>
-                        </div>
-                        <div className="space-y-3">
-                          <div className="flex items-center justify-between ml-1">
-                            <label className="text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Meta Description</label>
-                            <span className={cn(
-                              "text-[10px] font-bold px-2 py-0.5 rounded-full",
-                              editableDescription.length > 161 || editableDescription.length < 120 
-                                ? "bg-amber-100/50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400" 
-                                : "bg-emerald-100/50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
-                            )}>
-                              {editableDescription.length} / 160 Chars
-                            </span>
-                          </div>
-                          <div className="relative group/desc">
-                            <div className="absolute left-4 top-4 text-slate-400 group-focus-within/desc:text-indigo-500 transition-colors">
-                              <Icons.AlignLeft size={16} />
-                            </div>
-                            <textarea 
-                              value={editableDescription}
-                              onChange={(e) => setEditableDescription(e.target.value)}
-                              placeholder="Enter SEO description..."
-                              rows={3}
-                              className="w-full bg-slate-50 dark:bg-slate-800/30 border-2 border-slate-100 dark:border-slate-800 rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all dark:text-slate-200 font-medium leading-relaxed resize-none"
-                            />
-                          </div>
-                        </div>
-                      </div>
+                  </div>
 
-                      <div className="space-y-6 pt-4">
-                        <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
-                          <Icons.Globe size={12} className="text-indigo-500" />
-                          Brand & URL Settings
-                        </h4>
-                        
-                        <div className="grid sm:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Site Name</label>
-                            <div className="relative group/sitename">
-                              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/sitename:text-indigo-500 transition-colors">
-                                <Icons.Building2 size={14} />
-                              </div>
-                              <input 
-                                type="text"
-                                value={siteName}
-                                onChange={(e) => setSiteName(e.target.value)}
-                                placeholder="e.g. My Agency"
-                                className="w-full bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 pl-9 pr-3 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all dark:text-slate-200"
-                              />
-                            </div>
-                          </div>
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Slug / Display URL</label>
-                            <div className="relative group/siteurl">
-                              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/siteurl:text-indigo-500 transition-colors">
-                                <Icons.Link size={14} />
-                              </div>
-                              <input 
-                                type="text"
-                                value={siteUrl}
-                                onChange={(e) => setSiteUrl(e.target.value)}
-                                placeholder="e.g. site.com/page"
-                                className="w-full bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 pl-9 pr-3 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all dark:text-slate-200"
-                              />
-                            </div>
-                          </div>
-                        </div>
+                  <div className="my-10 p-2 sm:p-6 bg-slate-50 dark:bg-slate-800/30 rounded-3xl border-2 border-slate-100 dark:border-slate-800 shadow-inner">
+                    <SERPPreview 
+                      title={editableTitle}
+                      description={editableDescription}
+                      siteName={siteName}
+                      siteUrl={siteUrl}
+                      mode={previewMode}
+                      onTitleChange={setEditableTitle}
+                      onDescriptionChange={setEditableDescription}
+                      onSiteNameChange={setSiteName}
+                      onSiteUrlChange={setSiteUrl}
+                      onModeChange={setPreviewMode}
+                      showEditor={true}
+                    />
+                  </div>
+
+                  {showBoosted && variations[selectedVariation]?.improvements && (
+                    <motion.div 
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      className="mt-6 p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm relative z-10"
+                    >
+                      <div className="flex items-center gap-2 mb-3">
+                        <Icons.Sparkles size={14} className="text-indigo-500" />
+                        <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                          CTR Improvements: {variations[selectedVariation].trigger}
+                        </span>
                       </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        {variations[selectedVariation].improvements.split(/[\n,;]|\d\.\s+|[-*]\s+/).filter(i => i.trim().length > 5).slice(0, 3).map((improvement, i) => (
+                          <div key={i} className="flex items-start gap-2 p-2 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-lg border border-indigo-100/50 dark:border-indigo-800/30">
+                            <div className="mt-0.5 text-indigo-600 dark:text-indigo-400">
+                              <Icons.CheckCircle2 size={12} />
+                            </div>
+                            <p className="text-[10px] font-medium text-slate-600 dark:text-slate-400 leading-tight">
+                              {improvement.trim()}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+
+                  <div className="mt-8 p-4 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-2xl border border-indigo-100/50 dark:border-indigo-800/30 flex items-start gap-3">
+                    <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400 shrink-0">
+                      <Icons.Info size={16} />
                     </div>
-
-                    {/* Preview Section */}
-                    <div className="space-y-6">
-                      <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
-                        <Icons.Eye size={12} className="text-indigo-500" />
-                        Live Result
-                      </h4>
-                      
-                      <div className={cn(
-                        "bg-white dark:bg-slate-900 p-8 sm:p-10 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-2xl relative overflow-hidden transition-all duration-700 min-h-[180px] flex flex-col justify-center",
-                        previewMode === 'mobile' ? "max-w-[420px] mx-auto ring-[12px] ring-slate-100 dark:ring-slate-800/50" : "w-full"
-                      )}>
-                        <div className="absolute top-0 right-0 p-6 opacity-[0.05] pointer-events-none">
-                          {previewMode === 'desktop' ? <Icons.Monitor size={140} /> : <Icons.Smartphone size={140} />}
-                        </div>
-
-                        <div className="relative z-10 font-sans group/serp">
-                          {/* Modern Google SERP Header */}
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400 shrink-0 overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700 transition-transform group-hover/serp:scale-110">
-                              {siteUrl ? (
-                                <img 
-                                  src={`https://www.google.com/s2/favicons?sz=64&domain=${siteUrl.includes('://') ? siteUrl : `https://${siteUrl}`}`} 
-                                  alt="" 
-                                  className="w-full h-full object-contain p-1.5"
-                                  referrerPolicy="no-referrer"
-                                  onError={(e) => {
-                                    (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>';
-                                  }}
-                                />
-                              ) : (
-                                <Icons.Globe size={16} />
-                              )}
-                            </div>
-                            <div className="flex flex-col min-w-0">
-                              <div className="flex items-center gap-1.5">
-                                <span className={cn(
-                                  "font-medium text-slate-900 dark:text-slate-200 truncate",
-                                  previewMode === 'mobile' ? "text-xs" : "text-sm"
-                                )}>
-                                  {siteName || 'Enter Site Name'}
-                                </span>
-                                <Icons.ChevronDown size={12} className="text-slate-400" />
-                              </div>
-                              <span className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate opacity-80">{siteUrl || 'example.com/slug'}</span>
-                            </div>
-                          </div>
-
-                          {/* Title */}
-                          <button className={cn(
-                            "text-[#1a0dab] dark:text-[#8ab4f8] hover:underline text-left cursor-pointer mb-2 leading-tight font-medium line-clamp-2",
-                            previewMode === 'mobile' ? "text-xl" : "text-[20px]"
-                          )}>
-                            {previewTitle || 'Optimized Page Title Will Appear Here'}
-                          </button>
-
-                          {/* Description */}
-                          <div className={cn(
-                            "text-[#4d5156] dark:text-[#bdc1c6] leading-relaxed line-clamp-2 opacity-90",
-                            previewMode === 'mobile' ? "text-xs" : "text-sm"
-                          )}>
-                            {previewDescription || 'Your meta description will appear here. It should be between 150-160 characters for optimal visibility in search results.'}
-                          </div>
-                        </div>
-
-                        {showBoosted && variations[selectedVariation]?.improvements && (
-                          <motion.div 
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-700 relative z-10"
-                          >
-                            <div className="flex items-center gap-2 mb-3">
-                              <Icons.Sparkles size={14} className="text-indigo-500" />
-                              <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-                                CTR Improvements: {variations[selectedVariation].trigger}
-                              </span>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                              {variations[selectedVariation].improvements.split(/[\n,;]|\d\.\s+|[-*]\s+/).filter(i => i.trim().length > 5).slice(0, 3).map((improvement, i) => (
-                                <div key={i} className="flex items-start gap-2 p-2 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-lg border border-indigo-100/50 dark:border-indigo-800/30">
-                                  <div className="mt-0.5 text-indigo-600 dark:text-indigo-400">
-                                    <Icons.CheckCircle2 size={12} />
-                                  </div>
-                                  <p className="text-[10px] font-medium text-slate-600 dark:text-slate-400 leading-tight">
-                                    {improvement.trim()}
-                                  </p>
-                                </div>
-                              ))}
-                            </div>
-                          </motion.div>
-                        )}
-                      </div>
-
-                      <div className="bg-indigo-50/50 dark:bg-indigo-900/10 p-4 rounded-2xl border border-indigo-100/50 dark:border-indigo-800/30 flex items-start gap-3">
-                        <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400 shrink-0">
-                          <Icons.Info size={16} />
-                        </div>
-                        <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
-                          This preview uses Google's latest SERP layout. Aim for <span className="text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-widest">30-60 characters</span> for titles and <span className="text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-widest">120-160 characters</span> for descriptions to avoid truncation.
-                        </p>
-                      </div>
-                    </div>
+                    <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                      This preview uses Google's latest SERP layout. Aim for <span className="text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-widest">30-60 characters</span> for titles and <span className="text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-widest">120-160 characters</span> for descriptions to avoid truncation.
+                    </p>
                   </div>
 
                   {ctrAnalysis && (

@@ -19,6 +19,7 @@ const Privacy = lazy(() => import('./pages/Privacy'));
 const FAQ = lazy(() => import('./pages/FAQ'));
 const Tools = lazy(() => import('./pages/Tools'));
 const BlogPost = lazy(() => import('./pages/BlogPost'));
+const Terms = lazy(() => import('./pages/Terms'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const PowerPage = lazy(() => import('./pages/PowerPage'));
 const Onboarding = lazy(() => import('./components/Onboarding'));
@@ -82,92 +83,125 @@ function NavHeader() {
         )}
       </AnimatePresence>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center gap-4 flex-1">
-            <button
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
-            >
-              <Icons.Menu size={20} />
-            </button>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between h-16 sm:h-20">
+              <div className="flex items-center gap-3 sm:gap-4 flex-1">
+                <button
+                  onClick={() => setIsMobileMenuOpen(true)}
+                  className="lg:hidden p-2.5 sm:p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all active:scale-95 shadow-sm"
+                >
+                  <Icons.Menu size={20} className="sm:w-6 sm:h-6" />
+                </button>
 
-            <Link to="/" className="flex items-center gap-2 text-indigo-600 font-bold text-lg sm:text-xl group shrink-0">
-              <div className="bg-indigo-600 p-1 sm:p-1.5 rounded-lg text-white shadow-lg shadow-indigo-100 group-hover:scale-110 transition-transform">
-                <Icons.Zap size={16} className="sm:w-5 sm:h-5" fill="currentColor" />
-              </div>
-              <span className="hidden xs:inline tracking-tight">SEO Score</span>
-            </Link>
+                <Link to="/" className="flex items-center gap-2 text-indigo-600 font-bold text-lg sm:text-xl group shrink-0">
+                  <div className="bg-indigo-600 p-1.5 sm:p-2 rounded-lg sm:rounded-xl text-white shadow-lg shadow-indigo-100 dark:shadow-none group-hover:scale-110 group-hover:rotate-3 transition-all">
+                    <Icons.Zap size={18} className="sm:w-5 sm:h-5" fill="currentColor" />
+                  </div>
+                  <span className="xs:inline tracking-tight font-black text-slate-900 dark:text-white leading-none">
+                    SEO<span className="text-indigo-600">Score</span>
+                  </span>
+                </Link>
 
-            <div className="hidden xl:flex items-center gap-2 text-slate-300 shrink-0">
-              <span className="text-xl font-light">/</span>
-              <Link 
-                to="/" 
-                className={cn(
-                  "flex items-center gap-2.5 px-3 py-1.5 rounded-xl border transition-all",
-                  !currentTool 
-                    ? "bg-indigo-50 dark:bg-indigo-900/30 border-indigo-100 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 shadow-sm" 
-                    : "bg-white dark:bg-slate-800 border-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-100 dark:hover:border-slate-600 hover:text-indigo-600 dark:hover:text-indigo-400"
-                )}
-              >
-                <Icons.LayoutDashboard size={16} />
-                <span>Dashboard</span>
-              </Link>
-            </div>
-
-            {currentTool && (
-              <div className="hidden md:flex items-center gap-2 text-slate-300 shrink-0">
-                <span className="text-xl font-light">/</span>
-                <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 shadow-sm">
-                  <ToolIcon size={16} />
-                  <span className="font-bold truncate max-w-[150px]">{currentTool.name}</span>
+                <div className="hidden xl:flex items-center gap-2 text-slate-300 shrink-0">
+                  <span className="text-xl font-light">/</span>
+                  <Link 
+                    to="/" 
+                    className={cn(
+                      "flex items-center gap-2.5 px-3 py-1.5 rounded-xl border transition-all",
+                      !currentTool 
+                        ? "bg-indigo-50 dark:bg-indigo-900/30 border-indigo-100 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 shadow-sm" 
+                        : "bg-white dark:bg-slate-800 border-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-100 dark:hover:border-slate-600 hover:text-indigo-600 dark:hover:text-indigo-400"
+                    )}
+                  >
+                    <Icons.LayoutDashboard size={16} />
+                    <span className="font-bold uppercase tracking-widest text-[10px]">Dashboard</span>
+                  </Link>
                 </div>
+
+                {currentTool && (
+                  <div className="hidden md:flex items-center gap-2 text-slate-300 shrink-0">
+                    <span className="text-xl font-light">/</span>
+                    <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 shadow-sm">
+                      <ToolIcon size={16} />
+                      <span className="font-bold truncate max-w-[150px] uppercase tracking-widest text-[10px]">{currentTool.name}</span>
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
 
-          <div className="flex items-center gap-2 sm:gap-4">
-            <div className="hidden sm:block">
-              <ToolSearch />
+              <div className="flex items-center gap-2 sm:gap-4">
+                <div className="hidden sm:block">
+                  <ToolSearch />
+                </div>
+                
+                <button
+                  onClick={() => setIsMobileSearchOpen(true)}
+                  className="sm:hidden p-2.5 sm:p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all active:scale-95 shadow-sm"
+                >
+                  <Icons.Search size={20} />
+                </button>
+
+                <div className="w-px h-6 bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block" />
+
+                <button
+                  onClick={toggleTheme}
+                  className="p-2.5 sm:p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all hover:scale-110 active:scale-95 shadow-sm"
+                >
+                  {theme === 'dark' ? <Icons.Sun size={20} /> : <Icons.Moon size={20} />}
+                </button>
+              </div>
             </div>
-            
-            <button
-              onClick={() => setIsMobileSearchOpen(true)}
-              className="sm:hidden p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
-            >
-              <Icons.Search size={20} />
-            </button>
-
-            <div className="w-px h-6 bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block" />
-
-            <button
-              onClick={toggleTheme}
-              className="p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all hover:scale-110 active:scale-95"
-            >
-              {theme === 'dark' ? <Icons.Sun size={20} /> : <Icons.Moon size={20} />}
-            </button>
           </div>
-        </div>
-      </div>
 
       <AnimatePresence>
         {isMobileSearchOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-white dark:bg-slate-950 p-4"
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.1 }}
+            className="fixed inset-0 z-[120] bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl p-4 sm:p-6 flex flex-col"
           >
-            <div className="flex items-center gap-4 mb-6">
+            <div className="flex items-center justify-between gap-4 mb-6 pt-2">
+              <div className="flex items-center gap-3">
+                <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg">
+                  <Icons.Search size={20} />
+                </div>
+                <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Search Tools</h2>
+              </div>
               <button
                 onClick={() => setIsMobileSearchOpen(false)}
-                className="p-2 text-slate-500 dark:text-slate-400"
+                className="p-3 bg-slate-100 dark:bg-slate-800 rounded-2xl text-slate-500 dark:text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 active:scale-90 transition-all font-bold flex items-center gap-2"
               >
-                <Icons.ArrowLeft size={24} />
+                <span className="text-xs uppercase tracking-widest hidden xs:inline">Close</span>
+                <Icons.X size={20} />
               </button>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white">Search Tools</h2>
             </div>
-            <ToolSearch isMobile onSelect={() => setIsMobileSearchOpen(false)} />
+            <div className="flex-1 overflow-y-auto">
+              <ToolSearch 
+                isMobile 
+                autoFocus 
+                onSelect={() => setIsMobileSearchOpen(false)} 
+                className="!max-w-none shadow-2xl shadow-indigo-500/10"
+              />
+              
+              <div className="mt-12">
+                <h3 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4 pl-1">Popular Categories</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {['Keyword Research', 'Technical SEO', 'Content Audit', 'Site Speed'].map(cat => (
+                    <button 
+                      key={cat}
+                      className="p-4 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl text-left hover:border-indigo-200 transition-all"
+                      onClick={() => {
+                        // We could implement category filtering in search
+                      }}
+                    >
+                      <div className="text-xs font-bold text-slate-900 dark:text-white">{cat}</div>
+                      <div className="text-[10px] text-slate-500 mt-1">Explore tools</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -186,8 +220,9 @@ function AnimatedRoutes() {
       <Route path="/keyword-research-tool" element={<ToolPage idOverride="keyword-research" />} />
       <Route path="/about" element={<About />} />
       <Route path="/blog" element={<Blog />} />
-      <Route path="/blog/:id" element={<BlogPost />} />
+      <Route path="/blog/:slug" element={<BlogPost />} />
       <Route path="/privacy" element={<Privacy />} />
+      <Route path="/terms" element={<Terms />} />
       <Route path="/faq" element={<FAQ />} />
       <Route path="/resources" element={<PowerPage />} />
       <Route path="*" element={<NotFound />} />
@@ -235,15 +270,15 @@ function GlobalMetaTags() {
   const location = useLocation();
   const siteUrl = window.location.origin || 'https://seoscore.site'; // Dynamic base URL
   const canonicalUrl = `${siteUrl}${location.pathname === '/' ? '' : location.pathname}`;
-  const title = "SEO Score Suite | AI SEO Tools for 2026";
-  const description = "Dominate search rankings in 2026 with SEO Score Suite. Access 50+ free AI-powered SEO tools for keyword research, technical audits, and content optimization. Start for free!";
+  const title = "SEO Score – Free SEO Tools for Website Audit, Keywords & Ranking";
+  const description = "Use SEO Score to access free SEO tools for website audit, keyword research, backlinks, site speed, and more. Analyze, optimize, and boost your rankings easily.";
   const ogImage = `${siteUrl}/og-image.png`;
 
   const jsonLd = [
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "SEO Score Suite",
+      "name": "SEO Score",
       "url": siteUrl,
       "description": description,
       "potentialAction": {
@@ -255,7 +290,7 @@ function GlobalMetaTags() {
     {
       "@context": "https://schema.org",
       "@type": "Organization",
-      "name": "SEO Score Suite",
+      "name": "SEO Score",
       "url": siteUrl,
       "logo": `${siteUrl}/logo.png`,
       "sameAs": [
@@ -296,8 +331,8 @@ export default function App() {
     <ErrorBoundary>
       <HelmetProvider>
         <Helmet>
-          <title>SEO Score Suite | AI SEO Tools for 2026</title>
-          <meta name="description" content="Dominate search rankings in 2026 with SEO Score Suite. Access 50+ free AI-powered SEO tools for keyword research, technical audits, and content optimization. Start for free!" />
+          <title>SEO Score – Free SEO Tools for Website Audit, Keywords & Ranking</title>
+          <meta name="description" content="Use SEO Score to access free SEO tools for website audit, keyword research, backlinks, site speed, and more. Analyze, optimize, and boost your rankings easily." />
         </Helmet>
         <ThemeProvider>
           <Router>
@@ -338,7 +373,7 @@ export default function App() {
                       <div className="flex flex-col gap-3">
                         <h4 className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Legal</h4>
                         <Link to="/privacy" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Privacy Policy</Link>
-                        <a href="#" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Terms</a>
+                        <Link to="/terms" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Terms of Service</Link>
                       </div>
                       <div className="flex flex-col gap-3">
                         <h4 className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Popular Tools</h4>
@@ -357,7 +392,7 @@ export default function App() {
                   </div>
                   <div className="pt-8 border-t border-slate-100 dark:border-slate-800 text-center">
                     <p className="text-slate-500 dark:text-slate-400 text-xs">
-                      &copy; {new Date().getFullYear()} AI SEO Score Suite. Powered by Google Gemini. All rights reserved.
+                      &copy; {new Date().getFullYear()} SEO Score. Powered by Google Gemini AI. All rights reserved.
                     </p>
                   </div>
                 </div>

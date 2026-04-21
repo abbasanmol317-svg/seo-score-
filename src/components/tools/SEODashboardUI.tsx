@@ -13,7 +13,7 @@ export const SEODashboardUI: React.FC<ToolComponentProps & { history: any[] }> =
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
       <Helmet>
-        <title>SEO Insights Dashboard | AI SEO Score Suite</title>
+        <title>SEO Insights Dashboard | SEO Score</title>
         <meta name="description" content="View your SEO analysis history and insights." />
       </Helmet>
       <div className="flex items-center gap-4 mb-8">

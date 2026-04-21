@@ -5,6 +5,7 @@ import { ToolComponentProps } from './ToolComponentProps';
 const GenericToolUI = lazy(() => import('./GenericToolUI').then(m => ({ default: m.GenericToolUI })));
 const SEODashboardUI = lazy(() => import('./SEODashboardUI').then(m => ({ default: m.SEODashboardUI })));
 const MetaTagToolUI = lazy(() => import('./MetaTagToolUI').then(m => ({ default: m.MetaTagToolUI })));
+const SERPPreviewToolUI = lazy(() => import('./SERPPreviewToolUI').then(m => ({ default: m.SERPPreviewToolUI })));
 const SitemapRobotsUI = lazy(() => import('./SitemapRobotsUI').then(m => ({ default: m.SitemapRobotsUI })));
 const SEOChatUI = lazy(() => import('./SEOChatUI').then(m => ({ default: m.SEOChatUI })));
 const ImageAltTextUI = lazy(() => import('./ImageAltTextUI').then(m => ({ default: m.ImageAltTextUI })));
@@ -12,6 +13,7 @@ const ImageAltTextUI = lazy(() => import('./ImageAltTextUI').then(m => ({ defaul
 export const TOOL_COMPONENTS: Partial<Record<ToolId, React.LazyExoticComponent<React.FC<ToolComponentProps & any>>>> = {
   'seo-dashboard': SEODashboardUI,
   'meta-tag': MetaTagToolUI,
+  'serp-preview': SERPPreviewToolUI,
   'sitemap-robots': SitemapRobotsUI,
   'seo-chat': SEOChatUI,
   'image-alt-text': ImageAltTextUI,
