@@ -7,6 +7,7 @@ import { Tool, TOOLS } from '../services/gemini';
 import { cn } from '../lib/utils';
 import { ToolCard } from '../components/ToolCard';
 import { CATEGORY_CONFIG } from '../constants';
+import { AdUnit } from '../components/AdSense';
 import { SEOPerformanceChart, TrafficDistributionChart, SEOHealthRadarChart } from '../components/charts/SEOPerformanceChart';
 
 export default function Dashboard() {
@@ -109,6 +110,8 @@ export default function Dashboard() {
           />
         </motion.div>
       </header>
+
+      <AdUnit slot="YOUR_SLOT_ID" className="mb-12" />
 
       <div className="mb-16 grid grid-cols-1 lg:grid-cols-4 gap-6 sm:gap-8">
         <div className="lg:col-span-2">

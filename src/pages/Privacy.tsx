@@ -66,7 +66,7 @@ export default function Privacy() {
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Contact Us</h3>
           <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm">
             If you have any questions about our privacy policy, please contact our support team at 
-            <span className="text-indigo-600 dark:text-indigo-400 font-bold ml-1">privacy@seoscore.ai</span>
+            <span className="text-indigo-600 dark:text-indigo-400 font-bold ml-1">support@seoscore.site</span>
           </p>
         </section>
       </div>

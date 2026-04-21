@@ -9,6 +9,7 @@ import { HelmetProvider, Helmet } from 'react-helmet-async';
 import ToolSearch from './components/ToolSearch';
 import Sidebar from './components/Sidebar';
 import BackToTop from './components/BackToTop';
+import { AdSenseProvider } from './components/AdSense';
 
 // Lazy load pages for better performance
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -19,6 +20,7 @@ const Privacy = lazy(() => import('./pages/Privacy'));
 const FAQ = lazy(() => import('./pages/FAQ'));
 const Tools = lazy(() => import('./pages/Tools'));
 const BlogPost = lazy(() => import('./pages/BlogPost'));
+const Contact = lazy(() => import('./pages/Contact'));
 const Terms = lazy(() => import('./pages/Terms'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const PowerPage = lazy(() => import('./pages/PowerPage'));
@@ -219,6 +221,7 @@ function AnimatedRoutes() {
       <Route path="/ai-seo-audit-tool" element={<ToolPage idOverride="seo-audit" />} />
       <Route path="/keyword-research-tool" element={<ToolPage idOverride="keyword-research" />} />
       <Route path="/about" element={<About />} />
+      <Route path="/contact" element={<Contact />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="/blog/:slug" element={<BlogPost />} />
       <Route path="/privacy" element={<Privacy />} />
@@ -330,6 +333,7 @@ export default function App() {
   return (
     <ErrorBoundary>
       <HelmetProvider>
+        <AdSenseProvider publisherId="ca-pub-6719705037005199" />
         <Helmet>
           <title>SEO Score – Free SEO Tools for Website Audit, Keywords & Ranking</title>
           <meta name="description" content="Use SEO Score to access free SEO tools for website audit, keyword research, backlinks, site speed, and more. Analyze, optimize, and boost your rankings easily." />
@@ -366,6 +370,7 @@ export default function App() {
                         <h4 className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Company</h4>
                         <Link to="/tools" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">All Tools</Link>
                         <Link to="/about" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About Us</Link>
+                        <Link to="/contact" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Contact Us</Link>
                         <Link to="/blog" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Blog</Link>
                         <Link to="/faq" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">FAQ</Link>
                         <Link to="/resources" className="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline transition-colors">Resources</Link>

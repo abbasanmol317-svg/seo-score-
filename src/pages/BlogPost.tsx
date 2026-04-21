@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import * as Icons from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import Markdown from 'react-markdown';
+import { AdUnit } from '../components/AdSense';
 import { BLOG_POSTS } from '../constants/blogData';
 
 export default function BlogPost() {
@@ -159,6 +160,8 @@ export default function BlogPost() {
           <div className="markdown-body">
             <Markdown>{post.content}</Markdown>
           </div>
+
+          <AdUnit slot="YOUR_SLOT_ID" className="mt-12" />
 
           <div className="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-8">
             <div className="flex items-center gap-4">

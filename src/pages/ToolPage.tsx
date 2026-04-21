@@ -5,6 +5,7 @@ import * as Icons from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { TOOLS, runTool, ToolId } from '../services/gemini';
 import { cn } from '../lib/utils';
+import { AdUnit } from '../components/AdSense';
 import { getToolComponent } from '../components/tools/toolRegistry';
 import { getDeepContent } from '../constants/toolContent';
 
@@ -620,6 +621,8 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
               history={history}
             />
           </Suspense>
+
+          <AdUnit slot="YOUR_SLOT_ID" className="mt-12" />
 
           <div className={cn("mt-12 sm:mt-20 space-y-12", isGeneratingPDF && "hidden")}>
             <section className="p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
