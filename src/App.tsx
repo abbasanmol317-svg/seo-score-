@@ -337,6 +337,7 @@ export default function App() {
         <Helmet>
           <title>SEO Score – Free SEO Tools for Website Audit, Keywords & Ranking</title>
           <meta name="description" content="Use SEO Score to access free SEO tools for website audit, keyword research, backlinks, site speed, and more. Analyze, optimize, and boost your rankings easily." />
+          <meta name="google-adsense-account" content="ca-pub-6719705037005199" />
         </Helmet>
         <ThemeProvider>
           <Router>
