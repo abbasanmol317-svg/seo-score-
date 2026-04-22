@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, History, Target, ArrowRight, ChevronDown, Globe, Cpu, Zap, CheckCircle2, ShieldCheck, TrendingUp } from 'lucide-react';
@@ -8,8 +8,21 @@ import { cn } from '../lib/utils';
 import { ToolCard } from '../components/ToolCard';
 import { CATEGORY_CONFIG } from '../constants';
 import { AdUnit } from '../components/AdSense';
-import { SEOPerformanceChart, TrafficDistributionChart, SEOHealthRadarChart } from '../components/charts/SEOPerformanceChart';
 import { Icon } from '../components/ui/Icon';
+
+// Lazy load heavy chart components
+const SEOPerformanceChart = lazy(() => import('../components/charts/SEOPerformanceChart').then(m => ({ default: m.SEOPerformanceChart })));
+const TrafficDistributionChart = lazy(() => import('../components/charts/SEOPerformanceChart').then(m => ({ default: m.TrafficDistributionChart })));
+const SEOHealthRadarChart = lazy(() => import('../components/charts/SEOPerformanceChart').then(m => ({ default: m.SEOHealthRadarChart })));
+
+const ChartPlaceholder = () => (
+  <div className="bg-white dark:bg-slate-900 rounded-[2rem] p-8 border border-slate-200 dark:border-slate-800 shadow-sm h-[300px] flex items-center justify-center">
+    <div className="flex flex-col items-center gap-3">
+      <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+      <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Loading Analytics...</span>
+    </div>
+  </div>
+);
 
 export default function Dashboard() {
   const categories = Object.keys(CATEGORY_CONFIG).filter(cat => 
@@ -116,15 +129,17 @@ export default function Dashboard() {
       <AdUnit slot="YOUR_SLOT_ID" className="mb-12" />
 
       <div className="mb-16 grid grid-cols-1 lg:grid-cols-4 gap-6 sm:gap-8">
-        <div className="lg:col-span-2">
-          <SEOPerformanceChart />
-        </div>
-        <div className="lg:col-span-1">
-          <TrafficDistributionChart />
-        </div>
-        <div className="lg:col-span-1">
-          <SEOHealthRadarChart />
-        </div>
+        <Suspense fallback={<ChartPlaceholder />}>
+          <div className="lg:col-span-2">
+            <SEOPerformanceChart />
+          </div>
+          <div className="lg:col-span-1">
+            <TrafficDistributionChart />
+          </div>
+          <div className="lg:col-span-1">
+            <SEOHealthRadarChart />
+          </div>
+        </Suspense>
       </div>
 
       <AnimatePresence>

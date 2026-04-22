@@ -55,7 +55,26 @@ import {
   Eye,
   Settings2,
   ExternalLink,
-  Code2
+  Code2,
+  BookOpen,
+  ListChecks,
+  Lightbulb,
+  XCircle,
+  PanelLeftOpen,
+  PanelLeftClose,
+  Menu,
+  Moon,
+  Sun,
+  LayoutDashboard,
+  CircleHelp,
+  Github,
+  Twitter,
+  Linkedin,
+  SearchX,
+  ArrowDown,
+  ArrowUp,
+  CornerDownLeft,
+  Command
 } from 'lucide-react';
 
 const icons = {
@@ -82,7 +101,7 @@ const icons = {
   Package, 
   FileText, 
   MapPin, 
-  CircleHelp: HelpCircle, 
+  CircleHelp, 
   HelpCircle,
   X, 
   ShieldCheck, 
@@ -115,7 +134,25 @@ const icons = {
   Eye,
   Settings2,
   ExternalLink,
-  Code2
+  Code2,
+  BookOpen,
+  ListChecks,
+  Lightbulb,
+  XCircle,
+  PanelLeftOpen,
+  PanelLeftClose,
+  Menu,
+  Moon,
+  Sun,
+  LayoutDashboard,
+  Github,
+  Twitter,
+  Linkedin,
+  SearchX,
+  ArrowDown,
+  ArrowUp,
+  CornerDownLeft,
+  Command
 };
 
 export type IconName = keyof typeof icons;
@@ -125,11 +162,12 @@ interface IconProps {
   size?: number;
   className?: string;
   strokeWidth?: number;
+  fill?: string;
 }
 
-export const Icon = ({ name, size = 20, className, strokeWidth }: IconProps) => {
+export const Icon = ({ name, size = 20, className, strokeWidth, fill }: IconProps) => {
   const IconComponent = icons[name as IconName] || HelpCircle;
-  return <IconComponent size={size} className={className} strokeWidth={strokeWidth} />;
+  return <IconComponent size={size} className={className} strokeWidth={strokeWidth} fill={fill} />;
 };
 
 export default Icon;

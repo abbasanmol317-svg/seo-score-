@@ -9,7 +9,6 @@ import ToolSearch from './components/ToolSearch';
 import Sidebar from './components/Sidebar';
 import BackToTop from './components/BackToTop';
 import { AdSenseProvider } from './components/AdSense';
-import Onboarding from './components/Onboarding';
 import { Icon } from './components/ui/Icon';
 
 // Lazy load pages for better performance
@@ -25,6 +24,7 @@ const Contact = lazy(() => import('./pages/Contact'));
 const Terms = lazy(() => import('./pages/Terms'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const PowerPage = lazy(() => import('./pages/PowerPage'));
+const Onboarding = lazy(() => import('./components/Onboarding'));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-[60vh]">
@@ -355,7 +355,9 @@ export default function App() {
         <ThemeProvider>
           <Router>
             <GlobalMetaTags />
-            <Onboarding />
+            <Suspense fallback={null}>
+              <Onboarding />
+            </Suspense>
             <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col transition-colors duration-300">
               <NavHeader />
               <div className="flex flex-1 relative">

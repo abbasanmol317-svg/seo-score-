@@ -17,7 +17,8 @@ import {
   PolarRadiusAxis
 } from 'recharts';
 import { cn } from '../../lib/utils';
-import * as Icons from 'lucide-react';
+import { Icon } from '../ui/Icon';
+import { TrendingUp } from 'lucide-react';
 
 const MOCK_TREND_DATA = [
   { day: 'Day 1', score: 65, traffic: 1200 },
@@ -220,7 +221,7 @@ export const UserActivityChart = ({ history }: { history: any[] }) => {
           <p className="text-xs text-slate-500 font-medium">Tool usage over last 7 days</p>
         </div>
         <div className="p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl text-indigo-600">
-          <Icons.TrendingUp size={20} />
+          <Icon name="TrendingUp" size={20} />
         </div>
       </div>
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, Suspense, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import * as Icons from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { TOOLS, runTool, ToolId } from '../services/gemini';
 import { cn } from '../lib/utils';
@@ -12,6 +11,7 @@ import { getDeepContent } from '../constants/toolContent';
 import { getErrorMessage } from '../lib/seo-utils';
 import Breadcrumbs from '../components/Breadcrumbs';
 import { BLOG_POSTS } from '../constants/blogData';
+import { Icon } from '../components/ui/Icon';
 
 export default function ToolPage({ idOverride }: { idOverride?: string }) {
   const { id: paramId } = useParams<{ id: string }>();
@@ -358,7 +358,6 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
   };
 
   const ToolComponent = getToolComponent(tool.id);
-  const IconComponent = (Icons as any)[tool.icon] || Icons.CircleHelp;
 
   const relatedTools = useMemo(() => {
     if (!tool) return [];
@@ -560,7 +559,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
             exit={{ opacity: 0, y: 50 }}
             className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[110] px-6 py-3 bg-slate-900 text-white rounded-2xl shadow-2xl font-bold text-sm flex items-center gap-3"
           >
-            <Icons.CheckCircle2 className="text-emerald-400" size={18} />
+            <Icon name="CheckCircle2" className="text-emerald-400" size={18} />
             Copied to clipboard!
           </motion.div>
         )}
@@ -579,10 +578,10 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
             />
             <div className={cn("flex items-center gap-3 sm:gap-4", isGeneratingPDF && "hidden")}>
               <Link to="/" className="p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-600 dark:text-slate-400 shrink-0">
-                <Icons.ChevronLeft size={18} className="sm:w-6 sm:h-6" />
+                <Icon name="ChevronLeft" size={18} className="sm:w-6 sm:h-6" />
               </Link>
               <div className="p-2 sm:p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg sm:rounded-xl text-indigo-600 dark:text-indigo-400 shrink-0">
-                <IconComponent size={20} className="sm:w-7 sm:h-7" />
+                <Icon name={tool.icon} size={20} className="sm:w-7 sm:h-7" />
               </div>
               <div className="min-w-0">
                 <h1 className="text-lg sm:text-3xl font-black text-slate-900 dark:text-white truncate leading-tight">{tool.name}</h1>
@@ -629,7 +628,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
           <div className={cn("mt-12 sm:mt-20 space-y-12", isGeneratingPDF && "hidden")}>
             <section className="p-6 sm:p-8 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
-                <Icons.BookOpen size={200} />
+                <Icon name="BookOpen" size={200} />
               </div>
               
               <div className="relative z-10">
@@ -646,7 +645,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                     <div className="space-y-6">
                       <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
                         <div className="p-2 bg-indigo-600 rounded-lg text-white shadow-lg">
-                          <Icons.ListChecks size={20} />
+                          <Icon name="ListChecks" size={20} />
                         </div>
                         Step-by-Step Optimization
                       </h3>
@@ -667,7 +666,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                     <div className="space-y-6">
                       <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
                         <div className="p-2 bg-emerald-600 rounded-lg text-white shadow-lg">
-                          <Icons.Lightbulb size={20} />
+                          <Icon name="Lightbulb" size={20} />
                         </div>
                         Expert Pro Tips
                       </h3>
@@ -688,7 +687,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                     <div className="mt-12 space-y-6">
                       <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
                         <div className="p-2 bg-rose-600 rounded-lg text-white shadow-lg">
-                          <Icons.XCircle size={20} />
+                          <Icon name="XCircle" size={20} />
                         </div>
                         Mistakes to Avoid
                       </h3>
@@ -696,7 +695,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                         {deepContent.mistakesToAvoid.map((mistake, idx) => (
                           <div key={idx} className="flex items-start gap-4 p-4 bg-rose-50/30 dark:bg-rose-900/10 rounded-2xl border border-rose-100 dark:border-rose-900/20 group hover:border-rose-300 transition-all">
                             <div className="mt-0.5 text-rose-500 group-hover:scale-110 transition-transform">
-                              <Icons.X size={16} strokeWidth={3} />
+                              <Icon name="X" size={16} strokeWidth={3} />
                             </div>
                             <p className="text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
                               {mistake}
@@ -709,7 +708,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
 
                   <div className="mt-12 p-6 sm:p-8 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-[2rem] border border-indigo-100/50 dark:border-indigo-800/30">
                     <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-3">
-                      <Icons.Info size={20} className="text-indigo-600" />
+                      <Icon name="Info" size={20} className="text-indigo-600" />
                       Why This Matters for Your SEO
                     </h3>
                     <div className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed italic">
@@ -723,7 +722,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
             <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="md:col-span-2 p-6 sm:p-8 bg-slate-900 text-white rounded-[2.5rem] shadow-2xl relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-700">
-                  <Icons.Zap size={160} fill="currentColor" />
+                  <Icon name="Zap" size={160} className="opacity-20" />
                 </div>
                 <div className="relative z-10">
                   <h2 className="text-2xl font-black mb-4 tracking-tight">Ready to Dominate the SERPs?</h2>
@@ -733,7 +732,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                   <div className="flex flex-wrap gap-4">
                     {relatedPosts.slice(0, 2).map(post => (
                       <Link key={post.id} to={`/blog/${post.id}`} className="px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl text-sm font-bold transition-all flex items-center gap-2">
-                        <Icons.BookOpen size={16} /> {post.title}
+                        <Icon name="BookOpen" size={16} /> {post.title}
                       </Link>
                     ))}
                   </div>
@@ -742,7 +741,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
               
               <div className="p-6 sm:p-8 bg-indigo-600 text-white rounded-[2.5rem] shadow-xl flex flex-col justify-center items-center text-center">
                 <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
-                  <Icons.ShieldCheck size={32} />
+                  <Icon name="ShieldCheck" size={32} />
                 </div>
                 <h3 className="text-xl font-bold mb-2">100% Free & Secure</h3>
                 <p className="text-indigo-100 text-sm leading-relaxed">
@@ -753,7 +752,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
 
             <section className="space-y-6">
               <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
-                <Icons.CircleHelp className="text-indigo-600" size={24} />
+                <Icon name="CircleHelp" className="text-indigo-600" size={24} />
                 Frequently Asked Questions
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -775,7 +774,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                   <div>
                     <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-3 tracking-tight">
-                      <Icons.BookOpen className="text-indigo-600" size={24} />
+                      <Icon name="BookOpen" className="text-indigo-600" size={24} />
                       Expert SEO Insights
                     </h2>
                     <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
@@ -783,7 +782,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                     </p>
                   </div>
                   <Link to="/blog" className="text-xs font-black text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 uppercase tracking-widest">
-                    All Guides <Icons.ArrowRight size={14} />
+                    All Guides <Icon name="ArrowRight" size={14} />
                   </Link>
                 </div>
 
@@ -801,7 +800,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                           </span>
                           {(post as any).score > 40 && (
                             <div className="flex items-center gap-1 text-[9px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
-                              <Icons.Sparkles size={10} className="text-emerald-500" /> RECOMMENDED
+                              <Icon name="Sparkles" size={10} className="text-emerald-500" /> RECOMMENDED
                             </div>
                           )}
                         </div>
@@ -813,7 +812,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                         </p>
                         <div className="flex items-center justify-between text-[10px] font-black text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors uppercase tracking-widest">
                           <span>Read Full Guide</span>
-                          <Icons.ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                          <Icon name="ArrowRight" size={14} className="group-hover:translate-x-1 transition-transform" />
                         </div>
                       </div>
                     </Link>
@@ -827,7 +826,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
               <div>
                 <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-3 tracking-tight">
-                  <Icons.Sparkles className="text-indigo-600" size={24} />
+                  <Icon name="Sparkles" className="text-indigo-600" size={24} />
                   {hasHistory ? "Recommended for You" : "Related SEO Tools"}
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
@@ -837,13 +836,12 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                 </p>
               </div>
               <Link to="/" className="text-xs font-black text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 uppercase tracking-widest">
-                View All Tools <Icons.ArrowRight size={14} />
+                View All Tools <Icon name="ArrowRight" size={14} />
               </Link>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {relatedTools.map((relatedTool, idx) => {
-                const RelatedIcon = (Icons as any)[relatedTool.icon] || Icons.Zap;
                 return (
                   <Link
                     key={relatedTool.id}
@@ -851,12 +849,12 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                     className="group bg-white dark:bg-slate-900 p-6 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all hover:shadow-2xl hover:shadow-indigo-500/5 flex flex-col h-full relative overflow-hidden"
                   >
                     <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500 group-hover:scale-150 group-hover:-rotate-12">
-                      <RelatedIcon size={60} />
+                      <Icon name={relatedTool.icon} size={60} />
                     </div>
 
                     <div className="flex items-center gap-4 mb-4 relative z-10">
                       <div className="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl text-slate-600 dark:text-slate-400 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
-                        <RelatedIcon size={18} strokeWidth={2.5} />
+                        <Icon name={relatedTool.icon} size={18} strokeWidth={2.5} />
                       </div>
                       <div className="flex flex-col">
                         <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-tight">
@@ -864,7 +862,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                         </h3>
                         {(relatedTool as any).isSmartSuggestion && (
                           <span className="text-[8px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mt-0.5 flex items-center gap-1">
-                            <Icons.Zap size={8} fill="currentColor" /> Smart Suggestion
+                            <Icon name="Zap" size={8} fill="currentColor" /> Smart Suggestion
                           </span>
                         )}
                       </div>
@@ -874,7 +872,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                     </p>
                     <div className="mt-auto flex items-center justify-between text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest relative z-10">
                       <span>Try Now</span>
-                      <Icons.ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                      <Icon name="ArrowRight" size={12} className="group-hover:translate-x-1 transition-transform" />
                     </div>
                   </Link>
                 );

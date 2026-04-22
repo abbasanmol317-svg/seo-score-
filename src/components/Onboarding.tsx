@@ -1,48 +1,49 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { TrendingUp, FileText, Settings, Youtube, MapPin, Zap, BrainCircuit, Target, ChartBarBig, CheckCircle2, ArrowRight } from 'lucide-react';
+import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { Icon } from './ui/Icon';
 
 interface Step {
   title: string;
   description: string;
-  icon: React.ReactNode;
+  iconName: string;
   color: string;
   isGoalStep?: boolean;
 }
 
 const SEO_GOALS = [
-  { id: 'traffic', label: 'Boost Website Traffic', icon: <TrendingUp size={20} />, description: 'Keyword research and link building' },
-  { id: 'content', label: 'Optimize Content', icon: <FileText size={20} />, description: 'AI writing and semantic optimization' },
-  { id: 'technical', label: 'Fix Technical Issues', icon: <Settings size={20} />, description: 'Speed, audits, and crawlability' },
-  { id: 'youtube', label: 'YouTube Growth', icon: <Youtube size={20} />, description: 'Video SEO and channel ranking' },
-  { id: 'local', label: 'Local SEO Ranking', icon: <MapPin size={20} />, description: 'Google Maps and local intent' }
+  { id: 'traffic', label: 'Boost Website Traffic', iconName: 'TrendingUp', description: 'Keyword research and link building' },
+  { id: 'content', label: 'Optimize Content', iconName: 'FileText', description: 'AI writing and semantic optimization' },
+  { id: 'technical', label: 'Fix Technical Issues', iconName: 'Settings', description: 'Speed, audits, and crawlability' },
+  { id: 'youtube', label: 'YouTube Growth', iconName: 'Youtube', description: 'Video SEO and channel ranking' },
+  { id: 'local', label: 'Local SEO Ranking', iconName: 'MapPin', description: 'Google Maps and local intent' }
 ];
 
 const STEPS: Step[] = [
   {
     title: "Welcome to SEO Score",
     description: "Your all-in-one platform for AI-powered SEO analysis, keyword research, and content optimization.",
-    icon: <Zap size={48} />,
+    iconName: "Zap",
     color: "bg-indigo-600"
   },
   {
     title: "AI-Powered Analysis",
     description: "Leverage the power of Google Gemini to get deep insights into your website's performance and visibility.",
-    icon: <BrainCircuit size={48} />,
+    iconName: "BrainCircuit",
     color: "bg-purple-600"
   },
   {
     title: "Customized for You",
     description: "Tell us about your primary SEO goals so we can recommend the best tools for your specific needs.",
-    icon: <Target size={48} />,
+    iconName: "Target",
     color: "bg-orange-500",
     isGoalStep: true
   },
   {
     title: "Actionable Reports",
     description: "Get detailed reports with specific recommendations to improve your rankings and drive more organic traffic.",
-    icon: <ChartBarBig size={48} />,
+    iconName: "ChartBarBig",
     color: "bg-emerald-600"
   }
 ];
@@ -139,7 +140,7 @@ export default function Onboarding() {
                 "w-20 h-20 sm:w-24 sm:h-24 rounded-3xl flex items-center justify-center text-white mb-6 sm:mb-8 shadow-xl",
                 step.color
               )}>
-                {step.icon}
+                <Icon name={step.iconName} size={48} />
               </div>
               
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
@@ -167,7 +168,7 @@ export default function Onboarding() {
                         "p-2 rounded-xl shrink-0 transition-colors",
                         selectedGoals.includes(goal.id) ? "bg-white/20 text-white" : "bg-white dark:bg-slate-700 text-indigo-600"
                       )}>
-                        {goal.icon}
+                        <Icon name={goal.iconName} size={20} />
                       </div>
                       <div>
                         <div className="font-bold text-sm sm:text-base">{goal.label}</div>

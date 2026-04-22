@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import * as Icons from 'lucide-react';
+import { Search, X, Command } from 'lucide-react';
 import { TOOLS, Tool } from '../services/gemini';
 import { cn } from '../lib/utils';
+import { Icon } from './ui/Icon';
 
 interface ToolSearchProps {
   className?: string;
@@ -95,7 +96,7 @@ export default function ToolSearch({ className, onSelect, autoFocus, isMobile: i
     <div className={cn("relative w-full max-w-md", !isMobile && "mx-4", className)} ref={searchRef}>
       <div className="relative group">
         <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
-          <Icons.Search size={16} className="sm:w-[18px] sm:h-[18px]" />
+          <Icon name="Search" size={16} className="sm:w-[18px] sm:h-[18px]" />
         </div>
         <input
           ref={inputRef}
@@ -118,7 +119,7 @@ export default function ToolSearch({ className, onSelect, autoFocus, isMobile: i
             className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full text-slate-400 transition-colors sm:hidden"
             aria-label="Clear search"
           >
-            <Icons.X size={16} />
+            <Icon name="X" size={16} />
           </button>
         )}
         <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1">
@@ -142,7 +143,6 @@ export default function ToolSearch({ className, onSelect, autoFocus, isMobile: i
               </div>
               {results.length > 0 ? (
                 results.map((tool, index) => {
-                  const ToolIcon = (Icons as any)[tool.icon] || Icons.Zap;
                   return (
                     <motion.button
                       key={tool.id}
@@ -163,7 +163,7 @@ export default function ToolSearch({ className, onSelect, autoFocus, isMobile: i
                           ? "bg-white dark:bg-slate-800 shadow-sm" 
                           : "bg-slate-100 dark:bg-slate-800 group-hover:bg-white dark:group-hover:bg-slate-700"
                       )}>
-                        <ToolIcon size={16} className={cn(
+                        <Icon name={tool.icon} size={16} className={cn(
                           selectedIndex === index ? "text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400",
                           "sm:w-[18px] sm:h-[18px]"
                         )} />
@@ -172,14 +172,14 @@ export default function ToolSearch({ className, onSelect, autoFocus, isMobile: i
                         <div className="text-sm font-bold truncate">{tool.name}</div>
                         <div className="text-[10px] text-slate-400 dark:text-slate-500 truncate">{tool.category}</div>
                       </div>
-                      <Icons.ChevronRight size={14} className="text-slate-300 dark:text-slate-600 group-hover:translate-x-0.5 transition-transform shrink-0" />
+                      <Icon name="ChevronRight" size={14} className="text-slate-300 dark:text-slate-600 group-hover:translate-x-0.5 transition-transform shrink-0" />
                     </motion.button>
                   );
                 })
               ) : (
                 <div className="p-8 text-center">
                   <div className="w-12 h-12 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-3 text-slate-400">
-                    <Icons.SearchX size={24} />
+                    <Icon name="SearchX" size={24} />
                   </div>
                   <p className="text-sm font-bold text-slate-600 dark:text-slate-300">No tools found</p>
                   <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Try searching for something else</p>
@@ -188,10 +188,10 @@ export default function ToolSearch({ className, onSelect, autoFocus, isMobile: i
             </div>
             <div className="p-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-500">
               <div className="flex items-center gap-3">
-                <span className="hidden sm:flex items-center gap-1"><Icons.ArrowDown size={10} /> <Icons.ArrowUp size={10} /> to navigate</span>
-                <span className="flex items-center gap-1"><Icons.CornerDownLeft size={10} /> to select</span>
+                <span className="hidden sm:flex items-center gap-1"><Icon name="ArrowDown" size={10} /> <Icon name="ArrowUp" size={10} /> to navigate</span>
+                <span className="flex items-center gap-1"><Icon name="CornerDownLeft" size={10} /> to select</span>
               </div>
-              <span className="flex items-center gap-1"><Icons.X size={10} /> to close</span>
+              <span className="flex items-center gap-1"><Icon name="X" size={10} /> to close</span>
             </div>
           </motion.div>
         )}
