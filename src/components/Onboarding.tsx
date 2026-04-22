@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import * as Icons from 'lucide-react';
+import { TrendingUp, FileText, Settings, Youtube, MapPin, Zap, BrainCircuit, Target, ChartBarBig, CheckCircle2, ArrowRight } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 interface Step {
@@ -12,37 +12,37 @@ interface Step {
 }
 
 const SEO_GOALS = [
-  { id: 'traffic', label: 'Boost Website Traffic', icon: <Icons.TrendingUp size={20} />, description: 'Keyword research and link building' },
-  { id: 'content', label: 'Optimize Content', icon: <Icons.FileText size={20} />, description: 'AI writing and semantic optimization' },
-  { id: 'technical', label: 'Fix Technical Issues', icon: <Icons.Settings size={20} />, description: 'Speed, audits, and crawlability' },
-  { id: 'youtube', label: 'YouTube Growth', icon: <Icons.Youtube size={20} />, description: 'Video SEO and channel ranking' },
-  { id: 'local', label: 'Local SEO Ranking', icon: <Icons.MapPin size={20} />, description: 'Google Maps and local intent' }
+  { id: 'traffic', label: 'Boost Website Traffic', icon: <TrendingUp size={20} />, description: 'Keyword research and link building' },
+  { id: 'content', label: 'Optimize Content', icon: <FileText size={20} />, description: 'AI writing and semantic optimization' },
+  { id: 'technical', label: 'Fix Technical Issues', icon: <Settings size={20} />, description: 'Speed, audits, and crawlability' },
+  { id: 'youtube', label: 'YouTube Growth', icon: <Youtube size={20} />, description: 'Video SEO and channel ranking' },
+  { id: 'local', label: 'Local SEO Ranking', icon: <MapPin size={20} />, description: 'Google Maps and local intent' }
 ];
 
 const STEPS: Step[] = [
   {
     title: "Welcome to SEO Score",
     description: "Your all-in-one platform for AI-powered SEO analysis, keyword research, and content optimization.",
-    icon: <Icons.Zap size={48} />,
+    icon: <Zap size={48} />,
     color: "bg-indigo-600"
   },
   {
     title: "AI-Powered Analysis",
     description: "Leverage the power of Google Gemini to get deep insights into your website's performance and visibility.",
-    icon: <Icons.BrainCircuit size={48} />,
+    icon: <BrainCircuit size={48} />,
     color: "bg-purple-600"
   },
   {
     title: "Customized for You",
     description: "Tell us about your primary SEO goals so we can recommend the best tools for your specific needs.",
-    icon: <Icons.Target size={48} />,
+    icon: <Target size={48} />,
     color: "bg-orange-500",
     isGoalStep: true
   },
   {
     title: "Actionable Reports",
     description: "Get detailed reports with specific recommendations to improve your rankings and drive more organic traffic.",
-    icon: <Icons.ChartBarBig size={48} />,
+    icon: <ChartBarBig size={48} />,
     color: "bg-emerald-600"
   }
 ];
@@ -177,7 +177,7 @@ export default function Onboarding() {
                         )}>{goal.description}</div>
                       </div>
                       {selectedGoals.includes(goal.id) && (
-                        <Icons.CheckCircle2 size={20} className="ml-auto" />
+                        <CheckCircle2 size={20} className="ml-auto" />
                       )}
                     </button>
                   ))}
@@ -212,7 +212,7 @@ export default function Onboarding() {
             className="px-6 sm:px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-black shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40 transition-all active:scale-95 flex items-center gap-2"
           >
             {currentStep === STEPS.length - 1 ? "Get Started" : "Next"}
-            <Icons.ArrowRight size={18} />
+            <ArrowRight size={18} />
           </button>
         </div>
       </motion.div>

@@ -934,6 +934,7 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                         article: schemaType === 'article' ? { date: articleDate } : undefined,
                         faq: schemaType === 'faq' ? faqQuestions : undefined
                       } : undefined}
+                      ctrAnalysis={ctrAnalysis}
                     />
                   </div>
 

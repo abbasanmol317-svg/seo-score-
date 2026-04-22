@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import * as Icons from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Tool } from '../services/gemini';
+import { Icon } from './ui/Icon';
 
 interface ToolCardProps {
   tool: Tool;
@@ -12,8 +13,6 @@ interface ToolCardProps {
 }
 
 export const ToolCard = React.memo(({ tool, index, className }: ToolCardProps) => {
-  const IconComponent = (Icons as any)[tool.icon] || Icons.CircleHelp;
-  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -36,14 +35,14 @@ export const ToolCard = React.memo(({ tool, index, className }: ToolCardProps) =
         
         {/* Large Background Decorative Icon */}
         <div className="absolute top-0 right-0 p-4 opacity-[0.02] group-hover:opacity-[0.06] transition-all duration-700 group-hover:scale-150 group-hover:-rotate-12 pointer-events-none">
-          <IconComponent size={120} className="text-indigo-600 dark:text-indigo-400" />
+          <Icon name={tool.icon} size={120} className="text-indigo-600 dark:text-indigo-400" />
         </div>
         
         <div className="flex items-center gap-4 mb-6 relative z-10">
           <div className={cn(
             "p-3 sm:p-4 rounded-[1rem] sm:rounded-[1.25rem] transition-all duration-500 shadow-sm group-hover:shadow-indigo-200/50 dark:group-hover:shadow-none bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-indigo-600 group-hover:text-white group-hover:rotate-3 group-hover:scale-110"
           )}>
-            <IconComponent size={24} strokeWidth={2.5} />
+            <Icon name={tool.icon} size={24} strokeWidth={2.5} />
           </div>
           <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-tight tracking-tight">
             {tool.name}
@@ -60,7 +59,7 @@ export const ToolCard = React.memo(({ tool, index, className }: ToolCardProps) =
             Launch Analyzer
           </span>
           <div className="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-sm group-hover:shadow-lg group-hover:translate-x-1">
-            <Icons.ArrowRight size={14} strokeWidth={3} />
+            <ArrowRight size={14} strokeWidth={3} />
           </div>
         </div>
       </Link>

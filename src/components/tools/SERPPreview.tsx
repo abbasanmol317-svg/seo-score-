@@ -21,6 +21,7 @@ interface SERPPreviewProps {
     article?: { date: string };
     faq?: { q: string; a: string }[];
   };
+  ctrAnalysis?: string;
 }
 
 export const SERPPreview: React.FC<SERPPreviewProps> = ({
@@ -35,7 +36,8 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
   onSiteUrlChange,
   onModeChange,
   showEditor = true,
-  schema
+  schema,
+  ctrAnalysis
 }) => {
   const previewTitle = title.length > 61 ? title.substring(0, 58) + '...' : title;
   const previewDescription = description.length > 161 ? description.substring(0, 158) + '...' : description;
@@ -54,6 +56,12 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
     return "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400";
   };
 
+  // Simple CTR Impact analysis based on length and keywords
+  const titleScore = Math.min(100, Math.max(0, title.length > 30 && title.length < 60 ? 100 : 50));
+  const descScore = Math.min(100, Math.max(0, description.length > 120 && description.length < 160 ? 100 : 50));
+  const hasPowerWords = /(best|free|top|202[0-9]|get|now|instant|tutorial|guide)/i.test(title + description);
+  const totalCtrScore = Math.round((titleScore + descScore + (hasPowerWords ? 20 : 0)) / 2.2);
+
   return (
     <div className="space-y-8">
       {showEditor && (
@@ -62,12 +70,17 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
             <div className="space-y-3">
               <div className="flex items-center justify-between ml-1">
                 <label className="text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Page Title</label>
-                <span className={cn(
-                  "text-[10px] font-bold px-2 py-0.5 rounded-full transition-colors",
-                  getTitleColor(title.length)
-                )}>
-                  {title.length} / 60 Chars
-                </span>
+                <div className="flex items-center gap-2">
+                  {title.length > 50 && (
+                    <span className="text-[9px] font-black uppercase text-indigo-500 bg-indigo-50 dark:bg-indigo-900/20 px-1.5 py-0.5 rounded animate-pulse">High CTR Potential</span>
+                  )}
+                  <span className={cn(
+                    "text-[10px] font-bold px-2 py-0.5 rounded-full transition-colors",
+                    getTitleColor(title.length)
+                  )}>
+                    {title.length} / 60 Chars
+                  </span>
+                </div>
               </div>
               <div className="relative group/title">
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/title:text-indigo-500 transition-colors">
@@ -108,10 +121,25 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
           </div>
 
           <div className="space-y-6 pt-4">
-            <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
-              <Icons.Globe size={12} className="text-indigo-500" />
-              Brand & URL Settings
-            </h4>
+            <div className="flex items-center justify-between">
+              <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                <Icons.Globe size={12} className="text-indigo-500" />
+                Brand & URL Settings
+              </h4>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">CTR Strength</span>
+                <div className="w-16 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${totalCtrScore}%` }}
+                    className={cn(
+                      "h-full rounded-full transition-all duration-1000",
+                      totalCtrScore > 80 ? "bg-emerald-500" : totalCtrScore > 50 ? "bg-amber-500" : "bg-rose-500"
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
             
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -183,47 +211,83 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
         </h4>
         
         <div className={cn(
-          "bg-white dark:bg-slate-900 p-8 sm:p-10 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-2xl relative overflow-hidden transition-all duration-700 min-h-[180px] flex flex-col justify-center",
-          mode === 'mobile' ? "max-w-[420px] mx-auto ring-[12px] ring-slate-100 dark:ring-slate-800/50" : "w-full"
+          "bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-2xl relative overflow-hidden transition-all duration-700 flex flex-col justify-center",
+          mode === 'mobile' 
+            ? "max-w-[380px] mx-auto ring-[1px] ring-slate-200 dark:ring-slate-800 p-4 pt-12 pb-16" 
+            : "w-full p-8 sm:p-10 min-h-[180px]"
         )}>
+          {mode === 'mobile' && (
+            <div className="absolute top-0 left-0 right-0 h-8 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center justify-center gap-3">
+              <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+              <div className="w-12 h-1 rounded-full bg-slate-300" />
+            </div>
+          )}
+
           <div className="absolute top-0 right-0 p-6 opacity-[0.05] pointer-events-none">
-            {mode === 'desktop' ? <Icons.Monitor size={140} /> : <Icons.Smartphone size={140} />}
+            {mode === 'desktop' ? <Icons.Monitor size={140} /> : <Icons.Smartphone size={100} />}
           </div>
 
           <div className="relative z-10 font-sans group/serp">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400 shrink-0 overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700 transition-transform group-hover/serp:scale-110">
-                {siteUrl ? (
-                  <img 
-                    src={`https://www.google.com/s2/favicons?sz=64&domain=${siteUrl.includes('://') ? siteUrl : `https://${siteUrl}`}`} 
-                    alt="" 
-                    className="w-full h-full object-contain p-1.5"
-                    referrerPolicy="no-referrer"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>';
-                    }}
-                  />
-                ) : (
-                  <Icons.Globe size={16} />
-                )}
-              </div>
-              <div className="flex flex-col min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <span className={cn(
-                    "font-medium text-slate-900 dark:text-slate-200 truncate font-sans",
-                    mode === 'mobile' ? "text-xs" : "text-sm"
-                  )}>
-                    {siteName || 'Enter Site Name'}
-                  </span>
-                  <Icons.ChevronDown size={12} className="text-slate-400" />
+            {/* Desktop and Mobile Headers differ slightly */}
+            <div className={cn(
+              "flex items-center gap-3 mb-3",
+              mode === 'mobile' ? "flex-col items-start gap-1" : "flex-row"
+            )}>
+              {mode === 'mobile' ? (
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-6 h-6 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400 shrink-0 overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700">
+                    {siteUrl ? (
+                      <img 
+                        src={`https://www.google.com/s2/favicons?sz=64&domain=${siteUrl.includes('://') ? siteUrl : `https://${siteUrl}`}`} 
+                        alt="" 
+                        className="w-full h-full object-contain p-1"
+                        referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>';
+                        }}
+                      />
+                    ) : (
+                      <Icons.Globe size={12} />
+                    )}
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[12px] font-normal text-slate-900 dark:text-slate-200 truncate">{siteName || 'Enter Site Name'}</span>
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400 truncate opacity-80">{siteUrl || 'example.com'}</span>
+                  </div>
                 </div>
-                <span className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate opacity-80 font-sans">{siteUrl || 'example.com/slug'}</span>
-              </div>
+              ) : (
+                <>
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400 shrink-0 overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700 transition-transform group-hover/serp:scale-110">
+                    {siteUrl ? (
+                      <img 
+                        src={`https://www.google.com/s2/favicons?sz=64&domain=${siteUrl.includes('://') ? siteUrl : `https://${siteUrl}`}`} 
+                        alt="" 
+                        className="w-full h-full object-contain p-1.5"
+                        referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>';
+                        }}
+                      />
+                    ) : (
+                      <Icons.Globe size={16} />
+                    )}
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-sm font-medium text-slate-900 dark:text-slate-200 truncate font-sans">
+                        {siteName || 'Enter Site Name'}
+                      </span>
+                      <Icons.ChevronDown size={12} className="text-slate-400" />
+                    </div>
+                    <span className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate opacity-80 font-sans">{siteUrl || 'example.com/slug'}</span>
+                  </div>
+                </>
+              )}
             </div>
 
             <button className={cn(
               "text-[#1a0dab] dark:text-[#8ab4f8] hover:underline text-left cursor-pointer mb-1 leading-tight font-medium line-clamp-2 font-sans",
-              mode === 'mobile' ? "text-xl" : "text-[20px]"
+              mode === 'mobile' ? "text-xl font-normal" : "text-[20px]"
             )}>
               {previewTitle || 'Optimized Page Title Will Appear Here'}
             </button>
@@ -259,8 +323,8 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
             )}
 
             <div className={cn(
-              "text-[#4d5156] dark:text-[#bdc1c6] leading-relaxed line-clamp-2 opacity-90 font-sans",
-              mode === 'mobile' ? "text-xs" : "text-sm"
+              "text-[#4d5156] dark:text-[#bdc1c6] leading-relaxed opacity-90 font-sans",
+              mode === 'mobile' ? "text-sm line-clamp-3" : "text-sm line-clamp-2"
             )}>
               {previewDescription || 'Your meta description will appear here. It should be between 150-160 characters for optimal visibility in search results.'}
             </div>
@@ -273,6 +337,28 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
                     <Icons.ChevronDown size={14} className="text-slate-400 shrink-0" />
                   </div>
                 ))}
+              </div>
+            )}
+          </div>
+
+          {/* High-Impact Highlights / Tooltips */}
+          <div className="mt-4 flex flex-wrap gap-2">
+            {hasPowerWords && (
+              <div className="p-1 px-2 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800 rounded text-[9px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <Icons.Sparkles size={10} />
+                Power Words Detected
+              </div>
+            )}
+            {title.length >= 50 && title.length <= 60 && (
+              <div className="p-1 px-2 bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 rounded text-[9px] font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1">
+                <Icons.CheckCircle2 size={10} />
+                Optimal Title Length
+              </div>
+            )}
+            {description.length >= 120 && description.length <= 160 && (
+              <div className="p-1 px-2 bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 rounded text-[9px] font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-1">
+                <Icons.CheckCircle2 size={10} />
+                Optimal Description Length
               </div>
             )}
           </div>

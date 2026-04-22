@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import * as Icons from 'lucide-react';
+import { Sparkles, History, Target, ArrowRight, ChevronDown, Globe, Cpu, Zap, CheckCircle2, ShieldCheck, TrendingUp } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { Tool, TOOLS } from '../services/gemini';
 import { cn } from '../lib/utils';
@@ -9,6 +9,7 @@ import { ToolCard } from '../components/ToolCard';
 import { CATEGORY_CONFIG } from '../constants';
 import { AdUnit } from '../components/AdSense';
 import { SEOPerformanceChart, TrafficDistributionChart, SEOHealthRadarChart } from '../components/charts/SEOPerformanceChart';
+import { Icon } from '../components/ui/Icon';
 
 export default function Dashboard() {
   const categories = Object.keys(CATEGORY_CONFIG).filter(cat => 
@@ -74,7 +75,7 @@ export default function Dashboard() {
           animate={{ opacity: 1, scale: 1 }}
           className="inline-flex items-center justify-center p-3 sm:p-4 bg-indigo-600 rounded-2xl sm:rounded-3xl text-white mb-4 sm:mb-6 shadow-xl shadow-indigo-200 dark:shadow-indigo-900/40"
         >
-          <Icons.Sparkles size={32} className="w-8 h-8 sm:w-10 sm:h-10" />
+          <Icon name="Sparkles" size={32} className="w-8 h-8 sm:w-10 sm:h-10" />
         </motion.div>
         <motion.h1 
           initial={{ opacity: 0, y: 10 }}
@@ -104,9 +105,10 @@ export default function Dashboard() {
             alt="AI-Powered SEO Dashboard Analytics Visualization" 
             className="relative z-10 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full object-cover h-[200px] sm:h-[400px]"
             referrerPolicy="no-referrer"
-            loading="lazy"
+            loading="eager"
             width="1200"
             height="400"
+            fetchPriority="high"
           />
         </motion.div>
       </header>
@@ -134,7 +136,7 @@ export default function Dashboard() {
           >
             <div className="flex items-center gap-3 mb-6 sm:mb-8">
               <div className="p-2 bg-indigo-600 rounded-xl text-white shadow-lg shadow-indigo-100 dark:shadow-none">
-                <Icons.History size={20} />
+                <History size={20} />
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
                 Recently Used <span className="text-indigo-600">Tools</span>
@@ -157,7 +159,7 @@ export default function Dashboard() {
             <div className="flex items-center justify-between mb-6 sm:mb-8">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-orange-500 rounded-xl text-white shadow-lg shadow-orange-100 dark:shadow-none">
-                  <Icons.Target size={20} />
+                  <Target size={20} />
                 </div>
                 <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
                   Recommended for <span className="text-orange-500">Your Goals</span>
@@ -167,7 +169,7 @@ export default function Dashboard() {
                 to="/faq" 
                 className="text-xs font-black uppercase tracking-widest text-slate-400 hover:text-indigo-600 transition-colors flex items-center gap-2"
               >
-                Change Goals <Icons.ArrowRight size={14} />
+                Change Goals <ArrowRight size={14} />
               </Link>
             </div>
             <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -184,7 +186,6 @@ export default function Dashboard() {
           const config = CATEGORY_CONFIG[category];
           const isExpanded = expandedCategories.includes(category);
           const categoryTools = TOOLS.filter(t => t.category === category);
-          const CategoryIcon = (Icons as any)[config.icon] || Icons.Folder;
           
           return (
             <motion.section 
@@ -205,7 +206,7 @@ export default function Dashboard() {
                       ? cn(config.color, "text-white shadow-xl shadow-indigo-200 dark:shadow-indigo-900/40 scale-110 rotate-3") 
                       : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:scale-105"
                   )}>
-                    <CategoryIcon size={20} className="sm:w-7 sm:h-7" strokeWidth={2} />
+                    <Icon name={config.icon} size={20} className="sm:w-7 sm:h-7" strokeWidth={2} />
                   </div>
                   <div className="text-left">
                     <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-0.5 sm:mb-1">
@@ -234,7 +235,7 @@ export default function Dashboard() {
                     isExpanded ? "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600" : "text-slate-400 group-hover:text-indigo-500"
                   )}
                 >
-                  <Icons.ChevronDown size={20} className="sm:w-6 sm:h-6" />
+                  <ChevronDown size={20} className="sm:w-6 sm:h-6" />
                 </motion.div>
               </button>
 
@@ -264,7 +265,7 @@ export default function Dashboard() {
         <div className="lg:col-span-2 space-y-8">
           <div className="p-6 sm:p-10 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-[3rem] border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
-              <Icons.Globe size={240} />
+              <Globe size={240} />
             </div>
             <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white mb-6 tracking-tight relative z-10">
               Mastering Search in <span className="text-indigo-600">2026</span>
@@ -276,7 +277,7 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                 <div className="space-y-3">
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                    <Icons.Cpu size={18} className="text-indigo-600" />
+                    <Cpu size={18} className="text-indigo-600" />
                     AI-First Optimization
                   </h3>
                   <p className="text-sm">
@@ -285,7 +286,7 @@ export default function Dashboard() {
                 </div>
                 <div className="space-y-3">
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                    <Icons.Zap size={18} className="text-indigo-600" />
+                    <Zap size={18} className="text-indigo-600" />
                     Technical Foundations
                   </h3>
                   <p className="text-sm">
@@ -303,28 +304,28 @@ export default function Dashboard() {
             <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-6">Why Choose SEO Score?</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="flex gap-4">
-                <div className="mt-1 text-indigo-600"><Icons.CheckCircle2 size={20} /></div>
+                <div className="mt-1 text-indigo-600"><CheckCircle2 size={20} /></div>
                 <div>
                   <h4 className="font-bold text-slate-900 dark:text-white mb-1">100% Free Access</h4>
                   <p className="text-xs text-slate-500">No subscriptions, no hidden fees. Professional tools for everyone.</p>
                 </div>
               </div>
               <div className="flex gap-4">
-                <div className="mt-1 text-indigo-600"><Icons.CheckCircle2 size={20} /></div>
+                <div className="mt-1 text-indigo-600"><CheckCircle2 size={20} /></div>
                 <div>
                   <h4 className="font-bold text-slate-900 dark:text-white mb-1">Gemini 3.1 Powered</h4>
                   <p className="text-xs text-slate-500">Harness the power of Google's most advanced AI models.</p>
                 </div>
               </div>
               <div className="flex gap-4">
-                <div className="mt-1 text-indigo-600"><Icons.CheckCircle2 size={20} /></div>
+                <div className="mt-1 text-indigo-600"><CheckCircle2 size={20} /></div>
                 <div>
                   <h4 className="font-bold text-slate-900 dark:text-white mb-1">Real-Time Analysis</h4>
                   <p className="text-xs text-slate-500">Get instant feedback on your site's performance and SEO health.</p>
                 </div>
               </div>
               <div className="flex gap-4">
-                <div className="mt-1 text-indigo-600"><Icons.CheckCircle2 size={20} /></div>
+                <div className="mt-1 text-indigo-600"><CheckCircle2 size={20} /></div>
                 <div>
                   <h4 className="font-bold text-slate-900 dark:text-white mb-1">Privacy Focused</h4>
                   <p className="text-xs text-slate-500">We don't store your sensitive data or website credentials.</p>
@@ -337,20 +338,20 @@ export default function Dashboard() {
         <div className="flex flex-col gap-6">
           <div className="p-8 bg-indigo-600 text-white rounded-[2.5rem] shadow-xl relative overflow-hidden group">
             <div className="absolute -bottom-4 -right-4 p-4 opacity-20 group-hover:scale-110 transition-transform duration-500">
-              <Icons.ShieldCheck size={120} />
+              <ShieldCheck size={120} />
             </div>
             <h3 className="text-xl font-bold mb-3">Privacy First</h3>
             <p className="text-indigo-100 text-sm leading-relaxed mb-6">
               Your data is yours. We don't store your URLs or keywords. Our analysis happens in real-time, ensuring your competitive intelligence stays private.
             </p>
             <Link to="/privacy" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest hover:underline">
-              Learn More <Icons.ArrowRight size={14} />
+              Learn More <ArrowRight size={14} />
             </Link>
           </div>
 
           <div className="p-8 bg-slate-900 text-white rounded-[2.5rem] shadow-xl border border-slate-800">
             <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
-              <Icons.TrendingUp size={20} className="text-indigo-400" />
+              <TrendingUp size={20} className="text-indigo-400" />
               SEO Trends
             </h3>
             <ul className="space-y-4">

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import * as Icons from 'lucide-react';
+import { PanelLeftOpen, PanelLeftClose, ChevronDown, ChevronRight, X } from 'lucide-react';
 import { TOOLS } from '../services/gemini';
 import { CATEGORY_CONFIG } from '../constants';
 import { cn } from '../lib/utils';
+import { Icon } from './ui/Icon';
 
 interface SidebarProps {
   onClose?: () => void;
@@ -67,7 +68,7 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
         <div className="flex items-center justify-between p-6 border-b border-slate-50 dark:border-slate-800">
           <div className="flex items-center gap-3">
             <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-100 dark:shadow-none">
-              <Icons.Zap size={20} fill="currentColor" />
+              <Icon name="Zap" size={20} />
             </div>
             <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase">
               SEO Tools
@@ -75,11 +76,11 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
           </div>
           <button 
             onClick={onClose}
-            className="flex items-center gap-2 px-3 py-2 text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-all bg-slate-100 dark:bg-slate-800 rounded-xl active:scale-95 border border-slate-200 dark:border-slate-700 shadow-sm"
+            className="flex items-center gap-2 px-3 py-2 text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-all bg-slate-100 dark:bg-slate-800 rounded-xl active:scale-90 transition-all border border-slate-200 dark:border-slate-700 shadow-sm"
             aria-label="Close sidebar"
           >
             <span className="text-[10px] font-black uppercase tracking-widest">Close</span>
-            <Icons.X size={18} strokeWidth={3} />
+            <X size={18} strokeWidth={3} />
           </button>
         </div>
       )}
@@ -90,7 +91,7 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
             {(!isCollapsed) && (
               <div className="flex items-center gap-3">
                 <div className="bg-indigo-600 p-1.5 sm:p-2 rounded-lg sm:rounded-xl text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/40">
-                  <Icons.Zap size={18} className="sm:w-5 sm:h-5" fill="currentColor" />
+                  <Icon name="Zap" size={18} className="sm:w-5 sm:h-5" />
                 </div>
                 <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight uppercase tracking-[0.1em]">
                   SEO Tools
@@ -103,7 +104,7 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
               aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
               title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
             >
-              {isCollapsed ? <Icons.PanelLeftOpen size={20} /> : <Icons.PanelLeftClose size={20} />}
+              {isCollapsed ? <PanelLeftOpen size={20} /> : <PanelLeftClose size={20} />}
             </button>
           </div>
         )}
@@ -112,7 +113,6 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
           {categories.map((category) => {
             const config = CATEGORY_CONFIG[category];
             const isExpanded = expandedCategories.includes(category);
-            const CategoryIcon = (Icons as any)[config.icon] || Icons.Folder;
             const categoryTools = TOOLS.filter(t => t.category === category);
             const hasActiveTool = categoryTools.some(t => t.id === currentToolId || t.slug === currentToolId);
             
@@ -144,7 +144,7 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
                         ? "bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400"
                         : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 group-hover:bg-white dark:group-hover:bg-slate-700"
                     )}>
-                      <CategoryIcon size={16} strokeWidth={2.5} />
+                      <Icon name={config.icon} size={16} strokeWidth={2.5} />
                     </div>
                     {(!isCollapsed || isMobile) && <span className="text-sm font-bold tracking-tight">{category}</span>}
                   </div>
@@ -154,7 +154,7 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
                       transition={{ duration: 0.2 }}
                       className="text-slate-400"
                     >
-                      <Icons.ChevronDown size={14} />
+                      <ChevronDown size={14} />
                     </motion.div>
                   )}
                 </button>
@@ -174,7 +174,6 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
                       <div className="pl-6 sm:pl-8 pr-2 py-1 space-y-1">
                         {categoryTools.map((tool) => {
                           const isActive = tool.id === currentToolId || tool.slug === currentToolId;
-                          const ToolIcon = (Icons as any)[tool.icon] || Icons.Zap;
                           return (
                             <Link
                               key={tool.id}
@@ -183,7 +182,7 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
                               className={cn(
                                 "flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all group/item relative",
                                 isActive
-                                  ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40 translate-x-1"
+                                  ? "bg-indigo-600 text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/40 translate-x-1"
                                   : "text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30"
                               )}
                             >
@@ -197,10 +196,10 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
                                 "p-1 rounded-md transition-colors",
                                 isActive ? "bg-white/20 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-400 group-hover/item:bg-white dark:group-hover/item:bg-slate-700 group-hover/item:text-indigo-600"
                               )}>
-                                <ToolIcon size={12} strokeWidth={3} />
+                                <Icon name={tool.icon} size={12} strokeWidth={3} />
                               </div>
                               <span className="truncate">{tool.name}</span>
-                              {isActive && <Icons.ChevronRight size={10} className="ml-auto opacity-60" strokeWidth={4} />}
+                              {isActive && <ChevronRight size={10} className="ml-auto opacity-60" strokeWidth={4} />}
                             </Link>
                           );
                         })}
@@ -224,7 +223,7 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
           )}
           title={isCollapsed && !isMobile ? "Back to Dashboard" : undefined}
         >
-          <Icons.LayoutDashboard size={18} />
+          <Icon name="LayoutDashboard" size={18} />
           {(!isCollapsed || isMobile) && <span>Dashboard</span>}
         </Link>
         <Link
@@ -239,7 +238,7 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
           )}
           title={isCollapsed && !isMobile ? "FAQ" : undefined}
         >
-          <Icons.CircleHelp size={18} />
+          <Icon name="CircleHelp" size={18} />
           {(!isCollapsed || isMobile) && <span>FAQ</span>}
         </Link>
       </div>

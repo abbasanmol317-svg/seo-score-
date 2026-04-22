@@ -1,7 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import * as Icons from 'lucide-react';
 import { TOOLS } from './services/gemini';
 import { cn } from './lib/utils';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
@@ -10,6 +9,8 @@ import ToolSearch from './components/ToolSearch';
 import Sidebar from './components/Sidebar';
 import BackToTop from './components/BackToTop';
 import { AdSenseProvider } from './components/AdSense';
+import Onboarding from './components/Onboarding';
+import { Icon } from './components/ui/Icon';
 
 // Lazy load pages for better performance
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -24,7 +25,6 @@ const Contact = lazy(() => import('./pages/Contact'));
 const Terms = lazy(() => import('./pages/Terms'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const PowerPage = lazy(() => import('./pages/PowerPage'));
-const Onboarding = lazy(() => import('./components/Onboarding'));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-[60vh]">
@@ -42,7 +42,6 @@ function NavHeader() {
     ? location.pathname.split('/').filter(Boolean).pop() 
     : null;
   const currentTool = toolId ? TOOLS.find(t => t.id === toolId || t.slug === toolId) : null;
-  const ToolIcon = currentTool ? (Icons as any)[currentTool.icon] || Icons.Zap : Icons.Zap;
   const [isMobileSearchOpen, setIsMobileSearchOpen] = React.useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
@@ -104,12 +103,12 @@ function NavHeader() {
                   onClick={() => setIsMobileMenuOpen(true)}
                   className="lg:hidden p-2.5 sm:p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all active:scale-95 shadow-sm"
                 >
-                  <Icons.Menu size={20} className="sm:w-6 sm:h-6" />
+                  <Icon name="Menu" size={20} className="sm:w-6 sm:h-6" />
                 </button>
 
-                <Link to="/" className="flex items-center gap-2 text-indigo-600 font-bold text-lg sm:text-xl group shrink-0">
+                <Link to="/" className="flex items-center gap-2 text-indigo-600 font-bold text-lg sm:text-xl group shrink-0" id="header-logo">
                   <div className="bg-indigo-600 p-1.5 sm:p-2 rounded-lg sm:rounded-xl text-white shadow-lg shadow-indigo-100 dark:shadow-none group-hover:scale-110 group-hover:rotate-3 transition-all">
-                    <Icons.Zap size={18} className="sm:w-5 sm:h-5" fill="currentColor" />
+                    <Icon name="Zap" size={18} className="sm:w-5 sm:h-5" />
                   </div>
                   <span className="xs:inline tracking-tight font-black text-slate-900 dark:text-white leading-none">
                     SEO<span className="text-indigo-600">Score</span>
@@ -127,7 +126,7 @@ function NavHeader() {
                         : "bg-white dark:bg-slate-800 border-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-100 dark:hover:border-slate-600 hover:text-indigo-600 dark:hover:text-indigo-400"
                     )}
                   >
-                    <Icons.LayoutDashboard size={16} />
+                    <Icon name="LayoutDashboard" size={16} />
                     <span className="font-bold uppercase tracking-widest text-[10px]">Dashboard</span>
                   </Link>
                 </div>
@@ -136,7 +135,7 @@ function NavHeader() {
                   <div className="hidden md:flex items-center gap-2 text-slate-300 shrink-0">
                     <span className="text-xl font-light">/</span>
                     <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 shadow-sm">
-                      <ToolIcon size={16} />
+                      <Icon name={currentTool.icon} size={16} />
                       <span className="font-bold truncate max-w-[150px] uppercase tracking-widest text-[10px]">{currentTool.name}</span>
                     </div>
                   </div>
@@ -152,7 +151,7 @@ function NavHeader() {
                   onClick={() => setIsMobileSearchOpen(true)}
                   className="sm:hidden p-2.5 sm:p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all active:scale-95 shadow-sm"
                 >
-                  <Icons.Search size={20} />
+                  <Icon name="Search" size={20} />
                 </button>
 
                 <div className="w-px h-6 bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block" />
@@ -161,7 +160,7 @@ function NavHeader() {
                   onClick={toggleTheme}
                   className="p-2.5 sm:p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all hover:scale-110 active:scale-95 shadow-sm"
                 >
-                  {theme === 'dark' ? <Icons.Sun size={20} /> : <Icons.Moon size={20} />}
+                  {theme === 'dark' ? <Icon name="Sun" size={20} /> : <Icon name="Moon" size={20} />}
                 </button>
               </div>
             </div>
@@ -178,7 +177,7 @@ function NavHeader() {
             <div className="flex items-center justify-between gap-4 mb-6 pt-2">
               <div className="flex items-center gap-3">
                 <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg">
-                  <Icons.Search size={20} />
+                  <Icon name="Search" size={20} />
                 </div>
                 <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Search Tools</h2>
               </div>
@@ -187,7 +186,7 @@ function NavHeader() {
                 className="p-3 bg-slate-100 dark:bg-slate-800 rounded-2xl text-slate-500 dark:text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 active:scale-90 transition-all font-bold flex items-center gap-2"
               >
                 <span className="text-xs uppercase tracking-widest hidden xs:inline">Close</span>
-                <Icons.X size={20} />
+                <Icon name="X" size={20} />
               </button>
             </div>
             <div className="flex-1 overflow-y-auto">
@@ -356,9 +355,7 @@ export default function App() {
         <ThemeProvider>
           <Router>
             <GlobalMetaTags />
-            <Suspense fallback={null}>
-              <Onboarding />
-            </Suspense>
+            <Onboarding />
             <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col transition-colors duration-300">
               <NavHeader />
               <div className="flex flex-1 relative">
@@ -376,7 +373,7 @@ export default function App() {
                   <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-8">
                     <div className="flex items-center gap-2.5 text-indigo-600 font-bold text-xl">
                       <div className="bg-indigo-600 p-1.5 rounded-lg text-white shadow-lg shadow-indigo-100">
-                        <Icons.Zap size={20} fill="currentColor" />
+                        <Icon name="Zap" size={20} />
                       </div>
                       <span className="tracking-tight">SEO Score</span>
                     </div>
@@ -405,9 +402,9 @@ export default function App() {
                       </div>
                     </div>
                     <div className="flex justify-center gap-4">
-                      <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all"><Icons.Github size={20} /></a>
-                      <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all"><Icons.Twitter size={20} /></a>
-                      <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all"><Icons.Linkedin size={20} /></a>
+                      <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all"><Icon name="Github" size={20} /></a>
+                      <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all"><Icon name="Twitter" size={20} /></a>
+                      <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all"><Icon name="Linkedin" size={20} /></a>
                     </div>
                   </div>
                   <div className="pt-8 border-t border-slate-100 dark:border-slate-800 text-center">
