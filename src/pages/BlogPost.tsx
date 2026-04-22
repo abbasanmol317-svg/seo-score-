@@ -5,6 +5,7 @@ import * as Icons from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import Markdown from 'react-markdown';
 import { AdUnit } from '../components/AdSense';
+import Breadcrumbs from '../components/Breadcrumbs';
 import { BLOG_POSTS } from '../constants/blogData';
 
 export default function BlogPost() {
@@ -110,9 +111,14 @@ export default function BlogPost() {
         )}
       </AnimatePresence>
 
-      <Link to="/blog" className="inline-flex items-center gap-2 text-slate-500 hover:text-indigo-600 font-bold text-sm mb-8 transition-colors group">
-        <Icons.ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to Blog
-      </Link>
+      <Breadcrumbs 
+        className="mb-8"
+        items={[
+          { label: 'Blog', path: '/blog' },
+          { label: post.category, path: `/blog?category=${encodeURIComponent(post.category)}` },
+          { label: post.title, active: true }
+        ]} 
+      />
 
       <motion.article
         initial={{ opacity: 0, y: 20 }}

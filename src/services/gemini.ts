@@ -567,7 +567,7 @@ export const TOOLS: Tool[] = [
     (For social media)
     
     ## 🛠️ Schema Markup (JSON-LD)
-    If "Product Schema Details", "Article Schema Details", or "Local Business Schema Details" are provided in the input, generate the corresponding JSON-LD schema (Product, Article, or LocalBusiness). If no specific details are provided, generate a WebPage or Article schema based on the content.
+    If "Product Schema Details", "Article Schema Details", "Local Business Schema Details", "Organization Schema Details", or "FAQ Schema Details" are provided in the input, generate the corresponding JSON-LD schema (Product, Article, LocalBusiness, Organization, or FAQ). If no specific details are provided, generate a WebPage or Article schema based on the content.
     
     \u0060\u0060\u0060json
     {

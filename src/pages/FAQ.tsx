@@ -4,6 +4,7 @@ import * as Icons from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 interface FAQItem {
   question: string;
@@ -97,6 +98,10 @@ export default function FAQ() {
       </Helmet>
 
       <div className="max-w-4xl mx-auto px-4">
+        <Breadcrumbs 
+          className="mb-8"
+          items={[{ label: 'FAQ', active: true }]} 
+        />
         <div className="text-center mb-12 sm:mb-16">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}

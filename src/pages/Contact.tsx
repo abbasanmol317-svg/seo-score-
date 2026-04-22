@@ -1,10 +1,15 @@
 import { motion } from 'motion/react';
 import * as Icons from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 export default function Contact() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
+      <Breadcrumbs 
+        className="mb-8"
+        items={[{ label: 'Contact', active: true }]} 
+      />
       <Helmet>
         <title>Contact SEO Score | Get in Touch for Support & Inquiries</title>
         <meta name="description" content="Contact the SEO Score team for questions about our free AI SEO tools, support requests, or partnership inquiries. We're here to help." />

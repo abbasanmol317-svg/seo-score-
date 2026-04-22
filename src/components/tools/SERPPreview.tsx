@@ -15,6 +15,12 @@ interface SERPPreviewProps {
   onSiteUrlChange?: (val: string) => void;
   onModeChange?: (mode: 'desktop' | 'mobile') => void;
   showEditor?: boolean;
+  schema?: {
+    type: string;
+    product?: { rating: string; reviews: string; price: string; currency: string };
+    article?: { date: string };
+    faq?: { q: string; a: string }[];
+  };
 }
 
 export const SERPPreview: React.FC<SERPPreviewProps> = ({
@@ -28,10 +34,25 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
   onSiteNameChange,
   onSiteUrlChange,
   onModeChange,
-  showEditor = true
+  showEditor = true,
+  schema
 }) => {
   const previewTitle = title.length > 61 ? title.substring(0, 58) + '...' : title;
   const previewDescription = description.length > 161 ? description.substring(0, 158) + '...' : description;
+
+  const getTitleColor = (len: number) => {
+    if (len === 0) return "bg-slate-100 text-slate-500 dark:bg-slate-800";
+    if (len > 60) return "bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400";
+    if (len < 30) return "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400";
+    return "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400";
+  };
+
+  const getDescColor = (len: number) => {
+    if (len === 0) return "bg-slate-100 text-slate-500 dark:bg-slate-800";
+    if (len > 160) return "bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400";
+    if (len < 120) return "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400";
+    return "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400";
+  };
 
   return (
     <div className="space-y-8">
@@ -42,10 +63,8 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
               <div className="flex items-center justify-between ml-1">
                 <label className="text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Page Title</label>
                 <span className={cn(
-                  "text-[10px] font-bold px-2 py-0.5 rounded-full",
-                  title.length > 61 || title.length < 30 
-                    ? "bg-amber-100/50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400" 
-                    : "bg-emerald-100/50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
+                  "text-[10px] font-bold px-2 py-0.5 rounded-full transition-colors",
+                  getTitleColor(title.length)
                 )}>
                   {title.length} / 60 Chars
                 </span>
@@ -67,10 +86,8 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
               <div className="flex items-center justify-between ml-1">
                 <label className="text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Meta Description</label>
                 <span className={cn(
-                  "text-[10px] font-bold px-2 py-0.5 rounded-full",
-                  description.length > 161 || description.length < 120 
-                    ? "bg-amber-100/50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400" 
-                    : "bg-emerald-100/50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
+                  "text-[10px] font-bold px-2 py-0.5 rounded-full transition-colors",
+                  getDescColor(description.length)
                 )}>
                   {description.length} / 160 Chars
                 </span>
@@ -205,11 +222,41 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
             </div>
 
             <button className={cn(
-              "text-[#1a0dab] dark:text-[#8ab4f8] hover:underline text-left cursor-pointer mb-2 leading-tight font-medium line-clamp-2 font-sans",
+              "text-[#1a0dab] dark:text-[#8ab4f8] hover:underline text-left cursor-pointer mb-1 leading-tight font-medium line-clamp-2 font-sans",
               mode === 'mobile' ? "text-xl" : "text-[20px]"
             )}>
               {previewTitle || 'Optimized Page Title Will Appear Here'}
             </button>
+
+            {schema?.type === 'product' && schema.product && (
+              <div className="flex items-center gap-1 text-[12px] text-[#70757a] dark:text-[#bdc1c6] mb-1">
+                <div className="flex items-center gap-0.5 text-amber-500">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Icons.Star 
+                      key={i} 
+                      size={12} 
+                      fill={i < Math.floor(parseFloat(schema.product!.rating)) ? "currentColor" : "none"} 
+                      className={i < Math.floor(parseFloat(schema.product!.rating)) ? "" : "opacity-30"}
+                    />
+                  ))}
+                </div>
+                <span>Rating: {schema.product.rating}/5</span>
+                <span>•</span>
+                <span>{schema.product.reviews} reviews</span>
+                <span>•</span>
+                <span className="font-bold text-slate-900 dark:text-white">
+                  {schema.product.currency === 'USD' ? '$' : schema.product.currency === 'EUR' ? '€' : schema.product.currency === 'GBP' ? '£' : ''}
+                  {schema.product.price}
+                </span>
+                <span className="px-1 py-0.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[9px] font-bold rounded">In Stock</span>
+              </div>
+            )}
+
+            {schema?.type === 'article' && schema.article && (
+              <div className="text-[12px] text-[#70757a] dark:text-[#bdc1c6] mb-1">
+                <span>{schema.article.date}</span>
+              </div>
+            )}
 
             <div className={cn(
               "text-[#4d5156] dark:text-[#bdc1c6] leading-relaxed line-clamp-2 opacity-90 font-sans",
@@ -217,6 +264,17 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
             )}>
               {previewDescription || 'Your meta description will appear here. It should be between 150-160 characters for optimal visibility in search results.'}
             </div>
+
+            {schema?.type === 'faq' && schema.faq && schema.faq.length > 0 && (
+              <div className="mt-2 space-y-1 border-t border-slate-100 dark:border-slate-800 pt-2">
+                {schema.faq.slice(0, 2).map((item, i) => (
+                  <div key={i} className="flex items-center justify-between py-1 group/faq cursor-pointer">
+                    <span className="text-[13px] text-[#1a0dab] dark:text-[#8ab4f8] hover:underline truncate pr-4">{item.q || 'Sample Question?'}</span>
+                    <Icons.ChevronDown size={14} className="text-slate-400 shrink-0" />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

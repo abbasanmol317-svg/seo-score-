@@ -50,6 +50,18 @@ function NavHeader() {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
+  // Lock body scroll when mobile menu is open
+  React.useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
+
   React.useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
@@ -70,7 +82,7 @@ function NavHeader() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] lg:hidden"
+              className="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-[60] lg:hidden"
             />
             <motion.div
               initial={{ x: '-100%' }}
@@ -273,8 +285,8 @@ function GlobalMetaTags() {
   const location = useLocation();
   const siteUrl = window.location.origin || 'https://seoscore.site'; // Dynamic base URL
   const canonicalUrl = `${siteUrl}${location.pathname === '/' ? '' : location.pathname}`;
-  const title = "SEO Score – Free SEO Tools for Website Audit, Keywords & Ranking";
-  const description = "Use SEO Score to access free SEO tools for website audit, keyword research, backlinks, site speed, and more. Analyze, optimize, and boost your rankings easily.";
+  const title = "Best Free SEO Score Checker Tools for 2026";
+  const description = "Get a professional AI SEO audit in 30 seconds. Access 20+ free SEO checker tools for keyword research, technical fixes, and site speed with no signup required. Analyze your site now!";
   const ogImage = `${siteUrl}/og-image.png`;
 
   const jsonLd = [
@@ -306,6 +318,7 @@ function GlobalMetaTags() {
   return (
     <Helmet>
       <link rel="canonical" href={canonicalUrl} />
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       
       {/* Open Graph / Facebook */}
       <meta property="og:type" content="website" />
@@ -335,9 +348,10 @@ export default function App() {
       <HelmetProvider>
         <AdSenseProvider publisherId="ca-pub-6719705037005199" />
         <Helmet>
-          <title>SEO Score – Free SEO Tools for Website Audit, Keywords & Ranking</title>
-          <meta name="description" content="Use SEO Score to access free SEO tools for website audit, keyword research, backlinks, site speed, and more. Analyze, optimize, and boost your rankings easily." />
+          <title>Best Free SEO Score Checker Tools for 2026</title>
+          <meta name="description" content="Get a professional AI SEO audit in 30 seconds. Access 20+ free SEO checker tools for keyword research, technical fixes, and site speed with no signup required. Analyze your site now!" />
           <meta name="google-adsense-account" content="ca-pub-6719705037005199" />
+          <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         </Helmet>
         <ThemeProvider>
           <Router>

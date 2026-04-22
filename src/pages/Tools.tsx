@@ -5,6 +5,7 @@ import * as Icons from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { TOOLS } from '../services/gemini';
 
+import Breadcrumbs from '../components/Breadcrumbs';
 import { ToolCard } from '../components/ToolCard';
 
 export default function Tools() {
@@ -12,6 +13,12 @@ export default function Tools() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
+      <Breadcrumbs 
+        className="mb-8 pl-1"
+        items={[
+          { label: 'Tools', active: true }
+        ]} 
+      />
       <Helmet>
         <title>Free AI SEO Tools Directory: 20+ Professional Tools (No Signup)</title>
         <meta name="description" content="Access 20+ professional AI SEO tools in one directory. From technical audits to keyword research, find the right tool to grow your traffic now." />

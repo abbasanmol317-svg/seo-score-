@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState } from 'react';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import * as Icons from 'lucide-react';
 import { ToolComponentProps } from './ToolComponentProps';
@@ -10,8 +10,7 @@ import { ToolPlaceholder } from './ToolPlaceholder';
 import { cn } from '../../lib/utils';
 import { runTool } from '../../services/gemini';
 import { SERPPreview } from './SERPPreview';
-
-const ToolResult = lazy(() => import('./ToolResult').then(m => ({ default: m.ToolResult })));
+import { ToolResult } from './ToolResult';
 
 export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
   const {
@@ -103,7 +102,7 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
 
   // Schema Markup State
   const [showSchemaFields, setShowSchemaFields] = React.useState(false);
-  const [schemaType, setSchemaType] = React.useState<'product' | 'article' | 'local_business'>('product');
+  const [schemaType, setSchemaType] = React.useState<'product' | 'article' | 'local_business' | 'organization' | 'faq'>('product');
 
   // Product Schema Fields
   const [productName, setProductName] = React.useState('');
@@ -123,6 +122,13 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
   const [businessPhone, setBusinessPhone] = React.useState('');
   const [businessOpeningHours, setBusinessOpeningHours] = React.useState('Mo-Fr 09:00-17:00');
 
+  // Organization Schema Fields
+  const [orgName, setOrgName] = React.useState('');
+  const [orgLogo, setOrgLogo] = React.useState('');
+
+  // FAQ Schema Fields
+  const [faqQuestions, setFaqQuestions] = React.useState<{ q: string, a: string }[]>([{ q: '', a: '' }]);
+
   // Bulk Mode State
   const [isBulkMode, setIsBulkMode] = useState(false);
   const [bulkInput, setBulkInput] = useState('');
@@ -136,15 +142,29 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
       handleRunBulk();
       return;
     }
+    
     let finalInput = input;
+    
+    // Add Brand Context if provided and not default
+    const brandContext = [];
+    if (siteName && siteName !== 'SEO Score') brandContext.push(`Site Name: ${siteName}`);
+    if (siteUrl && siteUrl !== 'https://seoscore.site' && !input.includes(siteUrl)) brandContext.push(`Site URL: ${siteUrl}`);
+    
+    if (brandContext.length > 0) {
+      finalInput = `Target Page: ${input}\n\nBrand Context:\n${brandContext.join('\n')}`;
+    }
     
     if (showSchemaFields) {
       if (schemaType === 'product' && productName) {
-        finalInput = `${input}\n\nProduct Schema Details:\n- Name: ${productName}\n- Price: ${productPrice} ${productCurrency}\n- Rating: ${productRating}/5\n- Reviews: ${productReviews}`;
+        finalInput = `${finalInput}\n\nProduct Schema Details:\n- Name: ${productName}\n- Price: ${productPrice} ${productCurrency}\n- Rating: ${productRating}/5\n- Reviews: ${productReviews}`;
       } else if (schemaType === 'article') {
-        finalInput = `${input}\n\nArticle Schema Details:\n- Author: ${articleAuthor}\n- Published Date: ${articleDate}\n- Image URL: ${articleImage}`;
+        finalInput = `${finalInput}\n\nArticle Schema Details:\n- Author: ${articleAuthor}\n- Published Date: ${articleDate}\n- Image URL: ${articleImage}`;
       } else if (schemaType === 'local_business' && businessName) {
-        finalInput = `${input}\n\nLocal Business Schema Details:\n- Name: ${businessName}\n- Address: ${businessAddress}\n- Phone: ${businessPhone}\n- Hours: ${businessOpeningHours}`;
+        finalInput = `${finalInput}\n\nLocal Business Schema Details:\n- Name: ${businessName}\n- Address: ${businessAddress}\n- Phone: ${businessPhone}\n- Hours: ${businessOpeningHours}`;
+      } else if (schemaType === 'organization' && orgName) {
+        finalInput = `${finalInput}\n\nOrganization Schema Details:\n- Name: ${orgName}\n- Logo URL: ${orgLogo}`;
+      } else if (schemaType === 'faq' && faqQuestions[0].q) {
+        finalInput = `${finalInput}\n\nFAQ Schema Details:\n${faqQuestions.map(f => `- Q: ${f.q}\n  A: ${f.a}`).join('\n')}`;
       }
     }
     
@@ -255,13 +275,13 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
     : description;
 
   // Sync initial AI results to editable state
-  React.useEffect(() => {
+  useEffect(() => {
     setEditableTitle(currentTitle);
     setEditableDescription(currentDescription);
   }, [currentTitle, currentDescription]);
 
   // Sync site URL from input
-  React.useEffect(() => {
+  useEffect(() => {
     if (input && !isBulkMode) {
       try {
         const urlStr = input.trim();
@@ -274,6 +294,27 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
       }
     }
   }, [input, isBulkMode]);
+
+  // Handle AdSense - Push only once when ready
+  useEffect(() => {
+    try {
+      if (typeof window !== 'undefined' && (window as any).adsbygoogle) {
+        // Only push if there are empty slots
+        const ads = document.querySelectorAll('ins.adsbygoogle:not([data-adsbygoogle-status="done"])');
+        if (ads.length > 0) {
+          ads.forEach(() => {
+            try {
+              ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+            } catch (e) {
+              console.error('AdSense push error:', e);
+            }
+          });
+        }
+      }
+    } catch (err) {
+      console.error('AdSense initialization error:', err);
+    }
+  }, [result]); // Re-try on new results as layout changes
 
   return (
     <ToolLayout
@@ -360,26 +401,71 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                 handleClear={handleClear}
                 loading={loading}
               />
+
+              <div className="max-w-4xl mx-auto space-y-4">
+                <div className="flex items-center justify-between px-2">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-lg">
+                      <Icons.Globe size={14} />
+                    </div>
+                    <h4 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-widest">Brand Identity</h4>
+                  </div>
+                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Affects Preview & AI Context</span>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2 p-4 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm group/site">
+                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2 group-focus-within/site:text-indigo-500 transition-colors">
+                      <Icons.Building2 size={12} />
+                      Site Name
+                    </label>
+                    <input 
+                      type="text"
+                      value={siteName}
+                      onChange={(e) => setSiteName(e.target.value)}
+                      placeholder="e.g. My Awesome Site"
+                      className="w-full bg-slate-50/50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-2xl py-3 px-4 text-sm focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 transition-all dark:text-slate-200 font-bold"
+                    />
+                  </div>
+                  <div className="space-y-2 p-4 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm group/url">
+                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2 group-focus-within/url:text-indigo-500 transition-colors">
+                      <Icons.Link size={12} />
+                      Slug / Display URL
+                    </label>
+                    <input 
+                      type="text"
+                      value={siteUrl}
+                      onChange={(e) => setSiteUrl(e.target.value)}
+                      placeholder="e.g. awesome.site/page"
+                      className="w-full bg-slate-50/50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-2xl py-3 px-4 text-sm focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 transition-all dark:text-slate-200 font-mono text-[11px]"
+                    />
+                  </div>
+                </div>
+              </div>
               
-              <div className="bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 sm:p-6">
+              <div className="bg-white dark:bg-slate-900 rounded-[2rem] border-2 border-amber-100 dark:border-amber-900/30 p-1 shadow-xl shadow-amber-500/5 relative overflow-hidden group/schema-box">
+                <div className="absolute top-0 right-0 p-4 opacity-[0.03] pointer-events-none group-hover/schema-box:scale-110 transition-transform duration-700">
+                  <Icons.Code2 size={120} />
+                </div>
+                
                 <button 
                   onClick={() => setShowSchemaFields(!showSchemaFields)}
-                  className="flex items-center justify-between w-full group"
+                  className="flex items-center justify-between w-full p-5 sm:p-7 group/btn relative z-10"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-lg">
-                      <Icons.Code2 size={18} />
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-amber-600 rounded-2xl text-white shadow-lg shadow-amber-200 dark:shadow-none group-hover/btn:scale-110 transition-all">
+                      <Icons.PlusSquare size={24} />
                     </div>
                     <div className="text-left">
-                      <h4 className="text-sm font-bold text-slate-900 dark:text-white">Additional Schema Markup</h4>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-black">Optional • Boost Rich Snippets</p>
+                      <h4 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">Rich Result Schema Generator</h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-0.5">Select type & boost search visibility</p>
                     </div>
                   </div>
                   <div className={cn(
-                    "p-1.5 rounded-lg transition-all",
-                    showSchemaFields ? "bg-amber-600 text-white" : "bg-slate-200 dark:bg-slate-700 text-slate-500"
+                    "p-2 rounded-xl transition-all",
+                    showSchemaFields ? "bg-amber-600 text-white rotate-180" : "bg-slate-100 dark:bg-slate-800 text-slate-500"
                   )}>
-                    {showSchemaFields ? <Icons.ChevronUp size={16} /> : <Icons.ChevronDown size={16} />}
+                    <Icons.ChevronDown size={20} />
                   </div>
                 </button>
 
@@ -387,32 +473,47 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                   <motion.div 
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
-                    className="pt-6 space-y-6"
+                    className="px-6 pb-8 space-y-8 relative z-10"
                   >
-                    <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
-                      {[
-                        { id: 'product', label: 'Product', icon: Icons.Package },
-                        { id: 'article', label: 'Article', icon: Icons.FileText },
-                        { id: 'local_business', label: 'Local Business', icon: Icons.MapPin }
-                      ].map((type) => (
-                        <button
-                          key={type.id}
-                          onClick={() => setSchemaType(type.id as any)}
-                          className={cn(
-                            "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all",
-                            schemaType === type.id 
-                              ? "bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400 shadow-sm" 
-                              : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
-                          )}
-                        >
-                          <type.icon size={14} />
-                          {type.label}
-                        </button>
-                      ))}
+                    <div className="h-px bg-slate-100 dark:bg-slate-800 w-full mb-2" />
+                    
+                    <div className="space-y-4">
+                      <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] ml-1">1. Select Schema Type</label>
+                      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 p-1 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                        {[
+                          { id: 'product', label: 'Product', icon: Icons.Package, color: 'text-rose-500 bg-rose-50 dark:bg-rose-900/20' },
+                          { id: 'article', label: 'Article', icon: Icons.FileText, color: 'text-blue-500 bg-blue-50 dark:bg-blue-900/20' },
+                          { id: 'local_business', label: 'Local Business', icon: Icons.MapPin, color: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' },
+                          { id: 'organization', label: 'Organization', icon: Icons.Building2, color: 'text-indigo-500 bg-indigo-50 dark:bg-indigo-900/20' },
+                          { id: 'faq', label: 'FAQ', icon: Icons.HelpCircle, color: 'text-amber-500 bg-amber-50 dark:bg-amber-900/20' }
+                        ].map((type) => (
+                          <button
+                            key={type.id}
+                            onClick={() => setSchemaType(type.id as any)}
+                            className={cn(
+                              "flex flex-col items-center justify-center gap-2 py-4 px-2 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all",
+                              schemaType === type.id 
+                                ? "bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400 shadow-xl shadow-amber-500/10 ring-2 ring-amber-500/20" 
+                                : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-white/50 dark:hover:bg-slate-800"
+                            )}
+                          >
+                            <div className={cn(
+                              "p-2 rounded-lg transition-colors",
+                              schemaType === type.id ? type.color : "bg-slate-100 dark:bg-slate-800"
+                            )}>
+                              <type.icon size={18} />
+                            </div>
+                            {type.label}
+                          </button>
+                        ))}
+                      </div>
                     </div>
 
-                    {schemaType === 'product' && (
-                      <div className="space-y-4">
+                    <div className="space-y-4">
+                      <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] ml-1">2. Provide Schema Details</label>
+                      <div className="bg-slate-50 dark:bg-slate-800/20 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800/50 shadow-inner">
+                        {schemaType === 'product' && (
+                          <div className="space-y-6">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div className="space-y-1.5">
                             <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Product Name</label>
@@ -559,7 +660,86 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                         </div>
                       </div>
                     )}
-                  </motion.div>
+                    {schemaType === 'organization' && (
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Organization Name</label>
+                            <input 
+                              type="text"
+                              value={orgName}
+                              onChange={(e) => setOrgName(e.target.value)}
+                              placeholder="e.g. Acme Corp"
+                              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
+                            />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Logo URL</label>
+                            <input 
+                              type="url"
+                              value={orgLogo}
+                              onChange={(e) => setOrgLogo(e.target.value)}
+                              placeholder="https://example.com/logo.png"
+                              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all dark:text-slate-200"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {schemaType === 'faq' && (
+                      <div className="space-y-4">
+                        {faqQuestions.map((faq, idx) => (
+                          <div key={idx} className="p-4 bg-slate-100 dark:bg-slate-800 rounded-2xl space-y-3 relative">
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Question {idx + 1}</label>
+                              <input 
+                                type="text"
+                                value={faq.q}
+                                onChange={(e) => {
+                                  const newFaqs = [...faqQuestions];
+                                  newFaqs[idx].q = e.target.value;
+                                  setFaqQuestions(newFaqs);
+                                }}
+                                placeholder="What is your return policy?"
+                                className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm font-bold"
+                              />
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Answer {idx + 1}</label>
+                              <textarea 
+                                value={faq.a}
+                                onChange={(e) => {
+                                  const newFaqs = [...faqQuestions];
+                                  newFaqs[idx].a = e.target.value;
+                                  setFaqQuestions(newFaqs);
+                                }}
+                                placeholder="We offer a 30-day return policy..."
+                                className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 px-4 text-sm min-h-[80px]"
+                              />
+                            </div>
+                            {faqQuestions.length > 1 && (
+                              <button 
+                                onClick={() => setFaqQuestions(faqQuestions.filter((_, i) => i !== idx))}
+                                className="absolute top-2 right-2 p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-all"
+                              >
+                                <Icons.X size={14} />
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                        <button 
+                          onClick={() => setFaqQuestions([...faqQuestions, { q: '', a: '' }])}
+                          className="w-full py-3 border-2 border-dashed border-amber-200 dark:border-amber-800 rounded-2xl text-amber-600 dark:text-amber-400 text-xs font-black uppercase tracking-widest hover:bg-amber-50 dark:hover:bg-amber-900/10 transition-all flex items-center justify-center gap-2"
+                        >
+                          <Icons.Plus size={14} />
+                          Add Question
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
                 )}
               </div>
             </div>
@@ -686,23 +866,21 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
 
           {!isBulkMode && (
             <>
-              <Suspense fallback={<div className="h-96 animate-pulse bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800" />}>
-                <ToolResult
-                  tool={tool}
-                  result={result}
-                  reportRef={reportRef}
-                  handlePrint={handlePrint}
-                  handleDownloadPDF={handleDownloadPDF}
-                  handleCopy={handleCopy}
-                  handleClear={handleClear}
-                  handleShare={handleShare}
-                  isDownloading={isDownloading}
-                  isGeneratingPDF={isGeneratingPDF}
-                  copied={copied}
-                  showShareMenu={showShareMenu}
-                  setShowShareMenu={setShowShareMenu}
-                />
-              </Suspense>
+              <ToolResult
+                tool={tool}
+                result={result}
+                reportRef={reportRef}
+                handlePrint={handlePrint}
+                handleDownloadPDF={handleDownloadPDF}
+                handleCopy={handleCopy}
+                handleClear={handleClear}
+                handleShare={handleShare}
+                isDownloading={isDownloading}
+                isGeneratingPDF={isGeneratingPDF}
+                copied={copied}
+                showShareMenu={showShareMenu}
+                setShowShareMenu={setShowShareMenu}
+              />
               
               {result && (title || description || codeSnippet) && (
                 <motion.div
@@ -750,6 +928,12 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                       onSiteUrlChange={setSiteUrl}
                       onModeChange={setPreviewMode}
                       showEditor={true}
+                      schema={showSchemaFields ? {
+                        type: schemaType,
+                        product: schemaType === 'product' ? { rating: productRating, reviews: productReviews, price: productPrice, currency: productCurrency } : undefined,
+                        article: schemaType === 'article' ? { date: articleDate } : undefined,
+                        faq: schemaType === 'faq' ? faqQuestions : undefined
+                      } : undefined}
                     />
                   </div>
 
@@ -943,12 +1127,18 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                     <div className="flex items-center gap-3">
                       <div className={cn(
                         "h-2 w-32 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800",
-                        editableTitle.length > 60 || editableTitle.length < 30 ? "bg-amber-100 dark:bg-amber-900/30" : "bg-emerald-100 dark:bg-emerald-900/30"
+                        editableTitle.length === 0 ? "bg-slate-100 dark:bg-slate-800" :
+                        editableTitle.length > 60 ? "bg-rose-100 dark:bg-rose-900/30" : 
+                        editableTitle.length < 30 ? "bg-amber-100 dark:bg-amber-900/30" : 
+                        "bg-emerald-100 dark:bg-emerald-900/30"
                       )}>
                         <div 
                           className={cn(
                             "h-full transition-all duration-500",
-                            editableTitle.length > 60 || editableTitle.length < 30 ? "bg-amber-500" : "bg-emerald-500"
+                            editableTitle.length === 0 ? "bg-slate-400" :
+                            editableTitle.length > 60 ? "bg-rose-500" : 
+                            editableTitle.length < 30 ? "bg-amber-500" : 
+                            "bg-emerald-500"
                           )}
                           style={{ width: `${Math.min(100, (editableTitle.length / 60) * 100)}%` }}
                         />
@@ -957,7 +1147,10 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                         <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Title Length</span>
                         <span className={cn(
                           "text-xs font-bold",
-                          editableTitle.length > 60 || editableTitle.length < 30 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
+                          editableTitle.length === 0 ? "text-slate-400" :
+                          editableTitle.length > 60 ? "text-rose-600 dark:text-rose-400" : 
+                          editableTitle.length < 30 ? "text-amber-600 dark:text-amber-400" : 
+                          "text-emerald-600 dark:text-emerald-400"
                         )}>
                           {editableTitle.length}/60 chars
                         </span>
@@ -967,12 +1160,18 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                     <div className="flex items-center gap-3">
                       <div className={cn(
                         "h-2 w-32 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800",
-                        editableDescription.length > 160 || editableDescription.length < 120 ? "bg-amber-100 dark:bg-amber-900/30" : "bg-emerald-100 dark:bg-emerald-900/30"
+                        editableDescription.length === 0 ? "bg-slate-100 dark:bg-slate-800" :
+                        editableDescription.length > 160 ? "bg-rose-100 dark:bg-rose-900/30" : 
+                        editableDescription.length < 120 ? "bg-amber-100 dark:bg-amber-900/30" : 
+                        "bg-emerald-100 dark:bg-emerald-900/30"
                       )}>
                         <div 
                           className={cn(
                             "h-full transition-all duration-500",
-                            editableDescription.length > 160 || editableDescription.length < 120 ? "bg-amber-500" : "bg-emerald-500"
+                            editableDescription.length === 0 ? "bg-slate-400" :
+                            editableDescription.length > 160 ? "bg-rose-500" : 
+                            editableDescription.length < 120 ? "bg-amber-500" : 
+                            "bg-emerald-500"
                           )}
                           style={{ width: `${Math.min(100, (editableDescription.length / 160) * 100)}%` }}
                         />
@@ -981,7 +1180,10 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                         <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Description Length</span>
                         <span className={cn(
                           "text-xs font-bold",
-                          editableDescription.length > 160 || editableDescription.length < 120 ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
+                          editableDescription.length === 0 ? "text-slate-400" :
+                          editableDescription.length > 160 ? "text-rose-600 dark:text-rose-400" : 
+                          editableDescription.length < 120 ? "text-amber-600 dark:text-amber-400" : 
+                          "text-emerald-600 dark:text-emerald-400"
                         )}>
                           {editableDescription.length}/160 chars
                         </span>

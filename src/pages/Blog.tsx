@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import * as Icons from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 import { BLOG_POSTS } from '../constants/blogData';
 
@@ -20,7 +21,11 @@ export default function Blog() {
   }, [selectedCategory]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
+    <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12 sm:px-6 lg:px-8">
+      <Breadcrumbs 
+        className="mb-8"
+        items={[{ label: 'Blog', active: true }]} 
+      />
       <Helmet>
         <title>AI SEO Blog: Latest Search Optimization Trends & Strategies (2026)</title>
         <meta name="description" content="Master search optimization with our AI SEO blog. Get expert tips on Gemini AI, technical audits, and content strategy. Read the latest insights now!" />

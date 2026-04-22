@@ -75,10 +75,11 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
           </div>
           <button 
             onClick={onClose}
-            className="p-3 text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 transition-all bg-slate-50 dark:bg-slate-800 rounded-xl active:scale-95"
+            className="flex items-center gap-2 px-3 py-2 text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-all bg-slate-100 dark:bg-slate-800 rounded-xl active:scale-95 border border-slate-200 dark:border-slate-700 shadow-sm"
             aria-label="Close sidebar"
           >
-            <Icons.X size={24} />
+            <span className="text-[10px] font-black uppercase tracking-widest">Close</span>
+            <Icons.X size={18} strokeWidth={3} />
           </button>
         </div>
       )}

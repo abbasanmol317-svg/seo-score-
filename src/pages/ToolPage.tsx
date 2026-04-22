@@ -10,6 +10,7 @@ import { getToolComponent } from '../components/tools/toolRegistry';
 import { getDeepContent } from '../constants/toolContent';
 
 import { getErrorMessage } from '../lib/seo-utils';
+import Breadcrumbs from '../components/Breadcrumbs';
 import { BLOG_POSTS } from '../constants/blogData';
 
 export default function ToolPage({ idOverride }: { idOverride?: string }) {
@@ -567,14 +568,15 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
 
       <div className="px-4 py-6 sm:py-12 flex flex-col gap-6 sm:gap-8 max-w-5xl mx-auto lg:mx-0 lg:pl-8 xl:pl-12">
         <div className="flex-grow">
-          <div className="flex flex-col gap-1.5 sm:gap-2 mb-6 sm:mb-8">
-            <nav className={cn("flex flex-wrap items-center gap-1.25 sm:gap-2 text-[9px] sm:text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest", isGeneratingPDF && "hidden")}>
-              <Link to="/" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Dashboard</Link>
-              <Icons.ChevronRight size={8} className="sm:w-[10px] sm:h-[10px]" />
-              <span className="text-slate-300 dark:text-slate-700 truncate max-w-[60px] sm:max-w-none">{tool.category}</span>
-              <Icons.ChevronRight size={8} className="sm:w-[10px] sm:h-[10px]" />
-              <span className="text-indigo-600 dark:text-indigo-400 truncate max-w-[80px] sm:max-w-none">{tool.name}</span>
-            </nav>
+          <div className="flex flex-col gap-1.5 sm:gap-4 mb-6 sm:mb-10">
+            <Breadcrumbs 
+              className={cn(isGeneratingPDF && "hidden")}
+              items={[
+                { label: 'Tools', path: '/tools' },
+                { label: tool.category, path: `/tools?category=${encodeURIComponent(tool.category)}` },
+                { label: tool.name, active: true }
+              ]} 
+            />
             <div className={cn("flex items-center gap-3 sm:gap-4", isGeneratingPDF && "hidden")}>
               <Link to="/" className="p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-600 dark:text-slate-400 shrink-0">
                 <Icons.ChevronLeft size={18} className="sm:w-6 sm:h-6" />

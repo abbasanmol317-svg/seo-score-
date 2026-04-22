@@ -3,12 +3,17 @@ import { motion } from 'motion/react';
 import * as Icons from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { TOOLS } from '../services/gemini';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 export default function About() {
   const topTools = TOOLS.slice(0, 4);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
+      <Breadcrumbs 
+        className="mb-8"
+        items={[{ label: 'About', active: true }]} 
+      />
       <Helmet>
         <title>About SEO Score | Why We Built the Best Free AI SEO Platform</title>
         <meta name="description" content="Learn how SEO Score is democratizing search intelligence with Gemini AI. Discover our mission and start using professional tools for free." />
