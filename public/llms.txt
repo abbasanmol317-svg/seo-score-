@@ -1,0 +1,23 @@
+# SEO Score
+> A professional suite of AI-powered SEO tools for technical audits, keyword research, and content optimization.
+
+## Summary
+SEO Score provides more than 20 free search optimization tools driven by Google Gemini AI. The platform helps webmasters, marketers, and developers improve their search rankings through data-driven analysis and technical precision.
+
+## Core Tools
+- [Website SEO Audit](https://seoscore.site/tools/free-website-seo-audit-tool)
+- [Keyword Research](https://seoscore.site/tools/free-keyword-research-tool)
+- [On-Page SEO Optimizer](https://seoscore.site/tools/free-on-page-seo-optimizer)
+- [Backlink Checker](https://seoscore.site/tools/free-backlink-checker-tool)
+- [Site Speed Test](https://seoscore.site/tools/free-website-speed-test-tool)
+- [AI Content Generator](https://seoscore.site/tools/free-ai-content-generator-tool)
+
+## Resources
+- [Latest SEO Blog Insights](https://seoscore.site/blog)
+- [Frequently Asked Questions](https://seoscore.site/faq)
+
+## Technical Architecture
+- Framework: React 18+ with Vite
+- Styling: Tailwind CSS
+- AI: Google Gemini 3.1 (Pro/Flash)
+- Accessibility: Mobile-first responsive design

@@ -34,59 +34,72 @@ export default function Terms() {
         <section className="mb-10">
           <h2 className="text-xl font-bold mb-4">1. Acceptance of Terms</h2>
           <p>
-            By accessing and using SEO Score (the "Website"), you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this site.
+            By accessing and using SEO Score (the "Website"), you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this site. These terms apply to all visitors, users, and others who access or use the Service.
+          </p>
+          <p className="mt-4">
+            We reserve the right to modify these terms at any time. We will notify you of any changes by posting the new Terms of Service on this page. Your continued use of the Website after any such changes constitutes your acceptance of the new Terms of Service.
           </p>
         </section>
 
         <section className="mb-10">
-          <h2 className="text-xl font-bold mb-4">2. Use License</h2>
+          <h2 className="text-xl font-bold mb-4">2. Use License and AI Services</h2>
           <p>
-            Permission is granted to temporarily use the tools and information on SEO Score for personal, non-commercial transitory viewing and analysis only. This is the grant of a license, not a transfer of title, and under this license you may not:
+            Permission is granted to temporarily use the tools and information on SEO Score for personal, non-commercial transitory viewing and analysis only. This is the grant of a license, not a transfer of title.
           </p>
-          <ul className="list-disc pl-6 space-y-2 mt-4">
-            <li>Modify or copy the materials;</li>
-            <li>Use the materials for any commercial purpose, or for any public display (commercial or non-commercial) without explicit permission;</li>
+          <p className="mt-4">
+            Our tools are powered by third-party AI providers (Google Gemini). By using our tools, you also agree to comply with the acceptable use policies of these AI providers. You must not use our AI-powered tools to generate harmful, illegal, or unethical content.
+          </p>
+          <ul className="list-disc pl-6 space-y-2 mt-4 text-sm">
+            <li>Modify or copy the materials for commercial gain without attribution;</li>
+            <li>Use the materials for any automated data scraping or large-scale extraction;</li>
             <li>Attempt to decompile or reverse engineer any software contained on SEO Score;</li>
             <li>Remove any copyright or other proprietary notations from the materials;</li>
-            <li>Transfer the materials to another person or "mirror" the materials on any other server.</li>
+            <li>Use the service in any manner that could disable, overburden, or impair the site.</li>
           </ul>
         </section>
 
         <section className="mb-10">
-          <h2 className="text-xl font-bold mb-4">3. Disclaimer</h2>
+          <h2 className="text-xl font-bold mb-4">3. Disclaimer of Warranties</h2>
           <p>
-            The tools and materials on SEO Score are provided on an 'as is' basis. SEO Score makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
+            The tools and materials on SEO Score are provided on an 'as is' basis. SEO Score makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property.
           </p>
           <p className="mt-4">
-            Further, SEO Score does not warrant or make any representations concerning the accuracy, likely results, or reliability of the use of the materials on its website or otherwise relating to such materials or on any sites linked to this site.
+            SEO signals and search engine algorithms are constantly changing. The recommendations provided by our AI are based on probabilistic interpretations and do not guarantee specific indexing or ranking results. Your use of these insights is at your own risk.
           </p>
         </section>
 
         <section className="mb-10">
-          <h2 className="text-xl font-bold mb-4">4. Limitations</h2>
+          <h2 className="text-xl font-bold mb-4">4. Limitation of Liability</h2>
           <p>
             In no event shall SEO Score or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on SEO Score, even if SEO Score or an authorized representative has been notified orally or in writing of the possibility of such damage.
           </p>
         </section>
 
         <section className="mb-10">
-          <h2 className="text-xl font-bold mb-4">5. Accuracy of Materials</h2>
+          <h2 className="text-xl font-bold mb-4">5. Intellectual Property</h2>
           <p>
-            The materials appearing on SEO Score could include technical, typographical, or photographic errors. SEO Score does not warrant that any of the materials on its website are accurate, complete or current. SEO Score may make changes to the materials contained on its website at any time without notice.
+            The Website and its original content, features, and functionality are and will remain the exclusive property of SEO Score and its licensors. The Website is protected by copyright, trademark, and other laws of both the country and foreign countries. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent.
           </p>
         </section>
 
         <section className="mb-10">
-          <h2 className="text-xl font-bold mb-4">6. Links</h2>
+          <h2 className="text-xl font-bold mb-4">6. Links and External Content</h2>
           <p>
-            SEO Score has not reviewed all of the websites linked to its website and is not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by SEO Score of the site. Use of any such linked website is at the user's own risk.
+            SEO Score has not reviewed all of the websites linked to its website and is not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by SEO Score of the site. Use of any such linked website is at the user's own risk. We strongly advise you to read the terms and conditions and privacy policies of any third-party websites or services that you visit.
           </p>
         </section>
 
         <section className="mb-10">
-          <h2 className="text-xl font-bold mb-4">7. Governing Law</h2>
+          <h2 className="text-xl font-bold mb-4">7. Termination</h2>
           <p>
-            These terms and conditions are governed by and construed in accordance with the laws of your jurisdiction and you irrevocably submit to the exclusive jurisdiction of the courts in that State or location.
+            We may terminate or suspend access to our Service immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms. All provisions of the Terms which by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity and limitations of liability.
+          </p>
+        </section>
+
+        <section className="mb-10">
+          <h2 className="text-xl font-bold mb-4">8. Governing Law</h2>
+          <p>
+            These terms and conditions are governed by and construed in accordance with the laws of your jurisdiction and you irrevocably submit to the exclusive jurisdiction of the courts in that State or location. Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights.
           </p>
         </section>
 

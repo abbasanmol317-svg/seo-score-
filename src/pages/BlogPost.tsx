@@ -16,7 +16,7 @@ export default function BlogPost() {
   if (!post) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-        <h1 className="text-2xl font-bold mb-4">Post Not Found</h1>
+        <h2 className="text-2xl font-bold mb-4">Post Not Found</h2>
         <Link to="/blog" className="text-indigo-600 font-bold hover:underline">Back to Blog</Link>
       </div>
     );

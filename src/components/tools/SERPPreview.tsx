@@ -56,11 +56,35 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
     return "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400";
   };
 
-  // Simple CTR Impact analysis based on length and keywords
-  const titleScore = Math.min(100, Math.max(0, title.length > 30 && title.length < 60 ? 100 : 50));
-  const descScore = Math.min(100, Math.max(0, description.length > 120 && description.length < 160 ? 100 : 50));
-  const hasPowerWords = /(best|free|top|202[0-9]|get|now|instant|tutorial|guide)/i.test(title + description);
-  const totalCtrScore = Math.round((titleScore + descScore + (hasPowerWords ? 20 : 0)) / 2.2);
+  // Calculate CTR Impact Score based on analysis and content
+  const getCtrCalculations = () => {
+    let score = 40;
+    const powerWordsList = [/best/i, /free/i, /guide/i, /top/i, /2026/i, /how to/i, /why/i, /secret/i, /proven/i, /ultimate/i];
+    let foundPowerWords = false;
+
+    if (title.length >= 50 && title.length <= 60) score += 20;
+    if (description.length >= 120 && description.length <= 160) score += 20;
+    
+    powerWordsList.forEach(pw => {
+      if (pw.test(title + description)) {
+        score += 5;
+        foundPowerWords = true;
+      }
+    });
+
+    if (ctrAnalysis) score += 10;
+    return { score: Math.min(100, score), hasPowerWords: foundPowerWords };
+  };
+
+  const { score: ctrScore, hasPowerWords } = getCtrCalculations();
+
+  // Extract structured insights from ctrAnalysis
+  const triggers = ctrAnalysis?.match(/Trigger:\s*(.*)/i)?.[1] || 
+                  ctrAnalysis?.match(/Emotional Triggers?:\s*(.*)/i)?.[1];
+  const funnelStage = ctrAnalysis?.match(/Funnel Stage:\s*(.*)/i)?.[1];
+  const predictedImpact = ctrAnalysis?.match(/Predicted CTR Impact:\s*(.*)/i)?.[1];
+
+  const [showHeatmap, setShowHeatmap] = React.useState(false);
 
   return (
     <div className="space-y-8">
@@ -71,8 +95,8 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
               <div className="flex items-center justify-between ml-1">
                 <label className="text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Page Title</label>
                 <div className="flex items-center gap-2">
-                  {title.length > 50 && (
-                    <span className="text-[9px] font-black uppercase text-indigo-500 bg-indigo-50 dark:bg-indigo-900/20 px-1.5 py-0.5 rounded animate-pulse">High CTR Potential</span>
+                  {title.length > 50 && title.length <= 60 && (
+                    <span className="text-[9px] font-black uppercase text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 px-1.5 py-0.5 rounded animate-pulse">Perfect Length</span>
                   )}
                   <span className={cn(
                     "text-[10px] font-bold px-2 py-0.5 rounded-full transition-colors",
@@ -118,27 +142,116 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
                 />
               </div>
             </div>
+            
+            <div className="p-5 bg-indigo-500/5 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-900/30 rounded-2xl">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Icons.Zap size={14} className="text-indigo-500" />
+                  <span className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">SERP Visualizer</span>
+                </div>
+                <button
+                  onClick={() => setShowHeatmap(!showHeatmap)}
+                  className={cn(
+                    "px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
+                    showHeatmap 
+                      ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-none" 
+                      : "bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-100 dark:border-slate-700"
+                  )}
+                >
+                  <Icons.Flame size={12} />
+                  {showHeatmap ? "Heatmap On" : "Show Heatmap"}
+                </button>
+              </div>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                Our heatmap simulation uses F-shaped eye-tracking patterns to predict where users focus their attention most in SERPs.
+              </p>
+            </div>
           </div>
 
           <div className="space-y-6 pt-4">
-            <div className="flex items-center justify-between">
-              <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
-                <Icons.Globe size={12} className="text-indigo-500" />
-                Brand & URL Settings
-              </h4>
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">CTR Strength</span>
-                <div className="w-16 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: `${totalCtrScore}%` }}
-                    className={cn(
-                      "h-full rounded-full transition-all duration-1000",
-                      totalCtrScore > 80 ? "bg-emerald-500" : totalCtrScore > 50 ? "bg-amber-500" : "bg-rose-500"
-                    )}
-                  />
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] p-6 shadow-sm relative overflow-hidden group/card">
+              <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover/card:opacity-[0.08] transition-opacity">
+                <Icons.BarChart3 size={100} />
+              </div>
+              
+              <div className="flex items-center justify-between mb-6 relative z-10">
+                <div>
+                  <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-1">CTR Impact Score</h4>
+                  <div className="flex items-baseline gap-1">
+                    <span className={cn(
+                      "text-4xl font-black tracking-tight",
+                      ctrScore > 80 ? "text-emerald-600" : ctrScore > 60 ? "text-amber-600" : "text-rose-600"
+                    )}>
+                      {ctrScore}%
+                    </span>
+                    <span className="text-xs font-bold text-slate-400 uppercase">Predicted</span>
+                  </div>
+                </div>
+                <div className={cn(
+                  "p-4 rounded-2xl bg-white dark:bg-slate-800 shadow-md border transition-all duration-500",
+                  ctrScore > 80 ? "border-emerald-100 dark:border-emerald-900/30 text-emerald-500" : 
+                  ctrScore > 60 ? "border-amber-100 dark:border-amber-900/30 text-amber-500" : 
+                  "border-rose-100 dark:border-rose-900/30 text-rose-500"
+                )}>
+                  {ctrScore > 80 ? <Icons.Trophy size={28} /> : ctrScore > 60 ? <Icons.TrendingUp size={28} /> : <Icons.AlertCircle size={28} />}
                 </div>
               </div>
+
+              <div className="space-y-4 relative z-10">
+                <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${ctrScore}%` }}
+                    className={cn(
+                      "h-full transition-all duration-1000 relative",
+                      ctrScore > 80 ? "bg-emerald-500" : ctrScore > 60 ? "bg-amber-500" : "bg-rose-500"
+                    )}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+                  </motion.div>
+                </div>
+                
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-1">Trigger</span>
+                    <div className="bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700">
+                      <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 truncate block">
+                        {triggers || 'Authenticity'}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-1">Funnel</span>
+                    <div className="bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700">
+                      <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 truncate block">
+                        {funnelStage || 'Awareness'}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-1">Impact</span>
+                    <div className="bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700">
+                      <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 truncate block">
+                        {predictedImpact || 'High'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {ctrAnalysis && (
+                <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 relative z-10">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Icons.Sparkles size={14} className="text-indigo-500" />
+                    <span className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest tracking-tighter">AI Success Factors</span>
+                  </div>
+                  <div className="space-y-4">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                      {ctrAnalysis.split('\n').find(l => l.length > 40 && !l.includes('##'))?.replace(/^[-*]\s*|^\d\.\s*/, '') || "Optimizing your tags for search visibility and click-through intent..."}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
             
             <div className="grid sm:grid-cols-2 gap-4">
@@ -207,24 +320,45 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
       <div className="space-y-6">
         <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
           <Icons.Eye size={12} className="text-indigo-500" />
-          Live Result
+          Live Result Preview
         </h4>
         
         <div className={cn(
-          "bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-2xl relative overflow-hidden transition-all duration-700 flex flex-col justify-center",
+          "bg-white dark:bg-slate-950 transition-all duration-700 relative overflow-hidden flex flex-col justify-center",
           mode === 'mobile' 
-            ? "max-w-[380px] mx-auto ring-[1px] ring-slate-200 dark:ring-slate-800 p-4 pt-12 pb-16" 
-            : "w-full p-8 sm:p-10 min-h-[180px]"
+            ? "max-w-[400px] mx-auto border-[12px] border-slate-900 dark:border-slate-800 rounded-[3.5rem] p-6 pt-12 pb-16 shadow-2xl min-h-[600px]" 
+            : "w-full p-8 sm:p-12 min-h-[220px] rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-2xl"
         )}>
-          {mode === 'mobile' && (
-            <div className="absolute top-0 left-0 right-0 h-8 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center justify-center gap-3">
-              <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
-              <div className="w-12 h-1 rounded-full bg-slate-300" />
+          {/* Heatmap Overlay */}
+          {showHeatmap && (
+            <div className="absolute inset-0 z-30 pointer-events-none overflow-hidden mix-blend-multiply dark:mix-blend-screen opacity-60">
+              <div className="absolute top-[15%] left-[5%] w-32 h-32 bg-rose-500 rounded-full blur-[40px] animate-pulse" />
+              <div className="absolute top-[20%] left-[20%] w-24 h-24 bg-orange-400 rounded-full blur-[30px]" />
+              <div className="absolute top-[35%] left-[10%] w-40 h-16 bg-amber-400 rounded-full blur-[35px]" />
+              <div className="absolute top-[50%] left-[5%] w-20 h-20 bg-yellow-300 rounded-full blur-[25px]" />
             </div>
           )}
 
-          <div className="absolute top-0 right-0 p-6 opacity-[0.05] pointer-events-none">
-            {mode === 'desktop' ? <Icons.Monitor size={140} /> : <Icons.Smartphone size={100} />}
+          {mode === 'mobile' && (
+            <>
+              {/* Phone Status Bar */}
+              <div className="absolute top-0 left-0 right-0 h-6 flex items-center justify-between px-8 text-slate-400 font-bold text-[10px] pt-2">
+                <span>9:41</span>
+                <div className="flex items-center gap-1.5">
+                  <Icons.Signal size={10} />
+                  <Icons.Wifi size={10} />
+                  <Icons.Battery size={14} />
+                </div>
+              </div>
+              {/* Speaker Grille */}
+              <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1 bg-slate-800 dark:bg-slate-700 rounded-full" />
+              {/* Bottom Home Indicator */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-slate-800 dark:bg-slate-700 rounded-full" />
+            </>
+          )}
+
+          <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none group-hover/serp:scale-110 transition-transform duration-1000">
+            {mode === 'desktop' ? <Icons.Search size={180} /> : <Icons.Smartphone size={150} />}
           </div>
 
           <div className="relative z-10 font-sans group/serp">
@@ -234,30 +368,33 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
               mode === 'mobile' ? "flex-col items-start gap-1" : "flex-row"
             )}>
               {mode === 'mobile' ? (
-                <div className="flex items-center gap-2 mb-1">
-                  <div className="w-6 h-6 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400 shrink-0 overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700">
+                <div className="flex items-center gap-3 mb-2 w-full">
+                  <div className="w-8 h-8 bg-white dark:bg-slate-900 rounded-lg flex items-center justify-center text-slate-400 shrink-0 overflow-hidden shadow-md border border-slate-100 dark:border-slate-800">
                     {siteUrl ? (
                       <img 
                         src={`https://www.google.com/s2/favicons?sz=64&domain=${siteUrl.includes('://') ? siteUrl : `https://${siteUrl}`}`} 
                         alt="" 
-                        className="w-full h-full object-contain p-1"
+                        className="w-full h-full object-contain p-1.5"
                         referrerPolicy="no-referrer"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>';
                         }}
                       />
                     ) : (
-                      <Icons.Globe size={12} />
+                      <Icons.Globe size={16} />
                     )}
                   </div>
-                  <div className="flex flex-col">
-                    <span className="text-[12px] font-normal text-slate-900 dark:text-slate-200 truncate">{siteName || 'Enter Site Name'}</span>
-                    <span className="text-[11px] text-slate-500 dark:text-slate-400 truncate opacity-80">{siteUrl || 'example.com'}</span>
+                  <div className="flex flex-col flex-grow min-w-0">
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-[14px] font-medium text-slate-900 dark:text-slate-200 truncate">{siteName || 'Enter Site Name'}</span>
+                      <Icons.MoreVertical size={14} className="text-slate-400" />
+                    </div>
+                    <span className="text-[12px] text-slate-500 dark:text-slate-400 truncate opacity-80">{siteUrl || 'example.com'}</span>
                   </div>
                 </div>
               ) : (
                 <>
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400 shrink-0 overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700 transition-transform group-hover/serp:scale-110">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center text-slate-400 shrink-0 overflow-hidden shadow-md border border-slate-100 dark:border-slate-800 transition-transform group-hover/serp:scale-110">
                     {siteUrl ? (
                       <img 
                         src={`https://www.google.com/s2/favicons?sz=64&domain=${siteUrl.includes('://') ? siteUrl : `https://${siteUrl}`}`} 
@@ -286,14 +423,14 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
             </div>
 
             <button className={cn(
-              "text-[#1a0dab] dark:text-[#8ab4f8] hover:underline text-left cursor-pointer mb-1 leading-tight font-medium line-clamp-2 font-sans",
-              mode === 'mobile' ? "text-xl font-normal" : "text-[20px]"
+              "text-[#1a0dab] dark:text-[#8ab4f8] hover:underline text-left cursor-pointer mb-2 leading-tight font-sans",
+              mode === 'mobile' ? "text-[22px] font-normal" : "text-[20px] font-medium"
             )}>
               {previewTitle || 'Optimized Page Title Will Appear Here'}
             </button>
 
             {schema?.type === 'product' && schema.product && (
-              <div className="flex items-center gap-1 text-[12px] text-[#70757a] dark:text-[#bdc1c6] mb-1">
+              <div className="flex items-center gap-1.5 text-[13px] text-[#70757a] dark:text-[#bdc1c6] mb-2 bg-slate-50 dark:bg-slate-800/50 w-fit px-2 py-0.5 rounded-lg border border-slate-100 dark:border-slate-800">
                 <div className="flex items-center gap-0.5 text-amber-500">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Icons.Star 
@@ -304,61 +441,69 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
                     />
                   ))}
                 </div>
-                <span>Rating: {schema.product.rating}/5</span>
-                <span>•</span>
-                <span>{schema.product.reviews} reviews</span>
-                <span>•</span>
+                <span className="font-bold">{schema.product.rating}</span>
+                <span className="opacity-50">({schema.product.reviews})</span>
+                <span className="opacity-20">|</span>
                 <span className="font-bold text-slate-900 dark:text-white">
                   {schema.product.currency === 'USD' ? '$' : schema.product.currency === 'EUR' ? '€' : schema.product.currency === 'GBP' ? '£' : ''}
                   {schema.product.price}
                 </span>
-                <span className="px-1 py-0.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[9px] font-bold rounded">In Stock</span>
+                <span className="opacity-20">|</span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-0.5">
+                  <Icons.Check size={12} />
+                  In Stock
+                </span>
               </div>
             )}
 
             {schema?.type === 'article' && schema.article && (
-              <div className="text-[12px] text-[#70757a] dark:text-[#bdc1c6] mb-1">
+              <div className="text-[13px] text-[#70757a] dark:text-[#bdc1c6] mb-2 flex items-center gap-2">
+                <Icons.Calendar size={12} />
                 <span>{schema.article.date}</span>
               </div>
             )}
 
             <div className={cn(
               "text-[#4d5156] dark:text-[#bdc1c6] leading-relaxed opacity-90 font-sans",
-              mode === 'mobile' ? "text-sm line-clamp-3" : "text-sm line-clamp-2"
+              mode === 'mobile' ? "text-[15px] line-clamp-4" : "text-sm line-clamp-2"
             )}>
               {previewDescription || 'Your meta description will appear here. It should be between 150-160 characters for optimal visibility in search results.'}
             </div>
 
             {schema?.type === 'faq' && schema.faq && schema.faq.length > 0 && (
-              <div className="mt-2 space-y-1 border-t border-slate-100 dark:border-slate-800 pt-2">
+              <div className="mt-3 space-y-1 border-t border-slate-100 dark:border-slate-800 pt-3">
                 {schema.faq.slice(0, 2).map((item, i) => (
-                  <div key={i} className="flex items-center justify-between py-1 group/faq cursor-pointer">
-                    <span className="text-[13px] text-[#1a0dab] dark:text-[#8ab4f8] hover:underline truncate pr-4">{item.q || 'Sample Question?'}</span>
-                    <Icons.ChevronDown size={14} className="text-slate-400 shrink-0" />
+                  <div key={i} className="flex items-center justify-between py-2 group/faq cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 -mx-2 px-2 rounded-lg transition-colors">
+                    <span className="text-[14px] text-[#1a0dab] dark:text-[#8ab4f8] hover:underline truncate pr-4 font-sans">{item.q || 'Sample Question?'}</span>
+                    <Icons.ChevronDown size={14} className="text-slate-400 shrink-0 group-hover/faq:text-indigo-500 transition-colors" />
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          {/* High-Impact Highlights / Tooltips */}
-          <div className="mt-4 flex flex-wrap gap-2">
+          {/* Impact Highlights from CTR Analysis */}
+          <div className="mt-6 flex flex-wrap gap-2 relative z-20">
+            {ctrScore > 75 && (
+              <motion.div 
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="p-1.5 px-3 bg-indigo-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-indigo-200 dark:shadow-none"
+              >
+                <Icons.ArrowBigUpDash size={14} />
+                High Impact Content
+              </motion.div>
+            )}
             {hasPowerWords && (
-              <div className="p-1 px-2 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800 rounded text-[9px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                <Icons.Sparkles size={10} />
-                Power Words Detected
+              <div className="p-1 px-2.5 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                <Icons.Sparkles size={12} />
+                CTR Triggers Found
               </div>
             )}
             {title.length >= 50 && title.length <= 60 && (
-              <div className="p-1 px-2 bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 rounded text-[9px] font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1">
-                <Icons.CheckCircle2 size={10} />
-                Optimal Title Length
-              </div>
-            )}
-            {description.length >= 120 && description.length <= 160 && (
-              <div className="p-1 px-2 bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 rounded text-[9px] font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-1">
-                <Icons.CheckCircle2 size={10} />
-                Optimal Description Length
+              <div className="p-1 px-2.5 bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 flex items-center gap-1.5">
+                <Icons.CheckCircle2 size={12} />
+                Title Optimized
               </div>
             )}
           </div>

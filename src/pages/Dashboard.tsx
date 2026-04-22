@@ -90,13 +90,11 @@ export default function Dashboard() {
         >
           <Icon name="Sparkles" size={32} className="w-8 h-8 sm:w-10 sm:h-10" />
         </motion.div>
-        <motion.h1 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+        <h1 
           className="text-2xl font-black tracking-tight text-slate-900 dark:text-white sm:text-4xl md:text-5xl lg:text-6xl mb-4 leading-[1.1]"
         >
           SEO Score – Free SEO Tools for Website Audit, Keywords & Ranking
-        </motion.h1>
+        </h1>
         <motion.p 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -381,6 +379,59 @@ export default function Dashboard() {
               <li className="flex gap-3 items-start">
                 <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0" />
                 <p className="text-xs text-slate-400"><span className="text-white font-bold">Local Intent:</span> 46% of all searches have local intent.</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-24 pt-16 border-t border-slate-200 dark:border-slate-800">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div>
+            <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-8 tracking-tight">
+              Comprehensive SEO Analysis <span className="text-indigo-600">FAQ</span>
+            </h2>
+            <div className="space-y-6">
+              <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">How accurate is the SEO Score analysis?</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400">Our platform leverages the latest Google Gemini AI models to perform semantic and technical analysis. It evaluates your site against modern ranking factors, including Core Web Vitals, E-E-A-T signals, and mobile-first indexing standards to provide professional-grade insights.</p>
+              </div>
+              <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Which SEO tools are most important for beginners?</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400">We recommend starting with the **Free Website SEO Audit Tool** to get an overview. Next, use the **Keyword Research Tool** to plan your content and the **On-Page SEO Checklist** to ensure your individual pages are perfectly optimized for your target terms.</p>
+              </div>
+              <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Do I need to pay for any of these search optimization tools?</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400">No. Every tool on SEO Score is 100% free with no signup required. We believe in providing the community with the best AI-powered resources to help democratize search transparency and website excellence for everyone.</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-indigo-50 dark:bg-indigo-900/10 rounded-[3rem] p-10 sm:p-14 border border-indigo-100 dark:border-indigo-800">
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-6">Expert SEO Guidelines for 2026</h3>
+            <p className="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
+              Success in search today requires a holistic approach. It’s no longer enough to just have keywords; you need a technically sound website that provides value and follows several key principles:
+            </p>
+            <ul className="space-y-4">
+              <li className="flex gap-4">
+                <div className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px] font-black shrink-0 mt-1">1</div>
+                <div>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-1">Mobile Performance</h4>
+                  <p className="text-xs text-slate-500">Ensure your site passes all Core Web Vitals checks on mobile devices, where over 60% of search traffic originates.</p>
+                </div>
+              </li>
+              <li className="flex gap-4">
+                <div className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px] font-black shrink-0 mt-1">2</div>
+                <div>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-1">Topic Authority</h4>
+                  <p className="text-xs text-slate-500">Don't just write posts; build clusters of related content to show search engines you are an expert in your niche.</p>
+                </div>
+              </li>
+              <li className="flex gap-4">
+                <div className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px] font-black shrink-0 mt-1">3</div>
+                <div>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-1">Technical Hygiene</h4>
+                  <p className="text-xs text-slate-500">Regularly scan for broken links, duplicate meta tags, and missing alt text to maintain a clean crawl path for search bots.</p>
+                </div>
               </li>
             </ul>
           </div>
