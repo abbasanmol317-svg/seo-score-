@@ -114,7 +114,7 @@ export default function Dashboard() {
         >
           <div className="absolute inset-0 bg-indigo-500/10 blur-3xl rounded-full" />
           <img 
-            src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=60&w=1200&ixlib=rb-4.0.3" 
+            src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200&fm=webp" 
             alt="AI-Powered SEO Dashboard Analytics Visualization" 
             className="relative z-10 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full object-cover h-[200px] sm:h-[400px]"
             referrerPolicy="no-referrer"

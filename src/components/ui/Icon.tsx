@@ -74,7 +74,27 @@ import {
   ArrowDown,
   ArrowUp,
   CornerDownLeft,
-  Command
+  Command,
+  ArrowLeftRight,
+  ScanSearch,
+  CirclePlay,
+  Gauge,
+  Network,
+  Link2Off,
+  ClipboardCheck,
+  TabletSmartphone,
+  KeyRound,
+  FileSearch,
+  Tag,
+  ScrollText,
+  MonitorPlay,
+  CodeXml,
+  ImageDown,
+  FileSymlink,
+  GitCompare,
+  MessageCircleMore,
+  LayoutGrid,
+  ArrowLeftRight as CompareIcon
 } from 'lucide-react';
 
 const icons = {
@@ -152,7 +172,27 @@ const icons = {
   ArrowDown,
   ArrowUp,
   CornerDownLeft,
-  Command
+  Command,
+  ArrowLeftRight,
+  ScanSearch,
+  CirclePlay,
+  Gauge,
+  Network,
+  Link2Off,
+  LinkOff: Link2Off,
+  ClipboardCheck,
+  TabletSmartphone,
+  KeyRound,
+  FileSearch,
+  Tag,
+  ScrollText,
+  MonitorPlay,
+  CodeXml,
+  ImageDown,
+  FileSymlink,
+  GitCompare,
+  MessageCircleMore,
+  LayoutGrid
 };
 
 export type IconName = keyof typeof icons;

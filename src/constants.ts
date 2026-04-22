@@ -1,6 +1,6 @@
-import * as Icons from 'lucide-react';
+import { IconName } from './components/ui/Icon';
 
-export const CATEGORY_CONFIG: Record<string, { icon: keyof typeof Icons; description: string; color: string; accent: string }> = {
+export const CATEGORY_CONFIG: Record<string, { icon: IconName; description: string; color: string; accent: string }> = {
   'SEO Analysis': { 
     icon: 'Search', 
     description: 'Deep technical and structural analysis for any website or platform.',
