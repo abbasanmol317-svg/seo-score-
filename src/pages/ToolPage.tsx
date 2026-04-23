@@ -12,6 +12,7 @@ import { getErrorMessage } from '../lib/seo-utils';
 import Breadcrumbs from '../components/Breadcrumbs';
 import { BLOG_POSTS } from '../constants/blogData';
 import { Icon } from '../components/ui/Icon';
+import LeadCaptureModal from '../components/LeadCaptureModal';
 
 export default function ToolPage({ idOverride }: { idOverride?: string }) {
   const { id: paramId } = useParams<{ id: string }>();
@@ -30,6 +31,8 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
   const reportRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
+  const [hasScannedOnce, setHasScannedOnce] = useState(false);
 
   const tool = useMemo(() => {
     if (!id) return undefined;
@@ -69,7 +72,10 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
   const [currentTip, setCurrentTip] = useState('');
 
   const SEO_TIPS = [
-    "Google uses over 200 ranking factors in their algorithm.",
+    "260+ Point AI Scan: We analyze semantic density often missed by traditional tools.",
+    "GEO Readiness: Optimizing for AI search engines like Gemini and Perplexity is critical in 2026.",
+    "AEO Strategy: Answer Engine Optimization ensures your site wins in Voice Search.",
+    "Google uses over 200 ranking factors in their algorithm; we scan 260+ for safety.",
     "Page speed is a direct ranking factor for both desktop and mobile.",
     "High-quality content is the #1 most important SEO factor.",
     "Backlinks remain one of the strongest signals for search authority.",
@@ -113,20 +119,20 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
       
       const getMessages = () => {
         const baseMessages = [
-          'Analyzing your data...',
-          'Checking SEO patterns...',
-          'Consulting AI experts...',
-          'Generating recommendations...',
-          'Finalizing your report...',
-          'Almost there, refining results...'
+          'Initialising 260-point scan...',
+          'Analyzing semantic AI patterns...',
+          'Evaluating GEO citation potential...',
+          'Checking AEO compatibility...',
+          'Mapping Knowledge Graph connections...',
+          'Finalizing Search Intelligence report...'
         ];
 
         const toolSpecific: Record<string, string[]> = {
           'website-seo': [
-            'Scanning domain authority...',
-            'Analyzing on-page elements...',
-            'Checking meta tag consistency...',
-            'Evaluating content depth...'
+            'Running advanced intelligence audit...',
+            'Evaluating AI search readiness...',
+            'Deep scanning 260+ semantic nodes...',
+            'Assessing AEO direct-answer signals...'
           ],
           'youtube-seo': [
             'Analyzing video metadata...',
@@ -254,6 +260,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
     setFeedbackRating(null);
     setFeedbackText('');
     setIsFeedbackSubmitted(false);
+    setHasScannedOnce(true);
     try {
       const output = await runTool(tool.id as ToolId, finalInput);
       setResult(output || 'No response from AI.');
@@ -502,6 +509,11 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
       "description": tool.description,
       "applicationCategory": "SEO Tool",
       "operatingSystem": "Web",
+      "publisher": {
+        "@type": "Organization",
+        "name": "SEO Score",
+        "url": "https://seoscore.site"
+      },
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -512,6 +524,18 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
         "ratingValue": "4.9",
         "ratingCount": "1250"
       }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": deepContent.faqs.map(faq => ({
+        "@type": "Question",
+        "name": faq.q,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.a
+        }
+      }))
     },
     {
       "@context": "https://schema.org",
@@ -566,6 +590,14 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
       </AnimatePresence>
 
       <div className="px-4 py-6 sm:py-12 flex flex-col gap-6 sm:gap-8 max-w-5xl mx-auto lg:mx-0 lg:pl-8 xl:pl-12">
+        <LeadCaptureModal 
+          isOpen={isLeadModalOpen} 
+          onClose={() => setIsLeadModalOpen(false)} 
+          onSuccess={(email) => {
+            console.log(`Lead captured: ${email}`);
+            handleDownloadPDF();
+          }} 
+        />
         <div className="flex-grow">
           <div className="flex flex-col gap-1.5 sm:gap-4 mb-6 sm:mb-10">
             <Breadcrumbs 
@@ -602,7 +634,7 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
               handleClear={handleClear}
               handleCopy={handleCopy}
               handlePrint={handlePrint}
-              handleDownloadPDF={handleDownloadPDF}
+              handleDownloadPDF={() => setIsLeadModalOpen(true)}
               isDownloading={isDownloading}
               isGeneratingPDF={isGeneratingPDF}
               copied={copied}
@@ -730,9 +762,15 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
                     Our AI-driven tools are updated weekly to reflect the latest changes in Google's search algorithms. Start your journey to the first page today.
                   </p>
                   <div className="flex flex-wrap gap-4">
-                    {relatedPosts.slice(0, 2).map(post => (
-                      <Link key={post.id} to={`/blog/${post.id}`} className="px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl text-sm font-bold transition-all flex items-center gap-2">
-                        <Icon name="BookOpen" size={16} /> {post.title}
+                    <button 
+                      onClick={() => setIsLeadModalOpen(true)}
+                      className="px-8 py-4 bg-indigo-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-indigo-700 transition-all flex items-center gap-2 shadow-xl shadow-indigo-500/20 active:scale-95"
+                    >
+                      <Icon name="Mail" size={16} /> Get Full Analysis by Email
+                    </button>
+                    {relatedPosts.slice(0, 1).map(post => (
+                      <Link key={post.id} to={`/blog/${post.id}`} className="px-6 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl text-[10px] uppercase font-black tracking-widest transition-all flex items-center gap-2">
+                        <Icon name="BookOpen" size={16} /> Latest Strategy
                       </Link>
                     ))}
                   </div>

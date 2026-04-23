@@ -227,6 +227,21 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
           {(!isCollapsed || isMobile) && <span>Dashboard</span>}
         </Link>
         <Link
+          to="/guides"
+          onClick={onClose}
+          className={cn(
+            "flex items-center gap-3 p-3 rounded-xl transition-all font-bold text-sm mb-2",
+            isCollapsed && !isMobile && "justify-center",
+            location.pathname.startsWith('/guides')
+              ? "bg-indigo-600 text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/40"
+              : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-indigo-600 dark:hover:text-indigo-400"
+          )}
+          title={isCollapsed && !isMobile ? "Learning Academy" : undefined}
+        >
+          <Icon name="GraduationCap" size={18} />
+          {(!isCollapsed || isMobile) && <span>Academy</span>}
+        </Link>
+        <Link
           to="/faq"
           onClick={onClose}
           className={cn(

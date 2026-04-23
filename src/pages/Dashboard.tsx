@@ -1,7 +1,7 @@
 import React, { useState, lazy, Suspense } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, History, Target, ArrowRight, ChevronDown, Globe, Cpu, Zap, CheckCircle2, ShieldCheck, TrendingUp } from 'lucide-react';
+import { Sparkles, History, Target, ArrowRight, ChevronDown, Globe, Cpu, Zap, CheckCircle2, ShieldCheck, TrendingUp, Search } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { Tool, TOOLS } from '../services/gemini';
 import { cn } from '../lib/utils';
@@ -9,6 +9,7 @@ import { ToolCard } from '../components/ToolCard';
 import { CATEGORY_CONFIG } from '../constants';
 import { AdUnit } from '../components/AdSense';
 import { Icon } from '../components/ui/Icon';
+import NewsletterSection from '../components/NewsletterSection';
 
 // Lazy load heavy chart components
 const SEOPerformanceChart = lazy(() => import('../components/charts/SEOPerformanceChart').then(m => ({ default: m.SEOPerformanceChart })));
@@ -25,6 +26,8 @@ const ChartPlaceholder = () => (
 );
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+  const [quickAuditUrl, setQuickAuditUrl] = useState('');
   const categories = Object.keys(CATEGORY_CONFIG).filter(cat => 
     TOOLS.some(t => t.category === cat)
   );
@@ -78,9 +81,36 @@ export default function Dashboard() {
     <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12 sm:px-6 lg:px-8">
       <Helmet>
         <title>SEO Score – Free SEO Tools for Website Audit, Keywords & Ranking</title>
-        <meta name="description" content="Use SEO Score to access free SEO tools for website audit, keyword research, backlinks, site speed, and more. Analyze, optimize, and boost your rankings easily." />
+        <meta name="description" content="Master search in 2026 with a free 260-point AI audit. Optimize for Google, Gemini & Answer Engines. Get your expert search roadmap—no signup required. Scan now!" />
         <meta name="keywords" content="free SEO tools, AI SEO analysis, Google Gemini SEO, keyword research tool, technical SEO audit, backlink checker, content optimizer, SEO suite 2026" />
         <link rel="canonical" href="https://seoscore.site/" />
+        <script type="application/ld+json">
+          {JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "SEO Score",
+              "url": "https://seoscore.site/",
+              "logo": "https://seoscore.site/logo.png",
+              "description": "Professional AI-powered SEO intelligence platform providing free technical audits, keyword research, and content optimization tools.",
+              "sameAs": [
+                "https://twitter.com/seoscore",
+                "https://linkedin.com/company/seoscore"
+              ]
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "SEO Score",
+              "url": "https://seoscore.site/",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://seoscore.site/tools?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
+            }
+          ])}
+        </script>
       </Helmet>
       <header className="text-center mb-10 sm:mb-16">
         <motion.div
@@ -93,7 +123,7 @@ export default function Dashboard() {
         <h1 
           className="text-2xl font-black tracking-tight text-slate-900 dark:text-white sm:text-4xl md:text-5xl lg:text-6xl mb-4 leading-[1.1]"
         >
-          SEO Score – Free SEO Tools for Website Audit, Keywords & Ranking
+          Uncover Every Ranking Factor with our <br /><span className="text-indigo-600">260+ Point Intelligence Scan</span>
         </h1>
         <motion.p 
           initial={{ opacity: 0, y: 10 }}
@@ -101,8 +131,51 @@ export default function Dashboard() {
           transition={{ delay: 0.1 }}
           className="mt-3 max-w-md mx-auto text-sm sm:text-lg text-slate-600 dark:text-slate-400 md:mt-5 md:text-xl md:max-w-3xl px-2 sm:px-4 leading-relaxed font-medium"
         >
-          Use **SEO Score** to access free SEO tools for website audit, keyword research, backlinks, site speed, and more. Analyze, optimize, and boost your rankings easily with {TOOLS.length} professional-grade AI tools.
+          The first free platform to offer **GEO (AI Search)** and **AEO (Answer Engine)** readiness scores. Our multi-agent AI performs a technical deep scan of 260+ signals to give you an industrial-grade search roadmap.
         </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mt-12 max-w-2xl mx-auto px-4"
+        >
+          <form 
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (quickAuditUrl) {
+                navigate(`/tools/free-website-seo-audit-tool?url=${encodeURIComponent(quickAuditUrl)}`);
+              }
+            }}
+            className="group relative"
+          >
+            <div className="absolute -inset-1 bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+            <div className="relative flex flex-col sm:flex-row gap-3 p-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl">
+              <div className="flex-grow flex items-center px-4 gap-3 border border-transparent focus-within:border-indigo-500/30 rounded-xl transition-all">
+                <Search size={20} className="text-slate-400" />
+                <input 
+                  type="url"
+                  placeholder="Enter your website URL for a free 260-point scan..."
+                  value={quickAuditUrl}
+                  onChange={(e) => setQuickAuditUrl(e.target.value)}
+                  className="w-full py-4 text-sm font-bold bg-transparent focus:outline-none dark:text-white"
+                  required
+                />
+              </div>
+              <button 
+                type="submit"
+                className="px-8 py-4 bg-indigo-600 text-white font-black uppercase tracking-widest text-[10px] rounded-xl hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-200 dark:shadow-none active:scale-95"
+              >
+                Scan Now <ArrowRight size={14} />
+              </button>
+            </div>
+            <div className="mt-4 flex flex-wrap justify-center gap-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+              <span className="flex items-center gap-1.5"><CheckCircle2 size={12} className="text-emerald-500" /> No Credit Card</span>
+              <span className="flex items-center gap-1.5"><CheckCircle2 size={12} className="text-emerald-500" /> Real-time AI Scan</span>
+              <span className="flex items-center gap-1.5"><CheckCircle2 size={12} className="text-emerald-500" /> Expert Report</span>
+            </div>
+          </form>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -121,6 +194,22 @@ export default function Dashboard() {
             height="400"
             fetchPriority="high"
           />
+        </motion.div>
+
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="mt-16 pt-8 border-t border-slate-100 dark:border-slate-800/50"
+        >
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-8">Trusted by teams from</p>
+          <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-16 opacity-40 grayscale hover:opacity-100 dark:opacity-20 dark:hover:opacity-60 transition-all duration-700">
+            {['SearchEngineJournal', 'Moz', 'Backlinko', 'NeilPatel', 'Semrush'].map(logo => (
+              <span key={logo} className="text-sm sm:text-xl font-black text-slate-900 dark:text-white tracking-tighter italic select-none cursor-default">
+                {logo}
+              </span>
+            ))}
+          </div>
         </motion.div>
       </header>
 
@@ -385,6 +474,8 @@ export default function Dashboard() {
         </div>
       </div>
 
+      <NewsletterSection />
+
       <div className="mt-24 pt-16 border-t border-slate-200 dark:border-slate-800">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           <div>
@@ -407,30 +498,30 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="bg-indigo-50 dark:bg-indigo-900/10 rounded-[3rem] p-10 sm:p-14 border border-indigo-100 dark:border-indigo-800">
-            <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-6">Expert SEO Guidelines for 2026</h3>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-6">Search Intelligence Roadmap 2026</h3>
             <p className="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
-              Success in search today requires a holistic approach. It’s no longer enough to just have keywords; you need a technically sound website that provides value and follows several key principles:
+              Ranking in 2026 requires more than just keywords. Our intelligence scan ensures you are ready for the era of AI and Answer Engines:
             </p>
             <ul className="space-y-4">
               <li className="flex gap-4">
                 <div className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px] font-black shrink-0 mt-1">1</div>
                 <div>
-                  <h4 className="font-bold text-slate-900 dark:text-white mb-1">Mobile Performance</h4>
-                  <p className="text-xs text-slate-500">Ensure your site passes all Core Web Vitals checks on mobile devices, where over 60% of search traffic originates.</p>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-1">GEO (AI Search Readiness)</h4>
+                  <p className="text-xs text-slate-500">Optimize for the "Generative Experience." We scan semantic depth to ensure AI models like Gemini and Perplexity cite your content.</p>
                 </div>
               </li>
               <li className="flex gap-4">
                 <div className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px] font-black shrink-0 mt-1">2</div>
                 <div>
-                  <h4 className="font-bold text-slate-900 dark:text-white mb-1">Topic Authority</h4>
-                  <p className="text-xs text-slate-500">Don't just write posts; build clusters of related content to show search engines you are an expert in your niche.</p>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-1">AEO (Universal Answers)</h4>
+                  <p className="text-xs text-slate-500">Ensure your site provides direct, schema-backed answers for Voice Search and Screenless AI assistants.</p>
                 </div>
               </li>
               <li className="flex gap-4">
                 <div className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px] font-black shrink-0 mt-1">3</div>
                 <div>
-                  <h4 className="font-bold text-slate-900 dark:text-white mb-1">Technical Hygiene</h4>
-                  <p className="text-xs text-slate-500">Regularly scan for broken links, duplicate meta tags, and missing alt text to maintain a clean crawl path for search bots.</p>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-1">260-Point Technical Hygiene</h4>
+                  <p className="text-xs text-slate-500">From protocol security to Core Web Vitals, we leave no stone unturned in your technical foundation.</p>
                 </div>
               </li>
             </ul>

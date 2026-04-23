@@ -1,24 +1,33 @@
 import { ToolId } from "./gemini";
 
 export const TOOL_PROMPTS: Record<string, string> = {
-  'website-seo': `Analyze the SEO of this website. 
-    Format your response as a professional SEO Report with these EXACT sections:
-    ## 🏆 Overall SEO Score
-    (Give a score out of 100 with a brief explanation)
+  'website-seo': `Analyze the SEO of this website using a comprehensive 260+ point Search Intelligence scan.
+    Analyze the URL through three lenses: Classical SEO, Generative Engine Optimization (GEO), and Answer Engine Optimization (AEO).
     
-    ## 📝 Executive Summary
-    (2-3 sentences in simple language)
+    Format your response as a professional Search Intelligence Report with these sections:
     
-    ## 🚦 Key Findings
-    (Use [GOOD], [AVERAGE], or [POOR] for each point)
+    ## 🏆 Search Intelligence Index
+    (An overall score out of 100 combining all 260+ semantic and technical factors)
     
-    ## 🛠️ Action Plan
-    (Step-by-step instructions to fix issues)
+    ## 🧠 AI & SGE Readiness (GEO)
+    (Score out of 100. Evaluate content connectivity, citation potential for Google SGE/Perplexity/Gemini, and semantic richness for Generative Search.)
     
-    ## 📈 Potential Impact
-    (What will happen if fixed)
+    ## 🎙️ Answer Engine Score (AEO)
+    (Score out of 100. Evaluate direct-answer conversational potential, schema depth, and fragment clarity for Voice Search and AI assistants.)
     
-    Keep it simple and easy to understand for a non-technical user.`,
+    ## 📊 Technical & On-Page Health
+    (Standard SEO factors: Site speed, mobile UX, meta health, crawlability.)
+    
+    ## 🚦 260+ Point Deep Scan Highlights
+    (Group 5-10 findings using [AI_READY], [GOOD], [AVERAGE], or [POOR])
+    
+    ## 🛠️ Actionable Implementation Roadmap
+    (Step-by-step instructions to fix high-impact issues)
+    
+    ## 📉 Competitive Edge
+    (How this site compares to modern AI search standards)
+    
+    Keep it professional and technical yet actionable.`,
   
   'youtube-seo': `Analyze the SEO for this YouTube video or topic. 
     Format your response as a YouTube Optimization Guide with these sections:
@@ -106,28 +115,27 @@ export const TOOL_PROMPTS: Record<string, string> = {
     ## 🛡️ Prevention Strategy
     (How to avoid broken links in future)`,
 
-  'seo-audit': `Generate a complete SEO Audit Checklist.
-    Format as a Checklist with these sections:
-    ## 📝 Summary
-    (Provide a 2-3 sentence overview of the audit findings)
+  'seo-audit': `Generate a complete 260+ point Search Intelligence Audit.
+    Analyze the site for traditional technical SEO, AI-Search readability (GEO), and direct-answer compatibility (AEO).
     
-    ## 📋 Technical SEO
-    (List tasks with [GOOD/AVERAGE/POOR])
+    Format as a Search Intelligence Checklist with these EXACT sections:
+    ## 📝 Strategic Summary
+    (Provide a 2-3 sentence overview of how the site competes in the 2026 search landscape.)
     
-    ## ✍️ On-Page SEO
-    (List tasks with [GOOD/AVERAGE/POOR])
+    ## 📋 Advanced Technical & Hygiene Scan
+    (Checklist items for indexability, Core Web Vitals, and server hygiene with [GOOD/AVERAGE/POOR])
     
-    ## 📖 Content Quality & Analysis
-    (Analyze main pages for readability, keyword density, and provide optimization ideas. Suggest using the 'content-analysis' tool for deep-dives.)
+    ## 🧠 GEO & Semantic Quality (AI Context)
+    (Evaluate topical clusters, semantic density, and AI citation readiness with [GOOD/AVERAGE/POOR])
     
-    ## 🌐 Off-Page SEO
-    (List tasks with [GOOD/AVERAGE/POOR])
+    ## 📡 AEO & Knowledge Graph Readiness
+    (Evaluate structured data depth for Answer Engines and Rich Snippets with [GOOD/AVERAGE/POOR])
     
-    ## 📱 Mobile & UX
-    (List tasks with [GOOD/AVERAGE/POOR])
+    ## 📱 UX & Interactive Optimization
+    (Mobile, Speed, and User Flow indicators with [GOOD/AVERAGE/POOR])
     
-    ## 🏁 Priority Tasks
-    (Top 3 things to do first)`,
+    ## 🏁 Multi-Agent Priority Roadmap
+    (Top 3 high-impact tasks to win in both Google and AI-discovery engines)`,
 
   'on-page-checklist': `Generate a detailed On-Page SEO Checklist for this page or topic.
     Format as a Checklist with these EXACT sections:

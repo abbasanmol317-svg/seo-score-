@@ -11,6 +11,8 @@ export interface BlogPost {
   metaTitle?: string;
   metaDescription?: string;
   readingTime?: string;
+  views?: number;
+  shares?: number;
 }
 
 export const BLOG_POSTS: BlogPost[] = [
@@ -21,11 +23,13 @@ export const BLOG_POSTS: BlogPost[] = [
     excerpt: "Meta tags are the first thing users see in search results. Learn how to craft the perfect title and description to boost your click-through rate.",
     date: "April 22, 2026",
     category: "Optimization",
-    author: "SEO Suite Team",
+    author: "Elena Rodriguez",
     image: "https://picsum.photos/seed/meta-tags/800/400",
     metaTitle: "Optimize Meta Tags for CTR in 2026 | SEO Score",
     metaDescription: "Boost your search engine visibility. Discover advanced strategies for title tags and meta descriptions using our free generator.",
     readingTime: "8 min read",
+    views: 12500,
+    shares: 840,
     content: `
 Meta tags might seem like a small detail, but they play a massive role in whether a user clicks on your website or scrolls past it. In 2026, search engines are smarter, but human psychology remains the same. A compelling title and a clear description are essential for conversion.
 
@@ -53,11 +57,13 @@ By improving your CTR, you tell search engines that users find your content valu
     excerpt: "Help search engines navigate your site efficiently. Explore why robots.txt and sitemaps are still foundational for technical SEO.",
     date: "April 21, 2026",
     category: "Technical SEO",
-    author: "Technical SEO Expert",
+    author: "Sarah Jenkins",
     image: "https://picsum.photos/seed/indexing/800/400",
     metaTitle: "Sitemaps and Robots.txt Guide 2026 | SEO Score",
     metaDescription: "Ensure your website is indexed correctly. Learn how to manage crawl budget and site hierarchy with technical files.",
     readingTime: "10 min read",
+    views: 9800,
+    shares: 420,
     content: `
 Technical SEO often feels invisible, but it's the foundation upon which your content sits. Two of the most important files for any website are the Sitemap and the Robots.txt file. They act as a roadmap and a set of instructions for search engine crawlers like Googlebot.
 
@@ -88,6 +94,8 @@ Once generated, make sure to submit your sitemap to Google Search Console and ch
     metaTitle: "Why Page Speed Matters for SEO in 2026 | SEO Score",
     metaDescription: "Optimize your website performance. Learn why fast loading times are non-negotiable for modern search rankings.",
     readingTime: "7 min read",
+    views: 15600,
+    shares: 920,
     content: `
 In 2026, website speed is no longer just a "nice to have"—it's a critical ranking factor. With Core Web Vitals becoming the standard for user experience, a slow website is a penalized website.
 
@@ -121,6 +129,8 @@ By prioritizing performance, you create a better experience for your visitors an
     metaTitle: "AI Keyword Research Strategy 2026 | SEO Score",
     metaDescription: "Find profitable keywords with AI. Learn how to analyze intent, competition, and volume for better SEO success.",
     readingTime: "9 min read",
+    views: 11200,
+    shares: 650,
     content: `
 Keyword research is the compass of your SEO strategy. Without it, you are writing blind. In 2026, the focus has shifted from "exact match" keywords to "semantic intent."
 
@@ -185,6 +195,8 @@ Start treating accessibility as a core part of your SEO strategy, and you will s
     metaTitle: "Website SEO Guide 2026: How to Rank Your Website on Google",
     metaDescription: "Learn the latest website SEO strategies for 2026. Our complete guide covers on-page, off-page, and technical SEO to help you dominate search rankings.",
     readingTime: "12 min read",
+    views: 24500,
+    shares: 1240,
     content: `
 Search Engine Optimization (SEO) is the process of improving your website so that it appears higher in search engine results like Google. 
 
@@ -797,7 +809,7 @@ If your technical foundation is weak, your content won't rank—no matter how go
     excerpt: "Looking for the best free AI SEO tools to dominate search rankings in 2026? We've curated the ultimate list of tools powered by Gemini AI.",
     date: "April 10, 2026",
     category: "Tools",
-    author: "SEO Suite Team",
+    author: "Marcus Chen",
     image: "https://picsum.photos/seed/best-seo-tools/800/400",
     metaTitle: "15 Best Free AI SEO Tools in 2026: The Ultimate List",
     metaDescription: "Boost your search rankings with the best free AI SEO tools of 2026. From keyword research to content optimization, discover the tech that top experts use.",

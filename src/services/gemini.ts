@@ -27,15 +27,15 @@ export interface Tool {
 export const TOOLS: Tool[] = [
   {
     id: 'website-seo',
-    name: 'Website SEO',
-    description: 'Analyze any website for SEO improvements.',
+    name: 'Search Intelligence Audit',
+    description: 'A 260+ point deep scan covering Technical SEO, GEO (AI Search Readiness), and AEO (Direct Answers).',
     category: 'SEO Analysis',
     icon: 'ScanSearch',
     slug: 'free-website-seo-audit-tool',
-    keywords: 'website,seo,analytics',
-    seoTitle: 'Free Website SEO Audit Tool – Full Technical & On-Page Analysis',
-    seoDescription: 'Run a free website SEO audit to find technical issues, on-page errors, and performance gaps. Get actionable insights to boost rankings.',
-    placeholder: 'Enter website URL (e.g., https://example.com or example.com)'
+    keywords: 'website,seo,analytics,geo,aeo,ai search',
+    seoTitle: '260+ Point AI SEO Deep Scan – Advanced GEO & AEO Analysis',
+    seoDescription: 'Run a professional 260+ point search intelligence audit. Analyze your site for Traditional SEO, AI Search (GEO), and Answer Engine (AEO) readiness.',
+    placeholder: 'Enter website URL for a 260-point Deep Scan...'
   },
   {
     id: 'youtube-seo',
@@ -87,15 +87,15 @@ export const TOOLS: Tool[] = [
   },
   {
     id: 'seo-audit',
-    name: 'SEO Audit Checklist',
-    description: 'Complete SEO audit for your site.',
+    name: '260+ Point Checklist',
+    description: 'A complete 260+ point industrial-grade SEO audit covering AI, GEO, and technical performance.',
     category: 'SEO Analysis',
     icon: 'SearchCode',
     slug: 'free-seo-audit-checklist',
-    keywords: 'audit,checklist,seo',
-    seoTitle: 'Free SEO Audit Checklist – Complete Technical & On-Page Guide',
-    seoDescription: 'Use this free SEO audit checklist to optimize your website. Cover technical SEO, on-page fixes, and ranking factors.',
-    placeholder: 'Enter website URL for a full audit (e.g., https://mybrand.com)'
+    keywords: 'audit,checklist,seo,geo,aeo,260 points',
+    seoTitle: 'Professional 260+ Point SEO Audit Checklist – AI & Technical Scan',
+    seoDescription: 'The most comprehensive free SEO audit checklist. 260+ data points covering AI Search, Technical SEO, and UX.',
+    placeholder: 'Enter website URL for 260+ point scan...'
   },
   {
     id: 'on-page-checklist',

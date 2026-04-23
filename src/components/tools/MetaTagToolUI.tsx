@@ -1,4 +1,5 @@
 import React, { Suspense, lazy, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import * as Icons from 'lucide-react';
 import { ToolComponentProps } from './ToolComponentProps';
@@ -742,6 +743,24 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
               </motion.div>
                 )}
               </div>
+
+              <div className="p-6 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-[2rem] border border-indigo-100/50 dark:border-indigo-800/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-white dark:bg-slate-800 rounded-2xl text-indigo-600 shadow-sm border border-indigo-50 dark:border-indigo-900/50">
+                    <Icons.GraduationCap size={24} />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">SEO Academy</h4>
+                    <p className="text-[11px] text-slate-500 font-medium">Learn the logic behind perfect meta tags</p>
+                  </div>
+                </div>
+                <Link 
+                  to="/guides/seo-basics-beginner-guide"
+                  className="px-6 py-3 bg-indigo-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-700 shadow-lg shadow-indigo-100 dark:shadow-none transition-all active:scale-95 whitespace-nowrap"
+                >
+                  Read SEO Basics
+                </Link>
+              </div>
             </div>
           )}
         </div>
@@ -1189,6 +1208,40 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                           {editableDescription.length}/160 chars
                         </span>
                       </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-12 p-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 rounded-[2rem] shadow-2xl shadow-indigo-500/20">
+                    <div className="bg-white dark:bg-slate-900 rounded-[1.95rem] p-6 sm:p-10 text-center">
+                       <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-3">Analysis Complete! Ready to Rank?</h3>
+                       <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-8">Save this optimized SEO report or share these high-CTR tags with your team.</p>
+                       <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                          <button 
+                            onClick={handleDownloadPDF}
+                            disabled={isDownloading || isGeneratingPDF}
+                            className="w-full sm:w-auto px-8 py-4 bg-indigo-600 text-white rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200 dark:shadow-none flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50"
+                          >
+                            {isDownloading || isGeneratingPDF ? (
+                              <Icons.Loader2 size={20} className="animate-spin" />
+                            ) : (
+                              <Icons.Download size={20} />
+                            )}
+                            Save to PDF
+                          </button>
+                          <button 
+                            onClick={() => {
+                              if (navigator.share) {
+                                handleShare('native');
+                              } else {
+                                setShowShareMenu(true);
+                              }
+                            }}
+                            className="w-full sm:w-auto px-8 py-4 bg-slate-900 dark:bg-black text-white rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-slate-800 dark:hover:bg-slate-700 transition-all shadow-xl shadow-slate-900/10 flex items-center justify-center gap-3 active:scale-95"
+                          >
+                            <Icons.Share2 size={20} />
+                            Share Report
+                          </button>
+                       </div>
                     </div>
                   </div>
                 </motion.div>

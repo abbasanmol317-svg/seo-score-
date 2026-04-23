@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { ToolComponentProps } from './ToolComponentProps';
 import { ToolLayout } from './ToolLayout';
 import { SERPPreview } from './SERPPreview';
@@ -124,6 +125,13 @@ export const SERPPreviewToolUI: React.FC<ToolComponentProps> = (props) => {
                 </button>
                 
                 <div className="flex items-center gap-2">
+                  <Link 
+                    to="/guides/seo-basics-beginner-guide"
+                    className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-100 transition-all border border-indigo-100/50 dark:border-indigo-800/30"
+                  >
+                    <Icons.BookOpen size={12} />
+                    Beginner Guide
+                  </Link>
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-full">
                     Real-time Updates Enabled
                   </span>

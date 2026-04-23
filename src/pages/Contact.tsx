@@ -14,6 +14,39 @@ export default function Contact() {
         <title>Contact SEO Score | Get in Touch for Support & Inquiries</title>
         <meta name="description" content="Contact the SEO Score team for questions about our free AI SEO tools, support requests, or partnership inquiries. We're here to help." />
         <meta name="keywords" content="contact SEO Score, SEO support, customer service, AI tool help" />
+        <script type="application/ld+json">
+          {JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "ContactPage",
+              "name": "Contact SEO Score",
+              "description": "Contact the SEO Score team for support or inquiries.",
+              "mainEntity": {
+                "@type": "Organization",
+                "name": "SEO Score",
+                "email": "support@seoscore.site"
+              }
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Dashboard",
+                  "item": "https://seoscore.site/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Contact",
+                  "item": "https://seoscore.site/contact"
+                }
+              ]
+            }
+          ])}
+        </script>
       </Helmet>
 
       <motion.div

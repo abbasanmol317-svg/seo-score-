@@ -7,6 +7,7 @@ import { TOOLS } from '../services/gemini';
 
 import Breadcrumbs from '../components/Breadcrumbs';
 import { ToolCard } from '../components/ToolCard';
+import NewsletterSection from '../components/NewsletterSection';
 
 export default function Tools() {
   const categories = Array.from(new Set(TOOLS.map(t => t.category)));
@@ -21,9 +22,43 @@ export default function Tools() {
       />
       <Helmet>
         <title>Free AI SEO Tools Directory: 20+ Professional Tools (No Signup)</title>
-        <meta name="description" content="Access 20+ professional AI SEO tools in one directory. From technical audits to keyword research, find the right tool to grow your traffic now." />
+        <meta name="description" content="Explore 20+ free AI SEO tools to audit, optimize, and rank. From technical fixes to AEO strategy, get everything you need for search dominance. Try them free now!" />
         <meta name="keywords" content="SEO tools directory, free AI SEO tools, technical SEO suite, keyword research tools, content optimization tools" />
         <link rel="canonical" href="https://seoscore.site/tools" />
+        <script type="application/ld+json">
+          {JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "ItemList",
+              "name": "Free AI SEO Tools Directory",
+              "description": "Comprehensive directory of free AI-powered search optimization tools.",
+              "itemListElement": TOOLS.map((tool, index) => ({
+                "@type": "ListItem",
+                "position": index + 1,
+                "url": `https://seoscore.site/tools/${tool.slug}`,
+                "name": tool.name
+              }))
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Dashboard",
+                  "item": "https://seoscore.site/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Tools",
+                  "item": "https://seoscore.site/tools"
+                }
+              ]
+            }
+          ])}
+        </script>
       </Helmet>
 
       <motion.div
@@ -59,6 +94,10 @@ export default function Tools() {
             </div>
           </section>
         ))}
+      </div>
+
+      <div className="-mx-4 sm:-mx-6 lg:-mx-8 mt-20">
+        <NewsletterSection />
       </div>
 
       <section className="mt-20 bg-slate-900 dark:bg-indigo-950 rounded-[2.5rem] p-8 sm:p-16 text-center text-white relative overflow-hidden">

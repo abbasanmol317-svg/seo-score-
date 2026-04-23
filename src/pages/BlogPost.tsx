@@ -62,30 +62,56 @@ export default function BlogPost() {
     }
   ];
 
-  const articleSchema = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": post.title,
-    "description": post.excerpt,
-    "image": post.image,
-    "author": {
-      "@type": "Organization",
-      "name": "SEO Score"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "SEO Score",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://seoscore.site/logo.png"
+  const articleSchema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": post.title,
+      "description": post.excerpt,
+      "image": post.image,
+      "author": {
+        "@type": "Organization",
+        "name": "SEO Score"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SEO Score",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://seoscore.site/logo.png"
+        }
+      },
+      "datePublished": post.date,
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `https://seoscore.site/blog/${post.slug}`
       }
     },
-    "datePublished": post.date,
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": `https://seoscore.site/blog/${post.slug}`
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Dashboard",
+          "item": "https://seoscore.site/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://seoscore.site/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": post.title,
+          "item": `https://seoscore.site/blog/${post.slug}`
+        }
+      ]
     }
-  };
+  ];
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12 sm:py-20">

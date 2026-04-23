@@ -18,6 +18,39 @@ export default function About() {
         <title>About SEO Score | Why We Built the Best Free AI SEO Platform</title>
         <meta name="description" content="Learn how SEO Score is democratizing search intelligence with Gemini AI. Discover our mission and start using professional tools for free." />
         <meta name="keywords" content="about SEO Score, AI SEO mission, free SEO tools, Google Gemini SEO, SEO democratization" />
+        <script type="application/ld+json">
+          {JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "AboutPage",
+              "name": "About SEO Score",
+              "description": "Learn how SEO Score is democratizing search intelligence with Gemini AI.",
+              "publisher": {
+                "@type": "Organization",
+                "name": "SEO Score",
+                "url": "https://seoscore.site"
+              }
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Dashboard",
+                  "item": "https://seoscore.site/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "About",
+                  "item": "https://seoscore.site/about"
+                }
+              ]
+            }
+          ])}
+        </script>
       </Helmet>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -93,6 +126,82 @@ export default function About() {
             </p>
           </div>
         </div>
+
+        <section className="mb-16">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-8 text-center">The Experts Behind the Code</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+            {[
+              {
+                name: "Sarah Jenkins",
+                role: "Director of Search",
+                bio: "12+ years in Technical SEO. Former Head of SEO at ScaleGrowth.",
+                image: "https://i.pravatar.cc/150?u=sarah"
+              },
+              {
+                name: "Marcus Chen",
+                role: "AI Lead",
+                bio: "PhD in Neural Networks. Architect of our Gemini SEO integration.",
+                image: "https://i.pravatar.cc/150?u=marcus"
+              },
+              {
+                name: "Elena Rodriguez",
+                role: "Content Strategist",
+                bio: "Award-winning content marketer focused on topical authority modeling.",
+                image: "https://i.pravatar.cc/150?u=elena"
+              }
+            ].map(member => (
+              <div key={member.name} className="text-center group">
+                <div className="relative mb-4 inline-block">
+                  <div className="absolute inset-0 bg-indigo-600 rounded-2xl rotate-6 group-hover:rotate-0 transition-transform duration-300" />
+                  <img src={member.image} alt={member.name} className="relative w-24 h-24 rounded-2xl object-cover grayscale group-hover:grayscale-0 transition-all border-2 border-white dark:border-slate-800" />
+                </div>
+                <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">{member.name}</h4>
+                <p className="text-[10px] text-indigo-600 font-black uppercase tracking-widest mb-2">{member.role}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed px-4 mb-4">{member.bio}</p>
+                <Link 
+                  to={`/blog?author=${encodeURIComponent(member.name)}`}
+                  className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-indigo-600 hover:text-indigo-700 transition-colors"
+                >
+                  View Posts <Icons.ArrowRight size={12} />
+                </Link>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mb-16">
+          <div className="bg-slate-900 dark:bg-black rounded-[3rem] p-8 sm:p-12 relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-8 opacity-10 text-white">
+              <Icons.Quote size={120} />
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-10 relative z-10">Trusted by Global Teams</h2>
+            <div className="grid md:grid-cols-2 gap-8 relative z-10">
+              {[
+                {
+                  quote: "SEO Score replaced our $500/mo toolset. The AI audits are scarily accurate.",
+                  author: "David Miller",
+                  company: "Growth Manager, FinTech Global"
+                },
+                {
+                  quote: "The topical authority guide changed how we view content clusters. Rankings tripled in 3 months.",
+                  author: "Lisa Hart",
+                  company: "Founder, Bloom Digital"
+                }
+              ].map((t, i) => (
+                <div key={i} className="flex flex-col gap-4">
+                  <div className="flex gap-1">
+                    {[1,2,3,4,5].map(s => <Icons.Star key={s} size={12} className="fill-amber-400 text-amber-400" />)}
+                  </div>
+                  <p className="text-slate-300 italic font-medium">"{t.quote}"</p>
+                  <div>
+                    <p className="text-white font-bold text-xs">{t.author}</p>
+                    <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">{t.company}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         <section className="mb-12 sm:mb-16">
           <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-6 sm:mb-8">Popular SEO Tools</h2>
