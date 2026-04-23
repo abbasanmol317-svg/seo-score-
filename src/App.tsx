@@ -99,15 +99,15 @@ function NavHeader() {
         )}
       </AnimatePresence>
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16 sm:h-20">
-              <div className="flex items-center gap-3 sm:gap-4 flex-1">
-                <button
-                  onClick={() => setIsMobileMenuOpen(true)}
-                  className="lg:hidden p-2.5 sm:p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all active:scale-95 shadow-sm"
-                >
-                  <Icon name="Menu" size={20} className="sm:w-6 sm:h-6" />
-                </button>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between h-14 sm:h-20">
+                <div className="flex items-center gap-2 sm:gap-4 flex-1 overflow-hidden">
+                  <button
+                    onClick={() => setIsMobileMenuOpen(true)}
+                    className="lg:hidden p-2 sm:p-3 rounded-lg sm:rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all active:scale-95 shadow-sm"
+                  >
+                    <Icon name="Menu" size={18} className="sm:w-6 sm:h-6" />
+                  </button>
 
                 <Link to="/" className="flex items-center gap-2 text-indigo-600 font-bold text-lg sm:text-xl group shrink-0" id="header-logo">
                   <div className="bg-indigo-600 p-1.5 sm:p-2 rounded-lg sm:rounded-xl text-white shadow-lg shadow-indigo-100 dark:shadow-none group-hover:scale-110 group-hover:rotate-3 transition-all">
@@ -399,29 +399,28 @@ export default function App() {
                       </div>
                       <span className="tracking-tight">SEO Score</span>
                     </div>
-                    <div className="flex flex-wrap justify-center gap-8 md:gap-12">
+                    <div className="grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-x-8 gap-y-10 md:gap-12 w-full sm:w-auto">
                       <div className="flex flex-col gap-3">
                         <h4 className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Company</h4>
                         <Link to="/tools" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">All Tools</Link>
                         <Link to="/about" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About Us</Link>
-                        <Link to="/case-studies" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Case Studies</Link>
                         <Link to="/contact" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Contact Us</Link>
                         <Link to="/blog" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Blog</Link>
                         <Link to="/guides" className="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline transition-colors">Learning Academy</Link>
                         <Link to="/faq" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">FAQ</Link>
-                        <Link to="/resources" className="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline transition-colors">Resources</Link>
                       </div>
                       <div className="flex flex-col gap-3">
                         <h4 className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Legal</h4>
                         <Link to="/privacy" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Privacy Policy</Link>
                         <Link to="/terms" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Terms of Service</Link>
                         <a href="/sitemap.xml" target="_blank" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Sitemap</a>
+                        <Link to="/resources" className="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline transition-colors mt-2">Resources</Link>
                       </div>
-                      <div className="flex flex-col gap-3">
+                      <div className="col-span-2 sm:col-span-1 flex flex-col gap-3">
                         <h4 className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Popular Tools</h4>
-                        <div className="grid grid-cols-2 gap-x-6 gap-y-2">
+                        <div className="grid grid-cols-2 sm:grid-cols-1 gap-x-6 gap-y-2">
                           {TOOLS.slice(0, 4).map(tool => (
-                            <Link key={tool.id} to={`/tools/${tool.slug}`} className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate max-w-[120px]">{tool.name}</Link>
+                            <Link key={tool.id} to={`/tools/${tool.slug}`} className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate max-w-[150px]">{tool.name}</Link>
                           ))}
                         </div>
                       </div>

@@ -337,7 +337,7 @@ export const ToolResult = React.memo(({
               </h2>
             </div>
             <div className={cn(
-              "p-4 sm:p-8 markdown-body transition-colors duration-300",
+              "p-4 sm:p-8 markdown-body transition-colors duration-300 overflow-x-auto",
               isTechnical && "bg-slate-900 dark:bg-black text-slate-100"
             )}>
               {content.includes('|') && content.split('\n').some(l => l.includes('|---')) && <MarkdownTableChart content={content} />}

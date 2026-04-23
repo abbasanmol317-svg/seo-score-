@@ -121,15 +121,15 @@ export default function Dashboard() {
           <Icon name="Sparkles" size={32} className="w-8 h-8 sm:w-10 sm:h-10" />
         </motion.div>
         <h1 
-          className="text-2xl font-black tracking-tight text-slate-900 dark:text-white sm:text-4xl md:text-5xl lg:text-6xl mb-4 leading-[1.1]"
+          className="text-2xl font-black tracking-tight text-slate-900 dark:text-white sm:text-4xl md:text-5xl lg:text-6xl mb-4 leading-[1.1] px-2"
         >
-          Uncover Every Ranking Factor with our <br /><span className="text-indigo-600">260+ Point Intelligence Scan</span>
+          Uncover Every Ranking Factor with our <br className="hidden md:block" /><span className="text-indigo-600">260+ Point Intelligence Scan</span>
         </h1>
         <motion.p 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mt-3 max-w-md mx-auto text-sm sm:text-lg text-slate-600 dark:text-slate-400 md:mt-5 md:text-xl md:max-w-3xl px-2 sm:px-4 leading-relaxed font-medium"
+          className="mt-3 max-w-md mx-auto text-sm sm:text-lg text-slate-600 dark:text-slate-400 md:mt-5 md:text-xl md:max-w-3xl px-4 sm:px-4 leading-relaxed font-medium"
         >
           The first free platform to offer **GEO (AI Search)** and **AEO (Answer Engine)** readiness scores. Our multi-agent AI performs a technical deep scan of 260+ signals to give you an industrial-grade search roadmap.
         </motion.p>
@@ -200,10 +200,10 @@ export default function Dashboard() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="mt-16 pt-8 border-t border-slate-100 dark:border-slate-800/50"
+          className="mt-12 sm:mt-16 pt-8 border-t border-slate-100 dark:border-slate-800/50"
         >
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-8">Trusted by teams from</p>
-          <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-16 opacity-40 grayscale hover:opacity-100 dark:opacity-20 dark:hover:opacity-60 transition-all duration-700">
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 sm:mb-8">Trusted by teams from</p>
+          <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-16 opacity-40 grayscale hover:opacity-100 dark:opacity-20 dark:hover:opacity-60 transition-all duration-700 px-4">
             {['SearchEngineJournal', 'Moz', 'Backlinko', 'NeilPatel', 'Semrush'].map(logo => (
               <span key={logo} className="text-sm sm:text-xl font-black text-slate-900 dark:text-white tracking-tighter italic select-none cursor-default">
                 {logo}

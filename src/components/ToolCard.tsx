@@ -28,7 +28,7 @@ export const ToolCard = React.memo(({ tool, index, className }: ToolCardProps) =
     >
       <Link
         to={`/tools/${tool.slug}`}
-        className="group relative h-full bg-white dark:bg-slate-900 rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-2xl hover:shadow-indigo-500/10 dark:hover:shadow-indigo-900/30 hover:border-indigo-400 dark:hover:border-indigo-600 transition-all duration-500 flex flex-col overflow-hidden"
+        className="group relative h-full bg-white dark:bg-slate-900 rounded-[2rem] sm:rounded-[2.5rem] p-5 sm:p-8 shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-2xl hover:shadow-indigo-500/10 dark:hover:shadow-indigo-900/30 hover:border-indigo-400 dark:hover:border-indigo-600 transition-all duration-500 flex flex-col overflow-hidden"
       >
         {/* Subtle Background Color Shift on Hover */}
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/0 to-purple-50/0 group-hover:from-indigo-50/80 group-hover:to-purple-50/80 dark:group-hover:from-indigo-900/20 dark:group-hover:to-purple-900/20 transition-colors duration-500" />
