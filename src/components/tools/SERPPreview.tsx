@@ -297,50 +297,57 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 w-fit">
-                <button
-                  onClick={() => onModeChange?.('desktop')}
-                  className={cn(
-                    "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
-                    mode === 'desktop' 
-                      ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
-                      : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
-                  )}
-                >
-                  <Icons.Monitor size={14} />
-                  Desktop
-                </button>
-                <button
-                  onClick={() => onModeChange?.('mobile')}
-                  className={cn(
-                    "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
-                    mode === 'mobile' 
-                      ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
-                      : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
-                  )}
-                >
-                  <Icons.Smartphone size={14} />
-                  Mobile
-                </button>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex flex-col gap-2 w-full sm:w-auto">
+                <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Preview Mode</span>
+                <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 w-fit">
+                  <button
+                    onClick={() => onModeChange?.('desktop')}
+                    className={cn(
+                      "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
+                      mode === 'desktop' 
+                        ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
+                        : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
+                    )}
+                  >
+                    <Icons.Monitor size={14} />
+                    Desktop
+                  </button>
+                  <button
+                    onClick={() => onModeChange?.('mobile')}
+                    className={cn(
+                      "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
+                      mode === 'mobile' 
+                        ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
+                        : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
+                    )}
+                  >
+                    <Icons.Smartphone size={14} />
+                    Mobile
+                  </button>
+                </div>
               </div>
 
               {mode === 'mobile' && (
-                <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 w-fit">
-                  {DEVICES.map(device => (
-                    <button
-                      key={device.id}
-                      onClick={() => setSelectedDeviceId(device.id)}
-                      className={cn(
-                        "px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all",
-                        selectedDeviceId === device.id
-                          ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
-                          : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
-                      )}
-                    >
-                      {device.name}
-                    </button>
-                  ))}
+                <div className="flex flex-col gap-2 w-full sm:w-auto">
+                  <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Simulate Device</span>
+                  <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 w-fit">
+                    {DEVICES.map(device => (
+                      <button
+                        key={device.id}
+                        onClick={() => setSelectedDeviceId(device.id)}
+                        className={cn(
+                          "px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex flex-col items-center gap-0.5 min-w-[80px]",
+                          selectedDeviceId === device.id
+                            ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
+                            : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
+                        )}
+                      >
+                        <span>{device.name}</span>
+                        <span className="text-[8px] opacity-60 font-medium">{device.width}px</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -349,19 +356,29 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
       )}
 
       <div className="space-y-6">
-        <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
-          <Icons.Eye size={12} className="text-indigo-500" />
-          Live Result Preview
-        </h4>
+        <div className="flex items-center justify-between">
+          <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
+            <Icons.Eye size={12} className="text-indigo-500" />
+            Live Result Preview
+          </h4>
+          {mode === 'mobile' && (
+            <div className="flex items-center gap-2 px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700">
+              <Icons.Info size={10} className="text-slate-400" />
+              <span className="text-[8px] font-black uppercase text-slate-500 tracking-widest">
+                Simulating {currentDevice.name} width ({currentDevice.width}px)
+              </span>
+            </div>
+          )}
+        </div>
         
         <div 
           className={cn(
-            "bg-white dark:bg-slate-950 transition-all duration-700 relative overflow-hidden flex flex-col justify-center",
+            "bg-white dark:bg-slate-950 transition-all duration-700 relative overflow-hidden flex flex-col group/serp",
             mode === 'mobile' 
-              ? "mx-auto border-[12px] border-slate-900 dark:border-slate-800 rounded-[3.5rem] p-6 pt-12 pb-16 shadow-2xl min-h-[600px]" 
+              ? "mx-auto border-[14px] border-slate-900 dark:border-slate-800 rounded-[3.5rem] shadow-2xl min-h-[650px]" 
               : "w-full p-8 sm:p-12 min-h-[220px] rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-2xl"
           )}
-          style={mode === 'mobile' ? { width: `${currentDevice.width + 72}px`, maxWidth: '100%' } : undefined}
+          style={mode === 'mobile' ? { width: `${currentDevice.width + 28}px`, maxWidth: '100%' } : undefined}
         >
           {/* Heatmap Overlay */}
           {showHeatmap && (
@@ -373,10 +390,14 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
             </div>
           )}
 
+          <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none group-hover/serp:scale-110 transition-transform duration-1000">
+            {mode === 'desktop' ? <Icons.Search size={180} /> : <Icons.Smartphone size={150} />}
+          </div>
+
           {mode === 'mobile' && (
             <>
               {/* Phone Status Bar */}
-              <div className="absolute top-0 left-0 right-0 h-6 flex items-center justify-between px-8 text-slate-400 font-bold text-[10px] pt-2">
+              <div className="h-10 flex items-center justify-between px-8 text-white font-bold text-[10px] bg-slate-900 dark:bg-slate-800 sticky top-0 z-40">
                 <span>9:41</span>
                 <div className="flex items-center gap-1.5">
                   <Icons.Signal size={10} />
@@ -384,18 +405,18 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
                   <Icons.Battery size={14} />
                 </div>
               </div>
-              {/* Speaker Grille */}
-              <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1 bg-slate-800 dark:bg-slate-700 rounded-full" />
-              {/* Bottom Home Indicator */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-slate-800 dark:bg-slate-700 rounded-full" />
+              {/* Camera Notch Simulation */}
+              <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-6 bg-slate-900 dark:bg-slate-800 rounded-b-2xl z-50 flex items-center justify-center gap-2">
+                <div className="w-2 h-2 bg-slate-800 rounded-full" />
+                <div className="w-8 h-1 bg-slate-800 rounded-full" />
+              </div>
             </>
           )}
 
-          <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none group-hover/serp:scale-110 transition-transform duration-1000">
-            {mode === 'desktop' ? <Icons.Search size={180} /> : <Icons.Smartphone size={150} />}
-          </div>
-
-          <div className="relative z-10 font-sans group/serp">
+          <div className={cn(
+            "flex-grow relative z-10 p-6 pt-10",
+            mode === 'mobile' && "bg-white dark:bg-slate-950 overflow-y-auto custom-scrollbar"
+          )}>
             {/* Desktop and Mobile Headers differ slightly */}
             <div className={cn(
               "flex items-center gap-3 mb-3",

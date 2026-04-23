@@ -14,9 +14,11 @@ interface ToolSearchProps {
   isMobile?: boolean;
 }
 
+type SearchResult = (Tool & { searchType: 'tool' }) | (BlogPost & { searchType: 'blog' });
+
 export default function ToolSearch({ className, onSelect, autoFocus, isMobile: isMobileProp }: ToolSearchProps) {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<Tool[]>([]);
+  const [results, setResults] = useState<SearchResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -74,7 +76,7 @@ export default function ToolSearch({ className, onSelect, autoFocus, isMobile: i
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSelect = (result: any) => {
+  const handleSelect = (result: SearchResult) => {
     if (result.searchType === 'tool') {
       navigate(`/tools/${result.slug || result.id}`);
     } else {
@@ -151,11 +153,11 @@ export default function ToolSearch({ className, onSelect, autoFocus, isMobile: i
                 Search Results ({results.length})
               </div>
               {results.length > 0 ? (
-                results.map((result: any, index) => {
+                results.map((result: SearchResult, index) => {
                   const isTool = result.searchType === 'tool';
                   return (
                     <motion.button
-                      key={result.id}
+                      key={`${result.searchType}-${result.id}`}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.03 }}
