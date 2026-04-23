@@ -39,8 +39,9 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
   schema,
   ctrAnalysis
 }) => {
-  const previewTitle = title.length > 61 ? title.substring(0, 58) + '...' : title;
-  const previewDescription = description.length > 161 ? description.substring(0, 158) + '...' : description;
+  // Use full titles and descriptions to let CSS handle device-specific truncation simulation
+  const displayTitle = title || 'Optimized Page Title Will Appear Here';
+  const displayDescription = description || 'Your meta description will appear here. It should be between 150-160 characters for optimal visibility in search results.';
 
   const getTitleColor = (len: number) => {
     if (len === 0) return "bg-slate-100 text-slate-500 dark:bg-slate-800";
@@ -85,6 +86,15 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
   const predictedImpact = ctrAnalysis?.match(/Predicted CTR Impact:\s*(.*)/i)?.[1];
 
   const [showHeatmap, setShowHeatmap] = React.useState(false);
+  const [selectedDeviceId, setSelectedDeviceId] = React.useState('standard');
+
+  const DEVICES = [
+    { id: 'se', name: 'iPhone SE', width: 320 },
+    { id: 'standard', name: 'iPhone 15', width: 393 },
+    { id: 'large', name: 'S24 Ultra', width: 412 },
+  ];
+
+  const currentDevice = DEVICES.find(d => d.id === selectedDeviceId) || DEVICES[1];
 
   return (
     <div className="space-y-8">
@@ -287,31 +297,52 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
               </div>
             </div>
 
-            <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 w-fit">
-              <button
-                onClick={() => onModeChange?.('desktop')}
-                className={cn(
-                  "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
-                  mode === 'desktop' 
-                    ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
-                    : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
-                )}
-              >
-                <Icons.Monitor size={14} />
-                Desktop
-              </button>
-              <button
-                onClick={() => onModeChange?.('mobile')}
-                className={cn(
-                  "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
-                  mode === 'mobile' 
-                    ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
-                    : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
-                )}
-              >
-                <Icons.Smartphone size={14} />
-                Mobile
-              </button>
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 w-fit">
+                <button
+                  onClick={() => onModeChange?.('desktop')}
+                  className={cn(
+                    "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
+                    mode === 'desktop' 
+                      ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
+                      : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
+                  )}
+                >
+                  <Icons.Monitor size={14} />
+                  Desktop
+                </button>
+                <button
+                  onClick={() => onModeChange?.('mobile')}
+                  className={cn(
+                    "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
+                    mode === 'mobile' 
+                      ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
+                      : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
+                  )}
+                >
+                  <Icons.Smartphone size={14} />
+                  Mobile
+                </button>
+              </div>
+
+              {mode === 'mobile' && (
+                <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 w-fit">
+                  {DEVICES.map(device => (
+                    <button
+                      key={device.id}
+                      onClick={() => setSelectedDeviceId(device.id)}
+                      className={cn(
+                        "px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all",
+                        selectedDeviceId === device.id
+                          ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
+                          : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
+                      )}
+                    >
+                      {device.name}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -323,12 +354,15 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
           Live Result Preview
         </h4>
         
-        <div className={cn(
-          "bg-white dark:bg-slate-950 transition-all duration-700 relative overflow-hidden flex flex-col justify-center",
-          mode === 'mobile' 
-            ? "max-w-[400px] mx-auto border-[12px] border-slate-900 dark:border-slate-800 rounded-[3.5rem] p-6 pt-12 pb-16 shadow-2xl min-h-[600px]" 
-            : "w-full p-8 sm:p-12 min-h-[220px] rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-2xl"
-        )}>
+        <div 
+          className={cn(
+            "bg-white dark:bg-slate-950 transition-all duration-700 relative overflow-hidden flex flex-col justify-center",
+            mode === 'mobile' 
+              ? "mx-auto border-[12px] border-slate-900 dark:border-slate-800 rounded-[3.5rem] p-6 pt-12 pb-16 shadow-2xl min-h-[600px]" 
+              : "w-full p-8 sm:p-12 min-h-[220px] rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-2xl"
+          )}
+          style={mode === 'mobile' ? { width: `${currentDevice.width + 72}px`, maxWidth: '100%' } : undefined}
+        >
           {/* Heatmap Overlay */}
           {showHeatmap && (
             <div className="absolute inset-0 z-30 pointer-events-none overflow-hidden mix-blend-multiply dark:mix-blend-screen opacity-60">
@@ -424,9 +458,9 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
 
             <button className={cn(
               "text-[#1a0dab] dark:text-[#8ab4f8] hover:underline text-left cursor-pointer mb-2 leading-tight font-sans",
-              mode === 'mobile' ? "text-[22px] font-normal" : "text-[20px] font-medium"
+              mode === 'mobile' ? "text-[22px] font-normal line-clamp-2" : "text-[20px] font-medium line-clamp-1"
             )}>
-              {previewTitle || 'Optimized Page Title Will Appear Here'}
+              {displayTitle}
             </button>
 
             {schema?.type === 'product' && schema.product && (
@@ -465,9 +499,9 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
 
             <div className={cn(
               "text-[#4d5156] dark:text-[#bdc1c6] leading-relaxed opacity-90 font-sans",
-              mode === 'mobile' ? "text-[15px] line-clamp-4" : "text-sm line-clamp-2"
+              mode === 'mobile' ? "text-[15px] line-clamp-3" : "text-sm line-clamp-2"
             )}>
-              {previewDescription || 'Your meta description will appear here. It should be between 150-160 characters for optimal visibility in search results.'}
+              {displayDescription}
             </div>
 
             {schema?.type === 'faq' && schema.faq && schema.faq.length > 0 && (

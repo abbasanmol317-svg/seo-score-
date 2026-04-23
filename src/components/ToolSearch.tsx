@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, X, Command } from 'lucide-react';
 import { TOOLS, Tool } from '../services/gemini';
+import { BLOG_POSTS, BlogPost } from '../constants/blogData';
 import { cn } from '../lib/utils';
 import { Icon } from './ui/Icon';
 
@@ -37,12 +38,21 @@ export default function ToolSearch({ className, onSelect, autoFocus, isMobile: i
   useEffect(() => {
     const timer = setTimeout(() => {
       if (query.trim().length > 0) {
-        const filtered = TOOLS.filter(tool => 
-          tool.name.toLowerCase().includes(query.toLowerCase()) ||
-          tool.category.toLowerCase().includes(query.toLowerCase()) ||
-          tool.description.toLowerCase().includes(query.toLowerCase())
-        ).slice(0, 8);
-        setResults(filtered);
+        const queryLower = query.toLowerCase();
+        
+        const filteredTools = TOOLS.filter(tool => 
+          tool.name.toLowerCase().includes(queryLower) ||
+          tool.category.toLowerCase().includes(queryLower) ||
+          tool.description.toLowerCase().includes(queryLower)
+        ).map(t => ({ ...t, searchType: 'tool' as const }));
+
+        const filteredBlogs = BLOG_POSTS.filter(post =>
+          post.title.toLowerCase().includes(queryLower) ||
+          post.excerpt.toLowerCase().includes(queryLower) ||
+          post.category.toLowerCase().includes(queryLower)
+        ).map(p => ({ ...p, searchType: 'blog' as const }));
+
+        setResults([...filteredTools, ...filteredBlogs].slice(0, 10));
         setIsOpen(true);
       } else {
         setResults([]);
@@ -64,12 +74,11 @@ export default function ToolSearch({ className, onSelect, autoFocus, isMobile: i
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSelect = (toolId: string) => {
-    const tool = TOOLS.find(t => t.id === toolId);
-    if (tool) {
-      navigate(`/tools/${tool.slug}`);
+  const handleSelect = (result: any) => {
+    if (result.searchType === 'tool') {
+      navigate(`/tools/${result.slug || result.id}`);
     } else {
-      navigate(`/tool/${toolId}`);
+      navigate(`/blog/${result.slug}`);
     }
     setIsOpen(false);
     setQuery('');
@@ -85,7 +94,7 @@ export default function ToolSearch({ className, onSelect, autoFocus, isMobile: i
       setSelectedIndex(prev => (prev > 0 ? prev - 1 : prev));
     } else if (e.key === 'Enter') {
       if (selectedIndex >= 0 && results[selectedIndex]) {
-        handleSelect(results[selectedIndex].id);
+        handleSelect(results[selectedIndex]);
       }
     } else if (e.key === 'Escape') {
       setIsOpen(false);
@@ -139,17 +148,18 @@ export default function ToolSearch({ className, onSelect, autoFocus, isMobile: i
           >
             <div className="p-2 max-h-[60vh] sm:max-h-[400px] overflow-y-auto">
               <div className="px-3 py-2 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-                Tools Found ({results.length})
+                Search Results ({results.length})
               </div>
               {results.length > 0 ? (
-                results.map((tool, index) => {
+                results.map((result: any, index) => {
+                  const isTool = result.searchType === 'tool';
                   return (
                     <motion.button
-                      key={tool.id}
+                      key={result.id}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.03 }}
-                      onClick={() => handleSelect(tool.id)}
+                      onClick={() => handleSelect(result)}
                       className={cn(
                         "w-full flex items-center gap-3 p-3 rounded-xl transition-all group text-left",
                         selectedIndex === index 
@@ -163,14 +173,22 @@ export default function ToolSearch({ className, onSelect, autoFocus, isMobile: i
                           ? "bg-white dark:bg-slate-800 shadow-sm" 
                           : "bg-slate-100 dark:bg-slate-800 group-hover:bg-white dark:group-hover:bg-slate-700"
                       )}>
-                        <Icon name={tool.icon} size={16} className={cn(
+                        <Icon name={isTool ? result.icon : 'FileText'} size={16} className={cn(
                           selectedIndex === index ? "text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400",
                           "sm:w-[18px] sm:h-[18px]"
                         )} />
                       </div>
                       <div className="flex-grow min-w-0">
-                        <div className="text-sm font-bold truncate">{tool.name}</div>
-                        <div className="text-[10px] text-slate-400 dark:text-slate-500 truncate">{tool.category}</div>
+                        <div className="text-sm font-bold truncate">{isTool ? result.name : result.title}</div>
+                        <div className="flex items-center gap-2">
+                          <span className={cn(
+                            "text-[8px] font-black uppercase px-1.5 py-0.5 rounded",
+                            isTool ? "bg-amber-100 text-amber-700 dark:bg-amber-900/20" : "bg-blue-100 text-blue-700 dark:bg-blue-900/20"
+                          )}>
+                            {isTool ? 'Tool' : 'Blog'}
+                          </span>
+                          <div className="text-[10px] text-slate-400 dark:text-slate-500 truncate">{result.category}</div>
+                        </div>
                       </div>
                       <Icon name="ChevronRight" size={14} className="text-slate-300 dark:text-slate-600 group-hover:translate-x-0.5 transition-transform shrink-0" />
                     </motion.button>
