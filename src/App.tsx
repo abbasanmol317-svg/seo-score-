@@ -5,6 +5,7 @@ import { TOOLS } from './services/gemini';
 import { cn } from './lib/utils';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
+import { Analytics } from '@vercel/analytics/react';
 import ToolSearch from './components/ToolSearch';
 import Sidebar from './components/Sidebar';
 import BackToTop from './components/BackToTop';
@@ -347,6 +348,7 @@ function GlobalMetaTags() {
 export default function App() {
   return (
     <ErrorBoundary>
+      <Analytics />
       <HelmetProvider>
         <AdSenseProvider publisherId="ca-pub-6719705037005199" />
         <ThemeProvider>
