@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { PanelLeftOpen, PanelLeftClose, ChevronDown, ChevronRight, X } from 'lucide-react';
+import { PanelLeftOpen, PanelLeftClose, ChevronDown, ChevronRight, X, Star } from 'lucide-react';
 import { TOOLS } from '../services/gemini';
 import { CATEGORY_CONFIG } from '../constants';
 import { cn } from '../lib/utils';
 import { Icon } from './ui/Icon';
+import { useUser } from '../context/UserContext';
 
 interface SidebarProps {
   onClose?: () => void;
@@ -33,9 +34,10 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
       if (!expandedCategories.includes(currentTool.category)) {
         setExpandedCategories(prev => [...prev, currentTool.category]);
       }
-      // If a tool is selected and sidebar is collapsed, we might want to keep it collapsed 
-      // but the category accordion should be "expanded" internally so it shows when uncollapsed.
-      // The request says "automatically expand the category", which we do here.
+      // If we are on a tool page and collapsed, auto-expand to show context
+      if (isCollapsed && !isMobile) {
+        setIsCollapsed(false);
+      }
     }
   }, [currentToolId, currentTool]);
 
@@ -53,6 +55,8 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
   };
 
   const isToolPage = location.pathname.startsWith('/tool/') || location.pathname.startsWith('/tools/');
+  const { preferences, toggleFavorite } = useUser();
+  const favoriteTools = TOOLS.filter(t => preferences.favorites?.includes(t.slug));
 
   if (!isToolPage && !isMobile) return null;
 
@@ -68,7 +72,7 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
         <div className="flex items-center justify-between p-6 border-b border-slate-50 dark:border-slate-800">
           <div className="flex items-center gap-3">
             <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-100 dark:shadow-none">
-              <Icon name="Zap" size={20} />
+              <Icon name="Gauge" size={20} />
             </div>
             <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase">
               SEO Tools
@@ -91,7 +95,7 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
             {(!isCollapsed) && (
               <div className="flex items-center gap-3">
                 <div className="bg-indigo-600 p-1.5 sm:p-2 rounded-lg sm:rounded-xl text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/40">
-                  <Icon name="Zap" size={18} className="sm:w-5 sm:h-5" />
+                  <Icon name="Gauge" size={18} className="sm:w-5 sm:h-5" />
                 </div>
                 <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight uppercase tracking-[0.1em]">
                   SEO Tools
@@ -110,6 +114,50 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
         )}
 
         <div className="space-y-2">
+          {/* Favorites Section */}
+          {favoriteTools.length > 0 && (
+            <div className="mb-6">
+              {!isCollapsed || isMobile ? (
+                <div className="flex items-center gap-2 mb-3 px-3">
+                  <Star size={12} className="text-amber-400 fill-amber-400" />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Favorites</span>
+                </div>
+              ) : (
+                <div className="flex justify-center mb-3">
+                  <Star size={14} className="text-amber-400 fill-amber-400" />
+                </div>
+              )}
+              <div className="space-y-1">
+                {favoriteTools.map(tool => {
+                  const isActive = tool.id === currentToolId || tool.slug === currentToolId;
+                  return (
+                    <div key={`fav-${tool.id}`} className="relative group/fav">
+                      <Link
+                        to={`/tools/${tool.slug}`}
+                        onClick={onClose}
+                        className={cn(
+                          "flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all group/item relative",
+                          isActive
+                            ? "bg-amber-500 text-white shadow-lg shadow-amber-100 dark:shadow-none translate-x-1"
+                            : "text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-500/10"
+                        )}
+                        title={isCollapsed && !isMobile ? tool.name : undefined}
+                      >
+                        <div className={cn(
+                          "p-1 rounded-md transition-colors shrink-0",
+                          isActive ? "bg-white/20 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-400 group-hover/item:bg-white dark:group-hover/item:bg-slate-700 group-hover/item:text-amber-600"
+                        )}>
+                          <Icon name={tool.icon} size={12} strokeWidth={3} />
+                        </div>
+                        {(!isCollapsed || isMobile) && <span className="truncate">{tool.name}</span>}
+                      </Link>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {categories.map((category) => {
             const config = CATEGORY_CONFIG[category];
             const isExpanded = expandedCategories.includes(category);
@@ -199,7 +247,24 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
                                 <Icon name={tool.icon} size={12} strokeWidth={3} />
                               </div>
                               <span className="truncate">{tool.name}</span>
-                              {isActive && <ChevronRight size={10} className="ml-auto opacity-60" strokeWidth={4} />}
+                              <div className="ml-auto flex items-center gap-1">
+                                <button
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    toggleFavorite(tool.slug);
+                                  }}
+                                  className={cn(
+                                    "p-1 rounded-md transition-all opacity-0 group-hover/item:opacity-100",
+                                    preferences.favorites?.includes(tool.slug) 
+                                      ? "text-amber-400 opacity-100" 
+                                      : "text-slate-300 hover:text-amber-400"
+                                  )}
+                                >
+                                  <Star size={10} fill={preferences.favorites?.includes(tool.slug) ? "currentColor" : "none"} />
+                                </button>
+                                {isActive && <ChevronRight size={10} className="opacity-60" strokeWidth={4} />}
+                              </div>
                             </Link>
                           );
                         })}
@@ -214,6 +279,21 @@ export default React.memo(function Sidebar({ onClose, isMobile }: SidebarProps) 
       </div>
 
       <div className={cn("mt-auto p-6 border-t border-slate-100 dark:border-slate-800", isCollapsed && !isMobile && "px-4")}>
+        <Link
+          to="/profile"
+          onClick={onClose}
+          className={cn(
+            "flex items-center gap-3 p-3 rounded-xl transition-all font-bold text-sm mb-2",
+            isCollapsed && !isMobile && "justify-center",
+            location.pathname === '/profile'
+              ? "bg-indigo-600 text-white shadow-lg shadow-indigo-100 dark:shadow-indigo-900/40"
+              : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-indigo-600 dark:hover:text-indigo-400"
+          )}
+          title={isCollapsed && !isMobile ? "Your Profile" : undefined}
+        >
+          <Icon name="User" size={18} />
+          {(!isCollapsed || isMobile) && <span>Profile</span>}
+        </Link>
         <Link
           to="/"
           onClick={onClose}

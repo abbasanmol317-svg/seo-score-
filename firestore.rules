@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    
+    // --- Validation Helpers ---
+    function isValidUser(data) {
+      return data.keys().hasAll(['name', 'email', 'goals']) 
+        && data.name is string && data.name.size() <= 100
+        && data.email is string && data.email.size() <= 150
+        && data.goals is list && data.goals.size() <= 20
+        && (data.get('company', '') is string && data.get('company', '').size() <= 100)
+        && (data.get('updatedAt', request.time) == request.time);
+    }
+
+    function isValidHistory(data) {
+      return data.keys().hasAll(['userId', 'toolId', 'toolName', 'timestamp'])
+        && data.userId == request.auth.uid
+        && data.toolId is string && data.toolId.size() <= 50
+        && data.toolName is string && data.toolName.size() <= 100
+        && (data.get('toolSlug', '') is string)
+        && (data.get('url', '') is string && data.get('url', '').size() <= 1024)
+        && (data.get('score', 0) is number)
+        && data.timestamp == request.time;
+    }
+
+    // --- Rules ---
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUser(incoming());
+      allow update: if isOwner(userId) && isValidUser(incoming())
+        && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'email', 'goals', 'company', 'updatedAt']);
+    }
+
+    match /analysis_history/{historyId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidHistory(incoming()) && isValidId(historyId);
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+  }
+}

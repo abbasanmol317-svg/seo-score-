@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Star } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Tool } from '../services/gemini';
 import { Icon } from './ui/Icon';
+import { useUser } from '../context/UserContext';
 
 interface ToolCardProps {
   tool: Tool;
@@ -13,6 +14,9 @@ interface ToolCardProps {
 }
 
 export const ToolCard = React.memo(({ tool, index, className }: ToolCardProps) => {
+  const { preferences, toggleFavorite } = useUser();
+  const isFavorite = preferences.favorites?.includes(tool.slug);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -37,6 +41,24 @@ export const ToolCard = React.memo(({ tool, index, className }: ToolCardProps) =
         <div className="absolute top-0 right-0 p-4 opacity-[0.02] group-hover:opacity-[0.06] transition-all duration-700 group-hover:scale-150 group-hover:-rotate-12 pointer-events-none">
           <Icon name={tool.icon} size={120} className="text-indigo-600 dark:text-indigo-400" />
         </div>
+        
+        {/* Favorite Toggle */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleFavorite(tool.slug);
+          }}
+          className={cn(
+            "absolute top-4 right-4 z-20 p-2 rounded-xl transition-all duration-300",
+            isFavorite 
+              ? "text-amber-400 bg-amber-50 dark:bg-amber-400/10 scale-110 shadow-sm" 
+              : "text-slate-300 hover:text-amber-400 hover:bg-slate-50 dark:hover:bg-slate-800 opacity-0 group-hover:opacity-100"
+          )}
+          title={isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+        >
+          <Star size={18} fill={isFavorite ? "currentColor" : "none"} />
+        </button>
         
         <div className="flex items-center gap-4 mb-6 relative z-10">
           <div className={cn(

@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from 'react';
+import React, { useState, lazy, Suspense, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, History, Target, ArrowRight, ChevronDown, Globe, Cpu, Zap, CheckCircle2, ShieldCheck, TrendingUp, Search } from 'lucide-react';
@@ -10,6 +10,7 @@ import { CATEGORY_CONFIG } from '../constants';
 import { AdUnit } from '../components/AdSense';
 import { Icon } from '../components/ui/Icon';
 import NewsletterSection from '../components/NewsletterSection';
+import { useUser } from '../context/UserContext';
 
 // Lazy load heavy chart components
 const SEOPerformanceChart = lazy(() => import('../components/charts/SEOPerformanceChart').then(m => ({ default: m.SEOPerformanceChart })));
@@ -27,28 +28,22 @@ const ChartPlaceholder = () => (
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { preferences, history } = useUser();
   const [quickAuditUrl, setQuickAuditUrl] = useState('');
   const categories = Object.keys(CATEGORY_CONFIG).filter(cat => 
     TOOLS.some(t => t.category === cat)
   );
   const [expandedCategories, setExpandedCategories] = useState<string[]>(categories);
-  const [recentTools, setRecentTools] = useState<Tool[]>([]);
-  const [userGoals, setUserGoals] = useState<string[]>([]);
+  
+  const recentTools = useMemo(() => {
+    // Get unique tool IDs from history
+    const toolIds = Array.from(new Set(history.map(h => h.id)));
+    return toolIds
+      .map(id => TOOLS.find(t => t.id === id))
+      .filter(Boolean) as Tool[];
+  }, [history]);
 
-  React.useEffect(() => {
-    try {
-      const recentIds = JSON.parse(localStorage.getItem('seo_recent_tools') || '[]');
-      const found = recentIds
-        .map((id: string) => TOOLS.find(t => t.id === id))
-        .filter(Boolean) as Tool[];
-      setRecentTools(found);
-
-      const goals = JSON.parse(localStorage.getItem('seo_score_user_goals') || '[]');
-      setUserGoals(goals);
-    } catch (e) {
-      // Ignore
-    }
-  }, []);
+  const userGoals = preferences.goals;
 
   const getRecommendedTools = () => {
     if (userGoals.length === 0) return [];
@@ -77,12 +72,16 @@ export default function Dashboard() {
     );
   };
 
+  const favoriteTools = useMemo(() => {
+    return TOOLS.filter(t => preferences.favorites?.includes(t.slug));
+  }, [preferences.favorites]);
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12 sm:px-6 lg:px-8">
       <Helmet>
         <title>SEO Score – Free SEO Tools for Website Audit, Keywords & Ranking</title>
         <meta name="description" content="Master search in 2026 with a free 260-point AI audit. Optimize for Google, Gemini & Answer Engines. Get your expert search roadmap—no signup required. Scan now!" />
-        <meta name="keywords" content="free SEO tools, AI SEO analysis, Google Gemini SEO, keyword research tool, technical SEO audit, backlink checker, content optimizer, SEO suite 2026" />
+        <meta name="keywords" content="free SEO tools, AI SEO analysis, Google Gemini SEO, keyword research tool, technical SEO audit, backlink checker, content optimizer, SEO suite 2026, AEO, GEO, answer engine optimization" />
         <link rel="canonical" href="https://seoscore.site/" />
         <script type="application/ld+json">
           {JSON.stringify([
@@ -229,7 +228,30 @@ export default function Dashboard() {
         </Suspense>
       </div>
 
-      <AnimatePresence>
+      <AnimatePresence mode="popLayout">
+        {favoriteTools.length > 0 && (
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="mb-12 sm:mb-16"
+          >
+            <div className="flex items-center gap-3 mb-6 sm:mb-8">
+              <div className="p-2 bg-amber-400 rounded-xl text-white shadow-lg shadow-amber-100 dark:shadow-none">
+                <Icon name="Star" size={20} fill="currentColor" />
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                Your <span className="text-amber-500">Favorites</span>
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {favoriteTools.map((tool, index) => (
+                <ToolCard key={`fav-${tool.id}`} tool={tool} index={index} />
+              ))}
+            </div>
+          </motion.section>
+        )}
+
         {recentTools.length > 0 && (
           <motion.section
             initial={{ opacity: 0, y: 20 }}

@@ -249,6 +249,9 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
   const schemaMatch = result.match(/## 🛠️ Schema Markup \(JSON-LD\)\n[\s\S]*?```json\n([\s\S]*?)\n```/s);
   const schemaSnippet = schemaMatch ? schemaMatch[1].trim() : '';
 
+  const selfOptimizationMatch = result.match(/## 💎 Self-Optimization Suggestion\n(.*?)(?=\n##|$)/s);
+  const selfOptimization = selfOptimizationMatch ? selfOptimizationMatch[1].trim() : '';
+
   const [copiedCode, setCopiedCode] = React.useState(false);
   const [copiedSchema, setCopiedSchema] = React.useState(false);
 
@@ -807,7 +810,7 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
           }}
         />
       }
-      result={result || bulkResults.length > 0}
+      result={result || bulkResults.length > 0 || editableTitle !== '' || editableDescription !== ''}
       resultSection={
         <div className="space-y-8">
           {isBulkMode && bulkResults.length > 0 && (
@@ -901,7 +904,7 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                 setShowShareMenu={setShowShareMenu}
               />
               
-              {result && (title || description || codeSnippet) && (
+              {(result || editableTitle || editableDescription) && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -913,8 +916,8 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                         <Icons.Search size={24} />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Search Result Preview</h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-0.5">Real-time Google SERP Simulation</p>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Live SERP Optimizer</h3>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-0.5">Real-time Search Simulation & Editing</p>
                       </div>
                     </div>
 
@@ -1210,6 +1213,66 @@ export const MetaTagToolUI: React.FC<ToolComponentProps> = (props) => {
                       </div>
                     </div>
                   </div>
+
+                  {selfOptimization && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-12 group/self-opt"
+                    >
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="p-2 bg-indigo-600 rounded-xl text-white shadow-lg group-hover/self-opt:rotate-12 transition-transform">
+                          <Icons.Sparkles size={20} />
+                        </div>
+                        <div>
+                          <h4 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">Practice What We Preach</h4>
+                          <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Self-Optimization Intelligence for this tool</p>
+                        </div>
+                      </div>
+                      
+                      <div className="relative p-6 sm:p-10 bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-900/10 dark:to-blue-900/10 rounded-[2.5rem] border border-indigo-100 dark:border-indigo-800/50 shadow-inner overflow-hidden">
+                        <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none group-hover/self-opt:scale-125 transition-transform duration-1000">
+                          <Icons.Search size={150} />
+                        </div>
+                        
+                        <div className="relative z-10 space-y-6">
+                          <div className="prose prose-sm dark:prose-invert max-w-none text-slate-600 dark:text-slate-400">
+                            <div className="whitespace-pre-wrap leading-relaxed">
+                              {selfOptimization.split('\n').map((line, i) => {
+                                if (line.toLowerCase().includes('meta title:')) {
+                                  return (
+                                    <div key={i} className="mb-4 p-4 bg-white dark:bg-slate-900 rounded-2xl border border-indigo-200 dark:border-indigo-800 shadow-sm">
+                                      <span className="text-[9px] font-black text-indigo-500 uppercase tracking-widest block mb-1">Proposed Page Title</span>
+                                      <p className="text-sm font-black text-slate-900 dark:text-white">{line.split(/:\s*/)[1] || line}</p>
+                                    </div>
+                                  );
+                                }
+                                if (line.toLowerCase().includes('meta description:')) {
+                                  return (
+                                    <div key={i} className="mb-4 p-4 bg-white dark:bg-slate-900 rounded-2xl border border-indigo-200 dark:border-indigo-800 shadow-sm">
+                                      <span className="text-[9px] font-black text-indigo-500 uppercase tracking-widest block mb-1">Proposed Description</span>
+                                      <p className="text-xs text-slate-600 dark:text-slate-400 font-medium leading-relaxed">{line.split(/:\s*/)[1] || line}</p>
+                                    </div>
+                                  );
+                                }
+                                return <p key={i} className="mb-2 text-xs font-medium">{line}</p>;
+                              })}
+                            </div>
+                          </div>
+                          
+                          <div className="pt-4 flex flex-col sm:flex-row items-center gap-4">
+                            <div className="px-5 py-2.5 bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 border border-indigo-200/50 dark:border-indigo-800/50">
+                              <Icons.Zap size={14} />
+                              Auto-Implemented for maximum CTR
+                            </div>
+                            <span className="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest">
+                              Updated Live: {new Date().toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
 
                   <div className="mt-12 p-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 rounded-[2rem] shadow-2xl shadow-indigo-500/20">
                     <div className="bg-white dark:bg-slate-900 rounded-[1.95rem] p-6 sm:p-10 text-center">

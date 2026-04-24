@@ -13,8 +13,10 @@ import Breadcrumbs from '../components/Breadcrumbs';
 import { BLOG_POSTS } from '../constants/blogData';
 import { Icon } from '../components/ui/Icon';
 import LeadCaptureModal from '../components/LeadCaptureModal';
+import { useUser } from '../context/UserContext';
 
 export default function ToolPage({ idOverride }: { idOverride?: string }) {
+  const { preferences, toggleFavorite, addToHistory } = useUser();
   const { id: paramId } = useParams<{ id: string }>();
   const id = idOverride || paramId;
   const navigate = useNavigate();
@@ -265,6 +267,13 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
       const output = await runTool(tool.id as ToolId, finalInput);
       setResult(output || 'No response from AI.');
       
+      addToHistory({
+        id: tool.id,
+        slug: tool.slug,
+        name: tool.name,
+        url: finalInput.includes('http') ? finalInput : undefined
+      });
+      
       const newEntry = {
         id: Date.now(),
         toolId: tool.id,
@@ -493,11 +502,14 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
 
   const hasHistory = history.length > 0;
 
-  // Optimized Meta Tags
-  const seoTitle = tool.seoTitle || `${tool.name}: Best Free AI ${tool.category} Tool (2026)`;
-  const seoDescription = tool.seoDescription || `Optimize your site with our free ${tool.name}. Get deep AI insights and actionable SEO fixes powered by Gemini. Run your free analysis now!`;
+  // Optimized Meta Tags - Refined for maximum CTR and search relevance
+  const defaultTitle = `${tool.name} | #1 AI-Powered ${tool.category} Tool (Free 2026)`;
+  const seoTitle = tool.seoTitle || defaultTitle;
+  
+  const defaultDesc = `Dominate the SERPs with our ${tool.name}. ${tool.description} Built for Google, Gemini, and AI Search. Get actionable intelligence and rank #1 today for free.`;
+  const seoDescription = tool.seoDescription || defaultDesc;
 
-  const seoKeywords = `${tool.name.toLowerCase()}, free SEO tool, AI SEO analysis, ${tool.category.toLowerCase()}, search engine optimization, Google Gemini AI, SEO Score, technical SEO`;
+  const seoKeywords = `${tool.name.toLowerCase()}, free SEO tool, AI SEO analysis, ${tool.category.toLowerCase()}, search engine optimization, Google Gemini AI, SEO Score, technical SEO, digital marketing, analytics`;
 
   const deepContent = getDeepContent(tool.category);
 
@@ -570,6 +582,21 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
         <meta name="description" content={seoDescription} />
         <meta name="keywords" content={seoKeywords} />
         <link rel="canonical" href={`https://seoscore.site/tools/${tool.slug}`} />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`https://seoscore.site/tools/${tool.slug}`} />
+        <meta property="og:title" content={seoTitle} />
+        <meta property="og:description" content={seoDescription} />
+        <meta property="og:image" content={`https://picsum.photos/seed/${tool.id}/1200/630`} />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content={`https://seoscore.site/tools/${tool.slug}`} />
+        <meta name="twitter:title" content={seoTitle} />
+        <meta name="twitter:description" content={seoDescription} />
+        <meta name="twitter:image" content={`https://picsum.photos/seed/${tool.id}/1200/630`} />
+        
         <script type="application/ld+json">
           {JSON.stringify(toolSchema)}
         </script>
@@ -615,8 +642,22 @@ export default function ToolPage({ idOverride }: { idOverride?: string }) {
               <div className="p-2 sm:p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg sm:rounded-xl text-indigo-600 dark:text-indigo-400 shrink-0">
                 <Icon name={tool.icon} size={20} className="sm:w-7 sm:h-7" />
               </div>
-              <div className="min-w-0">
-                <h1 className="text-lg sm:text-3xl font-black text-slate-900 dark:text-white truncate leading-tight">{tool.name}</h1>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-lg sm:text-3xl font-black text-slate-900 dark:text-white truncate leading-tight">{tool.name}</h1>
+                  <button
+                    onClick={() => toggleFavorite(tool.slug)}
+                    className={cn(
+                      "p-1.5 sm:p-2 rounded-xl transition-all active:scale-90",
+                      preferences.favorites?.includes(tool.slug)
+                        ? "text-amber-400 bg-amber-50 dark:bg-amber-400/10 shadow-sm"
+                        : "text-slate-300 hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-400/10"
+                    )}
+                    title={preferences.favorites?.includes(tool.slug) ? "Remove from Favorites" : "Add to Favorites"}
+                  >
+                    <Icon name="Star" size={20} className="sm:w-6 sm:h-6" fill={preferences.favorites?.includes(tool.slug) ? "currentColor" : "none"} />
+                  </button>
+                </div>
                 <p className="text-[10px] sm:text-base text-slate-500 dark:text-slate-400 line-clamp-1 font-medium">{tool.description}</p>
               </div>
             </div>

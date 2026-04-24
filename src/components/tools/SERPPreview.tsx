@@ -40,8 +40,26 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
   ctrAnalysis
 }) => {
   // Use full titles and descriptions to let CSS handle device-specific truncation simulation
-  const displayTitle = title || 'Optimized Page Title Will Appear Here';
-  const displayDescription = description || 'Your meta description will appear here. It should be between 150-160 characters for optimal visibility in search results.';
+  const [selectedDeviceId, setSelectedDeviceId] = React.useState('standard');
+  const [searchQuery, setSearchQuery] = React.useState('');
+
+  const DEVICES = [
+    { id: 'se', name: 'iPhone SE', width: 320, titleMax: 55, descMax: 110, fontSize: 'text-[17px]' },
+    { id: 'standard', name: 'iPhone 15', width: 393, titleMax: 60, descMax: 145, fontSize: 'text-[19px]' },
+    { id: 'large', name: 'S24 Ultra', width: 412, titleMax: 65, descMax: 155, fontSize: 'text-[20px]' },
+  ];
+
+  const currentDevice = DEVICES.find(d => d.id === selectedDeviceId) || DEVICES[1];
+
+  // Helper to truncate text accurately based on device limits for realism
+  const getTruncatedContent = (text: string, maxChars: number) => {
+    if (!text) return '';
+    if (text.length <= maxChars) return text;
+    return text.substring(0, maxChars).trim() + '...';
+  };
+
+  const displayTitle = getTruncatedContent(title || 'Optimized Page Title Will Appear Here', currentDevice.titleMax);
+  const displayDescription = getTruncatedContent(description || 'Your meta description will appear here. It should be between 150-160 characters for optimal visibility in search results.', currentDevice.descMax);
 
   const getTitleColor = (len: number) => {
     if (len === 0) return "bg-slate-100 text-slate-500 dark:bg-slate-800";
@@ -79,6 +97,39 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
 
   const { score: ctrScore, hasPowerWords } = getCtrCalculations();
 
+  // Highlight keywords in text
+  const highlightKeywords = (text: string) => {
+    if (!text) return text;
+    
+    const keywordsSet = new Set<string>();
+    
+    // Extract keywords from analysis
+    if (ctrAnalysis) {
+      const keywordMatch = ctrAnalysis.match(/Keywords?:\s*(.*)/i);
+      if (keywordMatch) {
+        keywordMatch[1].split(/[,|;]/).map(k => k.trim()).filter(k => k.length > 2).forEach(k => keywordsSet.add(k));
+      }
+    }
+
+    // Extract keywords from search query
+    if (searchQuery) {
+      searchQuery.split(' ').filter(word => word.length > 2).forEach(word => keywordsSet.add(word));
+    }
+    
+    const keywords = Array.from(keywordsSet);
+    if (keywords.length === 0) return text;
+    
+    let highlighted = text;
+    keywords.forEach(kw => {
+      // Escape special characters for regex
+      const escaped = kw.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+      const regex = new RegExp(`(${escaped})`, 'gi');
+      highlighted = highlighted.replace(regex, '<strong>$1</strong>');
+    });
+    
+    return <span dangerouslySetInnerHTML={{ __html: highlighted }} />;
+  };
+
   // Extract structured insights from ctrAnalysis
   const triggers = ctrAnalysis?.match(/Trigger:\s*(.*)/i)?.[1] || 
                   ctrAnalysis?.match(/Emotional Triggers?:\s*(.*)/i)?.[1];
@@ -86,18 +137,77 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
   const predictedImpact = ctrAnalysis?.match(/Predicted CTR Impact:\s*(.*)/i)?.[1];
 
   const [showHeatmap, setShowHeatmap] = React.useState(false);
-  const [selectedDeviceId, setSelectedDeviceId] = React.useState('standard');
 
-  const DEVICES = [
-    { id: 'se', name: 'iPhone SE', width: 320 },
-    { id: 'standard', name: 'iPhone 15', width: 393 },
-    { id: 'large', name: 'S24 Ultra', width: 412 },
-  ];
-
-  const currentDevice = DEVICES.find(d => d.id === selectedDeviceId) || DEVICES[1];
+  // Update searchQuery when title changes if it was empty
+  React.useEffect(() => {
+    if (!searchQuery && title) {
+      setSearchQuery(title.split(' - ')[0] || title);
+    }
+  }, [title]);
 
   return (
     <div className="space-y-8">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-slate-100 dark:border-slate-800">
+        <div className="flex flex-col gap-1.5">
+          <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] flex items-center gap-2">
+            <Icons.Monitor size={12} className="text-indigo-500" />
+            Device Visualization
+          </h4>
+          <p className="text-[9px] text-slate-400 font-medium">Switch to see how your tags adapt to screen sizes</p>
+        </div>
+        
+        <div className="flex items-center gap-3">
+          <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
+            <button
+              onClick={() => onModeChange?.('desktop')}
+              className={cn(
+                "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
+                mode === 'desktop' 
+                  ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
+                  : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
+              )}
+            >
+              <Icons.Monitor size={14} />
+              Desktop
+            </button>
+            <button
+              onClick={() => onModeChange?.('mobile')}
+              className={cn(
+                "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
+                mode === 'mobile' 
+                  ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
+                  : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
+              )}
+            >
+              <Icons.Smartphone size={14} />
+              Mobile
+            </button>
+          </div>
+
+          <div className="w-px h-8 bg-slate-100 dark:bg-slate-800 mx-1 hidden sm:block" />
+
+          {mode === 'mobile' && (
+            <div className="hidden sm:flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
+              {DEVICES.map(device => (
+                <button
+                  key={device.id}
+                  onClick={() => setSelectedDeviceId(device.id)}
+                  className={cn(
+                    "px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex flex-col items-center gap-0.5 min-w-[70px]",
+                    selectedDeviceId === device.id
+                      ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
+                      : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
+                  )}
+                >
+                  <span className="font-black">{device.name.split(' ')[1] || device.name}</span>
+                  <span className="text-[7px] opacity-60 font-medium">{device.width}px</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
       {showEditor && (
         <div className="grid lg:grid-cols-2 gap-10 sm:gap-14">
           <div className="space-y-8">
@@ -296,61 +406,6 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
                 </div>
               </div>
             </div>
-
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-              <div className="flex flex-col gap-2 w-full sm:w-auto">
-                <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Preview Mode</span>
-                <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 w-fit">
-                  <button
-                    onClick={() => onModeChange?.('desktop')}
-                    className={cn(
-                      "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
-                      mode === 'desktop' 
-                        ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
-                        : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
-                    )}
-                  >
-                    <Icons.Monitor size={14} />
-                    Desktop
-                  </button>
-                  <button
-                    onClick={() => onModeChange?.('mobile')}
-                    className={cn(
-                      "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
-                      mode === 'mobile' 
-                        ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm" 
-                        : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
-                    )}
-                  >
-                    <Icons.Smartphone size={14} />
-                    Mobile
-                  </button>
-                </div>
-              </div>
-
-              {mode === 'mobile' && (
-                <div className="flex flex-col gap-2 w-full sm:w-auto">
-                  <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Simulate Device</span>
-                  <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 w-fit">
-                    {DEVICES.map(device => (
-                      <button
-                        key={device.id}
-                        onClick={() => setSelectedDeviceId(device.id)}
-                        className={cn(
-                          "px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex flex-col items-center gap-0.5 min-w-[80px]",
-                          selectedDeviceId === device.id
-                            ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
-                            : "text-slate-500 hover:text-slate-700 dark:text-slate-400"
-                        )}
-                      >
-                        <span>{device.name}</span>
-                        <span className="text-[8px] opacity-60 font-medium">{device.width}px</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       )}
@@ -414,125 +469,181 @@ export const SERPPreview: React.FC<SERPPreviewProps> = ({
           )}
 
           <div className={cn(
-            "flex-grow relative z-10 p-6 pt-10",
-            mode === 'mobile' && "bg-white dark:bg-slate-950 overflow-y-auto custom-scrollbar"
+            "flex-grow relative z-10 p-4 pt-4",
+            mode === 'mobile' && "bg-[#f2f2f2] dark:bg-slate-900 overflow-y-auto custom-scrollbar"
           )}>
-            {/* Desktop and Mobile Headers differ slightly */}
-            <div className={cn(
-              "flex items-center gap-3 mb-3",
-              mode === 'mobile' ? "flex-col items-start gap-1" : "flex-row"
-            )}>
-              {mode === 'mobile' ? (
-                <div className="flex items-center gap-3 mb-2 w-full">
-                  <div className="w-8 h-8 bg-white dark:bg-slate-900 rounded-lg flex items-center justify-center text-slate-400 shrink-0 overflow-hidden shadow-md border border-slate-100 dark:border-slate-800">
-                    {siteUrl ? (
-                      <img 
-                        src={`https://www.google.com/s2/favicons?sz=64&domain=${siteUrl.includes('://') ? siteUrl : `https://${siteUrl}`}`} 
-                        alt="" 
-                        className="w-full h-full object-contain p-1.5"
-                        referrerPolicy="no-referrer"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>';
-                        }}
-                      />
-                    ) : (
-                      <Icons.Globe size={16} />
-                    )}
-                  </div>
-                  <div className="flex flex-col flex-grow min-w-0">
-                    <div className="flex items-center justify-between w-full">
-                      <span className="text-[14px] font-medium text-slate-900 dark:text-slate-200 truncate">{siteName || 'Enter Site Name'}</span>
-                      <Icons.MoreVertical size={14} className="text-slate-400" />
-                    </div>
-                    <span className="text-[12px] text-slate-500 dark:text-slate-400 truncate opacity-80">{siteUrl || 'example.com'}</span>
+            {mode === 'mobile' && (
+              <div className="mb-4 sticky top-0 z-30 bg-[#f2f2f2] dark:bg-slate-900 -mx-4 px-4 pb-2">
+                <div className="flex items-center gap-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-full py-2 px-4 shadow-sm mb-3">
+                  <Icons.Search size={16} className="text-blue-500 shrink-0" />
+                  <input 
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="text-sm bg-transparent border-none focus:ring-0 p-0 text-slate-700 dark:text-slate-200 font-medium truncate flex-grow placeholder:text-slate-400"
+                    placeholder="Search query..."
+                  />
+                  {searchQuery && (
+                    <button onClick={() => setSearchQuery('')} className="text-slate-400 hover:text-rose-500">
+                      <Icons.X size={14} />
+                    </button>
+                  )}
+                  <div className="flex items-center gap-2 text-slate-400 border-l border-slate-200 dark:border-slate-700 pl-3 ml-1 shrink-0">
+                    <Icons.Mic size={16} />
+                    <Icons.Camera size={16} />
                   </div>
                 </div>
-              ) : (
-                <>
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center text-slate-400 shrink-0 overflow-hidden shadow-md border border-slate-100 dark:border-slate-800 transition-transform group-hover/serp:scale-110">
-                    {siteUrl ? (
-                      <img 
-                        src={`https://www.google.com/s2/favicons?sz=64&domain=${siteUrl.includes('://') ? siteUrl : `https://${siteUrl}`}`} 
-                        alt="" 
-                        className="w-full h-full object-contain p-1.5"
-                        referrerPolicy="no-referrer"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>';
-                        }}
-                      />
-                    ) : (
-                      <Icons.Globe size={16} />
-                    )}
-                  </div>
-                  <div className="flex flex-col min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-sm font-medium text-slate-900 dark:text-slate-200 truncate font-sans">
-                        {siteName || 'Enter Site Name'}
-                      </span>
-                      <Icons.ChevronDown size={12} className="text-slate-400" />
+                <div className="flex items-center gap-6 overflow-x-auto no-scrollbar pb-1">
+                  {['All', 'Images', 'Videos', 'News', 'Shopping', 'Maps'].map((tab, i) => (
+                    <div 
+                      key={tab} 
+                      className={cn(
+                        "text-[12px] font-medium whitespace-nowrap pb-2 relative",
+                        i === 0 ? "text-indigo-600 dark:text-indigo-400 font-bold" : "text-slate-500 dark:text-slate-400"
+                      )}
+                    >
+                      {tab}
+                      {i === 0 && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 dark:bg-indigo-400 rounded-full" />}
                     </div>
-                    <span className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate opacity-80 font-sans">{siteUrl || 'example.com/slug'}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className={cn(
+               mode === 'mobile' && "bg-white dark:bg-slate-950 rounded-2xl p-4 shadow-sm border border-slate-100 dark:border-slate-800 mb-4"
+            )}>
+              <div className={cn(
+                "flex items-center gap-3 mb-3",
+                mode === 'mobile' ? "flex-col items-start gap-1" : "flex-row"
+              )}>
+                {mode === 'mobile' ? (
+                  <div className="flex items-center gap-3 mb-2 w-full">
+                    <div className="w-8 h-8 bg-white dark:bg-slate-900 rounded-lg flex items-center justify-center text-slate-400 shrink-0 overflow-hidden shadow-md border border-slate-100 dark:border-slate-800">
+                      {siteUrl ? (
+                        <img 
+                          src={`https://www.google.com/s2/favicons?sz=64&domain=${siteUrl.includes('://') ? siteUrl : `https://${siteUrl}`}`} 
+                          alt="" 
+                          className="w-full h-full object-contain p-1.5"
+                          referrerPolicy="no-referrer"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>';
+                          }}
+                        />
+                      ) : (
+                        <Icons.Globe size={16} />
+                      )}
+                    </div>
+                    <div className="flex flex-col flex-grow min-w-0">
+                      <div className="flex items-center justify-between w-full">
+                        <span className="text-[14px] font-medium text-slate-900 dark:text-slate-200 truncate">{siteName || 'Enter Site Name'}</span>
+                        <Icons.MoreVertical size={14} className="text-slate-400" />
+                      </div>
+                      <span className="text-[12px] text-slate-500 dark:text-slate-400 truncate opacity-80">{siteUrl || 'example.com'}</span>
+                    </div>
                   </div>
-                </>
-              )}
-            </div>
+                ) : (
+                  <>
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center text-slate-400 shrink-0 overflow-hidden shadow-md border border-slate-100 dark:border-slate-800 transition-transform group-hover/serp:scale-110">
+                      {siteUrl ? (
+                        <img 
+                          src={`https://www.google.com/s2/favicons?sz=64&domain=${siteUrl.includes('://') ? siteUrl : `https://${siteUrl}`}`} 
+                          alt="" 
+                          className="w-full h-full object-contain p-1.5"
+                          referrerPolicy="no-referrer"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>';
+                          }}
+                        />
+                      ) : (
+                        <Icons.Globe size={16} />
+                      )}
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-sm font-medium text-slate-900 dark:text-slate-200 truncate font-sans">
+                          {siteName || 'Enter Site Name'}
+                        </span>
+                        <Icons.ChevronDown size={12} className="text-slate-400" />
+                      </div>
+                      <span className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate opacity-80 font-sans">{siteUrl || 'example.com/slug'}</span>
+                    </div>
+                  </>
+                )}
+              </div>
 
             <button className={cn(
               "text-[#1a0dab] dark:text-[#8ab4f8] hover:underline text-left cursor-pointer mb-2 leading-tight font-sans",
-              mode === 'mobile' ? "text-[22px] font-normal line-clamp-2" : "text-[20px] font-medium line-clamp-1"
+              mode === 'mobile' ? `${currentDevice.fontSize} font-normal line-clamp-2` : "text-[20px] font-medium line-clamp-1"
             )}>
-              {displayTitle}
-            </button>
+                {highlightKeywords(displayTitle)}
+              </button>
 
-            {schema?.type === 'product' && schema.product && (
-              <div className="flex items-center gap-1.5 text-[13px] text-[#70757a] dark:text-[#bdc1c6] mb-2 bg-slate-50 dark:bg-slate-800/50 w-fit px-2 py-0.5 rounded-lg border border-slate-100 dark:border-slate-800">
-                <div className="flex items-center gap-0.5 text-amber-500">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Icons.Star 
-                      key={i} 
-                      size={12} 
-                      fill={i < Math.floor(parseFloat(schema.product!.rating)) ? "currentColor" : "none"} 
-                      className={i < Math.floor(parseFloat(schema.product!.rating)) ? "" : "opacity-30"}
-                    />
+              {schema?.type === 'product' && schema.product && (
+                <div className="flex items-center gap-1.5 text-[13px] text-[#70757a] dark:text-[#bdc1c6] mb-2 bg-slate-50 dark:bg-slate-800/50 w-fit px-2 py-0.5 rounded-lg border border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-0.5 text-amber-500">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Icons.Star 
+                        key={i} 
+                        size={12} 
+                        fill={i < Math.floor(parseFloat(schema.product!.rating)) ? "currentColor" : "none"} 
+                        className={i < Math.floor(parseFloat(schema.product!.rating)) ? "" : "opacity-30"}
+                      />
+                    ))}
+                  </div>
+                  <span className="font-bold">{schema.product.rating}</span>
+                  <span className="opacity-50">({schema.product.reviews})</span>
+                  <span className="opacity-20">|</span>
+                  <span className="font-bold text-slate-900 dark:text-white">
+                    {schema.product.currency === 'USD' ? '$' : schema.product.currency === 'EUR' ? '€' : schema.product.currency === 'GBP' ? '£' : ''}
+                    {schema.product.price}
+                  </span>
+                  <span className="opacity-20">|</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-0.5">
+                    <Icons.Check size={12} />
+                    In Stock
+                  </span>
+                </div>
+              )}
+
+              {schema?.type === 'article' && schema.article && (
+                <div className="text-[13px] text-[#70757a] dark:text-[#bdc1c6] mb-2 flex items-center gap-2">
+                  <Icons.Calendar size={12} />
+                  <span>{schema.article.date}</span>
+                </div>
+              )}
+
+              <div className={cn(
+                "text-[#4d5156] dark:text-[#bdc1c6] leading-relaxed opacity-90 font-sans",
+                mode === 'mobile' ? "text-[14px] line-clamp-3" : "text-sm line-clamp-2"
+              )}>
+                {highlightKeywords(displayDescription)}
+              </div>
+
+              {schema?.type === 'faq' && schema.faq && schema.faq.length > 0 && (
+                <div className="mt-3 space-y-1 border-t border-slate-100 dark:border-slate-800 pt-3">
+                  {schema.faq.slice(0, 2).map((item, i) => (
+                    <div key={i} className="flex items-center justify-between py-2 group/faq cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 -mx-2 px-2 rounded-lg transition-colors">
+                      <span className="text-[14px] text-[#1a0dab] dark:text-[#8ab4f8] hover:underline truncate pr-4 font-sans">{item.q || 'Sample Question?'}</span>
+                      <Icons.ChevronDown size={14} className="text-slate-400 shrink-0 group-hover/faq:text-indigo-500 transition-colors" />
+                    </div>
                   ))}
                 </div>
-                <span className="font-bold">{schema.product.rating}</span>
-                <span className="opacity-50">({schema.product.reviews})</span>
-                <span className="opacity-20">|</span>
-                <span className="font-bold text-slate-900 dark:text-white">
-                  {schema.product.currency === 'USD' ? '$' : schema.product.currency === 'EUR' ? '€' : schema.product.currency === 'GBP' ? '£' : ''}
-                  {schema.product.price}
-                </span>
-                <span className="opacity-20">|</span>
-                <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-0.5">
-                  <Icons.Check size={12} />
-                  In Stock
-                </span>
-              </div>
-            )}
-
-            {schema?.type === 'article' && schema.article && (
-              <div className="text-[13px] text-[#70757a] dark:text-[#bdc1c6] mb-2 flex items-center gap-2">
-                <Icons.Calendar size={12} />
-                <span>{schema.article.date}</span>
-              </div>
-            )}
-
-            <div className={cn(
-              "text-[#4d5156] dark:text-[#bdc1c6] leading-relaxed opacity-90 font-sans",
-              mode === 'mobile' ? "text-[15px] line-clamp-3" : "text-sm line-clamp-2"
-            )}>
-              {displayDescription}
+              )}
             </div>
 
-            {schema?.type === 'faq' && schema.faq && schema.faq.length > 0 && (
-              <div className="mt-3 space-y-1 border-t border-slate-100 dark:border-slate-800 pt-3">
-                {schema.faq.slice(0, 2).map((item, i) => (
-                  <div key={i} className="flex items-center justify-between py-2 group/faq cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 -mx-2 px-2 rounded-lg transition-colors">
-                    <span className="text-[14px] text-[#1a0dab] dark:text-[#8ab4f8] hover:underline truncate pr-4 font-sans">{item.q || 'Sample Question?'}</span>
-                    <Icons.ChevronDown size={14} className="text-slate-400 shrink-0 group-hover/faq:text-indigo-500 transition-colors" />
+            {/* Simulated Second Result for Mobile to show "SERP" context */}
+            {mode === 'mobile' && (
+              <div className="bg-white dark:bg-slate-950 rounded-2xl p-4 shadow-sm border border-slate-100 dark:border-slate-800 opacity-60 pointer-events-none scale-[0.98]">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-lg" />
+                  <div className="flex-grow">
+                    <div className="h-3 w-24 bg-slate-100 dark:bg-slate-800 rounded-full mb-1" />
+                    <div className="h-2 w-32 bg-slate-50 dark:bg-slate-900 rounded-full" />
                   </div>
-                ))}
+                </div>
+                <div className="h-4 w-full bg-slate-100 dark:bg-slate-800 rounded-full mb-2" />
+                <div className="h-3 w-3/4 bg-slate-50 dark:bg-slate-900 rounded-full" />
               </div>
             )}
           </div>

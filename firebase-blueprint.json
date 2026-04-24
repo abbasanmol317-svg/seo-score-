@@ -1,0 +1,55 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User preferences and profile data.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "company": {
+          "type": "string"
+        },
+        "goals": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["name", "email", "goals"]
+    },
+    "AnalysisHistory": {
+      "title": "Analysis History",
+      "description": "Log of SEO tools used by the user.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "toolId": { "type": "string" },
+        "toolSlug": { "type": "string" },
+        "toolName": { "type": "string" },
+        "url": { "type": "string" },
+        "score": { "type": "number" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "toolId", "toolName", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Individual user preference documents."
+    },
+    "/analysis_history/{historyId}": {
+      "schema": "AnalysisHistory",
+      "description": "Individual logs of tool usage."
+    }
+  }
+}

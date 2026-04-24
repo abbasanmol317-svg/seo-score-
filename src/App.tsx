@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { TOOLS } from './services/gemini';
 import { cn } from './lib/utils';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { UserProvider, useUser } from './context/UserContext';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import ToolSearch from './components/ToolSearch';
 import Sidebar from './components/Sidebar';
@@ -28,6 +29,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const PowerPage = lazy(() => import('./pages/PowerPage'));
 const Onboarding = lazy(() => import('./components/Onboarding'));
 const CaseStudies = lazy(() => import('./pages/CaseStudies'));
+const Profile = lazy(() => import('./pages/Profile'));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-[60vh]">
@@ -41,6 +43,7 @@ const PageLoader = () => (
 function NavHeader() {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { preferences, user } = useUser();
   const toolId = location.pathname.startsWith('/tool/') || location.pathname.startsWith('/tools/') 
     ? location.pathname.split('/').filter(Boolean).pop() 
     : null;
@@ -99,75 +102,124 @@ function NavHeader() {
         )}
       </AnimatePresence>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex justify-between h-14 sm:h-20">
-                <div className="flex items-center gap-2 sm:gap-4 flex-1 overflow-hidden">
-                  <button
-                    onClick={() => setIsMobileMenuOpen(true)}
-                    className="lg:hidden p-2 sm:p-3 rounded-lg sm:rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all active:scale-95 shadow-sm"
-                  >
-                    <Icon name="Menu" size={18} className="sm:w-6 sm:h-6" />
-                  </button>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14 sm:h-20 gap-4">
+          {/* Left Section: Mobile Menu & Logo */}
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="lg:hidden p-2 sm:p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm"
+            >
+              <Icon name="Menu" size={18} className="sm:w-5 sm:h-5" />
+            </motion.button>
 
-                <Link to="/" className="flex items-center gap-2 text-indigo-600 font-bold text-lg sm:text-xl group shrink-0" id="header-logo">
-                  <div className="bg-indigo-600 p-1.5 sm:p-2 rounded-lg sm:rounded-xl text-white shadow-lg shadow-indigo-100 dark:shadow-none group-hover:scale-110 group-hover:rotate-3 transition-all">
-                    <Icon name="Zap" size={18} className="sm:w-5 sm:h-5" />
-                  </div>
-                  <span className="xs:inline tracking-tight font-black text-slate-900 dark:text-white leading-none">
-                    SEO<span className="text-indigo-600">Score</span>
-                  </span>
-                </Link>
+            <Link to="/" className="flex items-center gap-2.5 text-indigo-600 font-bold text-lg sm:text-xl group shrink-0" id="header-logo">
+              <div className="bg-indigo-600 p-1.5 sm:p-2 rounded-lg sm:rounded-xl text-white shadow-lg shadow-indigo-100 dark:shadow-none group-hover:scale-110 group-hover:rotate-3 transition-all">
+                <Icon name="Gauge" size={18} className="sm:w-5 sm:h-5" />
+              </div>
+              <span className="hidden xs:inline tracking-tighter font-black text-slate-900 dark:text-white leading-none">
+                SEO<span className="text-indigo-600">Score</span>
+              </span>
+            </Link>
+          </div>
 
-                <div className="hidden xl:flex items-center gap-2 text-slate-300 shrink-0">
-                  <span className="text-xl font-light">/</span>
-                  <Link 
-                    to="/" 
-                    className={cn(
-                      "flex items-center gap-2.5 px-3 py-1.5 rounded-xl border transition-all",
-                      !currentTool 
-                        ? "bg-indigo-50 dark:bg-indigo-900/30 border-indigo-100 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 shadow-sm" 
-                        : "bg-white dark:bg-slate-800 border-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-100 dark:hover:border-slate-600 hover:text-indigo-600 dark:hover:text-indigo-400"
-                    )}
-                  >
-                    <Icon name="LayoutDashboard" size={16} />
-                    <span className="font-bold uppercase tracking-widest text-[10px]">Dashboard</span>
-                  </Link>
+          {/* Center Section: Navigation Breadcrumbs */}
+          <div className="flex-1 hidden md:flex items-center gap-2 overflow-hidden min-w-0">
+            <div className="flex items-center gap-2 text-slate-300">
+              <span className="text-xl font-light">/</span>
+              <Link 
+                to="/" 
+                className={cn(
+                  "flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all shrink-0",
+                  !currentTool 
+                    ? "bg-indigo-50 dark:bg-indigo-900/30 border-indigo-100 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 shadow-sm" 
+                    : "bg-white dark:bg-slate-800 border-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-100 dark:hover:border-slate-600 hover:text-indigo-600 dark:hover:text-indigo-400"
+                )}
+              >
+                <Icon name="LayoutDashboard" size={14} className="shrink-0" />
+                <span className="font-black uppercase tracking-widest text-[10px] hidden lg:inline">Dashboard</span>
+              </Link>
+            </div>
+
+            {currentTool && (
+              <div className="flex items-center gap-2 text-slate-300 min-w-0">
+                <span className="text-xl font-light">/</span>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 shadow-sm min-w-0">
+                  <Icon name={currentTool.icon} size={14} className="shrink-0" />
+                  <span className="font-black truncate uppercase tracking-widest text-[10px]">{currentTool.name}</span>
                 </div>
+              </div>
+            )}
+          </div>
 
-                {currentTool && (
-                  <div className="hidden md:flex items-center gap-2 text-slate-300 shrink-0">
-                    <span className="text-xl font-light">/</span>
-                    <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 shadow-sm">
-                      <Icon name={currentTool.icon} size={16} />
-                      <span className="font-bold truncate max-w-[150px] uppercase tracking-widest text-[10px]">{currentTool.name}</span>
-                    </div>
-                  </div>
+          {/* Right Section: Actions */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <div className="hidden sm:block">
+              <ToolSearch />
+            </div>
+            
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsMobileSearchOpen(true)}
+              className="sm:hidden p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm"
+            >
+              <Icon name="Search" size={18} />
+            </motion.button>
+
+            <div className="hidden sm:block">
+              <div className="w-px h-6 bg-slate-200 dark:bg-slate-800 mx-1" />
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={toggleTheme}
+              className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm"
+            >
+              {theme === 'dark' ? <Icon name="Sun" size={18} /> : <Icon name="Moon" size={18} />}
+            </motion.button>
+
+            <div className="w-px h-6 bg-slate-200 dark:bg-slate-800 mx-1" />
+
+            <Link
+              to="/profile"
+              className={cn(
+                "p-1 rounded-xl border transition-all flex items-center gap-2 group/profile",
+                location.pathname === '/profile'
+                  ? "bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-none"
+                  : "border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-indigo-500/50"
+              )}
+              title="Your Profile"
+            >
+              <div className={cn(
+                "w-8 h-8 rounded-lg flex items-center justify-center transition-all overflow-hidden",
+                location.pathname === '/profile' ? "bg-white/20" : "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 group-hover/profile:scale-110 group-hover/profile:rotate-3"
+              )}>
+                {user?.photoURL ? (
+                  <img src={user.photoURL} alt={user.displayName || 'Profile'} className="w-full h-full object-cover" />
+                ) : (
+                  <Icon name="User" size={16} />
                 )}
               </div>
-
-              <div className="flex items-center gap-2 sm:gap-4">
-                <div className="hidden sm:block">
-                  <ToolSearch />
-                </div>
-                
-                <button
-                  onClick={() => setIsMobileSearchOpen(true)}
-                  className="sm:hidden p-2.5 sm:p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all active:scale-95 shadow-sm"
-                >
-                  <Icon name="Search" size={20} />
-                </button>
-
-                <div className="w-px h-6 bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block" />
-
-                <button
-                  onClick={toggleTheme}
-                  className="p-2.5 sm:p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all hover:scale-110 active:scale-95 shadow-sm"
-                >
-                  {theme === 'dark' ? <Icon name="Sun" size={20} /> : <Icon name="Moon" size={20} />}
-                </button>
+              <div className="hidden lg:flex flex-col items-start pr-2 leading-tight">
+                <span className={cn(
+                  "text-[10px] font-black uppercase tracking-widest",
+                  location.pathname === '/profile' ? "text-white" : "text-slate-900 dark:text-white"
+                )}>
+                  {user?.displayName ? user.displayName.split(' ')[0] : (preferences.name ? preferences.name.split(' ')[0] : 'Guest')}
+                </span>
+                <span className={cn(
+                  "text-[8px] font-bold opacity-60",
+                  location.pathname === '/profile' ? "text-white" : "text-slate-500"
+                )}>
+                  Profile
+                </span>
               </div>
-            </div>
+            </Link>
           </div>
+        </div>
+      </div>
 
       <AnimatePresence>
         {isMobileSearchOpen && (
@@ -240,6 +292,7 @@ function AnimatedRoutes() {
       <Route path="/blog/:slug" element={<BlogPost />} />
       <Route path="/guides" element={<Guides />} />
       <Route path="/guides/:slug" element={<GuidePost />} />
+      <Route path="/profile" element={<Profile />} />
       <Route path="/case-studies" element={<CaseStudies />} />
       <Route path="/privacy" element={<Privacy />} />
       <Route path="/terms" element={<Terms />} />
@@ -373,7 +426,8 @@ export default function App() {
       <HelmetProvider>
         <AdSenseProvider publisherId="ca-pub-6719705037005199" />
         <ThemeProvider>
-          <Router>
+          <UserProvider>
+            <Router>
             <GlobalMetaTags />
             <Suspense fallback={null}>
               <Onboarding />
@@ -390,57 +444,76 @@ export default function App() {
               </div>
               <BackToTop />
 
-              <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12">
+              <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-16 pb-8">
                 <div className="max-w-7xl mx-auto px-4">
-                  <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-8">
-                    <div className="flex items-center gap-2.5 text-indigo-600 font-bold text-xl">
-                      <div className="bg-indigo-600 p-1.5 rounded-lg text-white shadow-lg shadow-indigo-100">
-                        <Icon name="Zap" size={20} />
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                    {/* Brand Column */}
+                    <div className="flex flex-col gap-6">
+                      <div className="flex items-center gap-2.5 text-indigo-600 font-bold text-xl">
+                        <div className="bg-indigo-600 p-1.5 rounded-lg text-white shadow-lg shadow-indigo-100">
+                          <Icon name="Gauge" size={24} />
+                        </div>
+                        <span className="tracking-tight">SEO Score</span>
                       </div>
-                      <span className="tracking-tight">SEO Score</span>
+                      <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed pr-4">
+                        Professional-grade SEO tools and intelligence powered by advanced AI. Uncover signals that matter for your search rankings.
+                      </p>
+                      <div className="flex gap-3">
+                        <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all shadow-sm"><Icon name="Github" size={18} /></a>
+                        <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all shadow-sm"><Icon name="Twitter" size={18} /></a>
+                        <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all shadow-sm"><Icon name="Linkedin" size={18} /></a>
+                      </div>
                     </div>
-                    <div className="grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-x-8 gap-y-10 md:gap-12 w-full sm:w-auto">
-                      <div className="flex flex-col gap-3">
-                        <h4 className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Company</h4>
+
+                    {/* Company Column */}
+                    <div className="flex flex-col gap-5">
+                      <h4 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.2em] mb-1">Company</h4>
+                      <nav className="flex flex-col gap-3">
                         <Link to="/tools" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">All Tools</Link>
                         <Link to="/about" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About Us</Link>
                         <Link to="/contact" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Contact Us</Link>
                         <Link to="/blog" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Blog</Link>
-                        <Link to="/guides" className="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline transition-colors">Learning Academy</Link>
-                        <Link to="/faq" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">FAQ</Link>
-                      </div>
-                      <div className="flex flex-col gap-3">
-                        <h4 className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Legal</h4>
+                        <Link to="/guides" className="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline transition-colors mt-1">Learning Academy</Link>
+                      </nav>
+                    </div>
+
+                    {/* Legal Column */}
+                    <div className="flex flex-col gap-5">
+                      <h4 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.2em] mb-1">Legal</h4>
+                      <nav className="flex flex-col gap-3">
                         <Link to="/privacy" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Privacy Policy</Link>
                         <Link to="/terms" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Terms of Service</Link>
                         <a href="/sitemap.xml" target="_blank" className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Sitemap</a>
-                        <Link to="/resources" className="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline transition-colors mt-2">Resources</Link>
-                      </div>
-                      <div className="col-span-2 sm:col-span-1 flex flex-col gap-3">
-                        <h4 className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Popular Tools</h4>
-                        <div className="grid grid-cols-2 sm:grid-cols-1 gap-x-6 gap-y-2">
-                          {TOOLS.slice(0, 4).map(tool => (
-                            <Link key={tool.id} to={`/tools/${tool.slug}`} className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate max-w-[150px]">{tool.name}</Link>
-                          ))}
-                        </div>
-                      </div>
+                        <Link to="/resources" className="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline transition-colors mt-1">Resources</Link>
+                      </nav>
                     </div>
-                    <div className="flex justify-center gap-4">
-                      <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all"><Icon name="Github" size={20} /></a>
-                      <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all"><Icon name="Twitter" size={20} /></a>
-                      <a href="#" className="p-2 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all"><Icon name="Linkedin" size={20} /></a>
+
+                    {/* Popular Tools Column */}
+                    <div className="flex flex-col gap-5">
+                      <h4 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.2em] mb-1">Popular Tools</h4>
+                      <nav className="flex flex-col gap-3">
+                        {TOOLS.slice(0, 5).map(tool => (
+                          <Link key={tool.id} to={`/tools/${tool.slug}`} className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate">{tool.name}</Link>
+                        ))}
+                      </nav>
                     </div>
                   </div>
-                  <div className="pt-8 border-t border-slate-100 dark:border-slate-800 text-center">
-                    <p className="text-slate-500 dark:text-slate-400 text-xs">
-                      &copy; {new Date().getFullYear()} SEO Score. Powered by Google Gemini AI. All rights reserved.
+
+                  <div className="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+                    <p className="text-slate-500 dark:text-slate-400 text-xs font-medium">
+                      &copy; {new Date().getFullYear()} SEO Score. Powered by Multi-Agent AI Technology.
                     </p>
+                    <div className="flex items-center gap-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                      <span>Status: All Systems Operational</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    </div>
                   </div>
                 </div>
               </footer>
             </div>
           </Router>
-        </ThemeProvider>
+        </UserProvider>
+      </ThemeProvider>
       </HelmetProvider>
     </ErrorBoundary>
   );

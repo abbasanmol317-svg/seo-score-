@@ -24,7 +24,7 @@ const STEPS: Step[] = [
   {
     title: "Welcome to SEO Score",
     description: "Your all-in-one platform for AI-powered SEO analysis, keyword research, and content optimization.",
-    iconName: "Zap",
+    iconName: "Gauge",
     color: "bg-indigo-600"
   },
   {

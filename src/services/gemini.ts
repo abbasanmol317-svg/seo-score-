@@ -33,8 +33,8 @@ export const TOOLS: Tool[] = [
     icon: 'ScanSearch',
     slug: 'free-website-seo-audit-tool',
     keywords: 'website,seo,analytics,geo,aeo,ai search',
-    seoTitle: '260+ Point AI SEO Deep Scan – Advanced GEO & AEO Analysis',
-    seoDescription: 'Run a professional 260+ point search intelligence audit. Analyze your site for Traditional SEO, AI Search (GEO), and Answer Engine (AEO) readiness.',
+    seoTitle: '260+ Point AI SEO Audit Tool – Deep Website Analysis (2026)',
+    seoDescription: 'Perform a professional 260+ point SEO audit instantly. Analyze your site for AI search readiness, GEO, and traditional SEO signals with our free deep scan tool.',
     placeholder: 'Enter website URL for a 260-point Deep Scan...'
   },
   {
@@ -45,8 +45,8 @@ export const TOOLS: Tool[] = [
     icon: 'CirclePlay',
     slug: 'free-youtube-seo-tool',
     keywords: 'youtube,video,marketing',
-    seoTitle: 'Free YouTube SEO Tool – Optimize Titles, Tags & Descriptions',
-    seoDescription: 'Use our free YouTube SEO tool to generate optimized titles, tags, and descriptions to increase views and rankings.',
+    seoTitle: 'Free YouTube SEO Tool: Optimize Video Titles, Tags & Rankings',
+    seoDescription: 'Boost your YouTube views with our AI-powered SEO tool. Generate high-CTR titles, viral tags, and optimized descriptions to rank #1 on YouTube search.',
     placeholder: 'Enter Video URL or Topic (e.g., https://youtu.be/abc or "How to bake a cake")'
   },
   {
@@ -57,8 +57,8 @@ export const TOOLS: Tool[] = [
     icon: 'Gauge',
     slug: 'free-website-speed-test-tool',
     keywords: 'speed,fast,performance',
-    seoTitle: 'Best Website Speed Test Tool – Core Web Vitals Checker',
-    seoDescription: 'Test your website speed for free. Analyze Core Web Vitals, loading time, and performance to improve user experience.',
+    seoTitle: 'Website Speed Test: Free Core Web Vitals Checker (AI-Powered)',
+    seoDescription: 'Test your website speed and analyze Core Web Vitals for free. Get actionable AI suggestions to fix slow page loads and improve your Google search rankings.',
     placeholder: 'Enter website URL to test speed (e.g., https://mysite.com/blog)'
   },
   {
@@ -69,8 +69,8 @@ export const TOOLS: Tool[] = [
     icon: 'Network',
     slug: 'free-backlink-checker-tool',
     keywords: 'links,network,backlinks',
-    seoTitle: 'Free Backlink Checker Tool – Analyze Domain Authority & Links',
-    seoDescription: 'Check backlinks for free. Analyze domain authority, link quality, and find new opportunities to improve SEO.',
+    seoTitle: 'Free Backlink Checker: Analyze Domain Authority & Link Quality',
+    seoDescription: 'Instantly check any website\'s backlinks for free. Monitor referring domains, link authority, and anchor text to build a stronger SEO backlink profile.',
     placeholder: 'Enter domain name (e.g., apple.com or yourdomain.io)'
   },
   {
@@ -81,8 +81,8 @@ export const TOOLS: Tool[] = [
     icon: 'LinkOff',
     slug: 'free-broken-link-checker-tool',
     keywords: 'broken,link,error',
-    seoTitle: 'Advanced Broken Link Checker Tool – Find 404 Errors & Dead Links',
-    seoDescription: 'Scan your website for free and detect broken links, 404 errors, and dead pages to improve SEO and UX.',
+    seoTitle: 'Broken Link Checker: Find 404 Errors & Dead Links Instantly',
+    seoDescription: 'Scan your entire website for broken links and 404 errors for free. Improve user experience and fix technical SEO issues with our fast AI-powered crawler.',
     placeholder: 'Enter website URL to scan (e.g., https://example.com/services)'
   },
   {
@@ -93,8 +93,8 @@ export const TOOLS: Tool[] = [
     icon: 'SearchCode',
     slug: 'free-seo-audit-checklist',
     keywords: 'audit,checklist,seo,geo,aeo,260 points',
-    seoTitle: 'Professional 260+ Point SEO Audit Checklist – AI & Technical Scan',
-    seoDescription: 'The most comprehensive free SEO audit checklist. 260+ data points covering AI Search, Technical SEO, and UX.',
+    seoTitle: 'Professional 260+ Point SEO Checklist – Complete Site Audit',
+    seoDescription: 'The most detailed free SEO checklist available. 260+ data points covering technical SEO, AI search signals, and mobile experience. Audit your site now!',
     placeholder: 'Enter website URL for 260+ point scan...'
   },
   {
@@ -105,8 +105,8 @@ export const TOOLS: Tool[] = [
     icon: 'ClipboardCheck',
     slug: 'free-on-page-seo-checklist',
     keywords: 'on-page,checklist,optimization,content',
-    seoTitle: 'Best On-Page SEO Checklist – Optimize Pages for Higher Rankings',
-    seoDescription: 'Improve your pages with a free on-page SEO checklist. Optimize titles, content, keywords, and internal links.',
+    seoTitle: 'On-Page SEO Checklist: Step-by-Step Optimization Guide',
+    seoDescription: 'Master your on-page SEO with our free interactive checklist. Optimize content, images, H1 tags, and keyword placement to rank higher on Google.',
     placeholder: 'Enter page URL or content topic (e.g., https://example.com/blog-post or "Best Yoga Mats")'
   },
   {
@@ -117,8 +117,8 @@ export const TOOLS: Tool[] = [
     icon: 'TabletSmartphone',
     slug: 'free-mobile-friendly-test-tool',
     keywords: 'mobile,responsive,phone',
-    seoTitle: 'Free Mobile-Friendly Test Tool – Check Website Responsiveness',
-    seoDescription: 'Test your website’s mobile responsiveness for free. Ensure better UX and higher rankings on mobile devices.',
+    seoTitle: 'Mobile-Friendly Test Tool: Check Google Mobile Responsiveness',
+    seoDescription: 'Is your site mobile-ready? Use our free mobile-friendly test tool to analyze responsiveness, font size, and touch targets for better mobile search rankings.',
     placeholder: 'Enter website URL to test mobile UX (e.g., https://myshop.com)'
   },
   {
@@ -129,8 +129,8 @@ export const TOOLS: Tool[] = [
     icon: 'ListChecks',
     slug: 'free-bulk-url-seo-analysis-tool',
     keywords: 'bulk,data,list',
-    seoTitle: 'Advanced Bulk URL SEO Analysis Tool – Analyze Multiple Pages',
-    seoDescription: 'Analyze multiple URLs for free. Get SEO insights, performance data, and optimization tips for better rankings.',
+    seoTitle: 'Bulk URL SEO Analysis Tool – Analyze Multiple Pages at Once',
+    seoDescription: 'Save time with our Bulk URL tool. Analyze SEO metrics for up to 10 pages simultaneously for fast, professional-grade search site audits.',
     placeholder: 'Enter up to 10 URLs, one per line (e.g.,\nhttps://site.com/p1\nhttps://site.com/p2)'
   },
   {
@@ -141,8 +141,8 @@ export const TOOLS: Tool[] = [
     icon: 'KeyRound',
     slug: 'free-keyword-research-tool',
     keywords: 'search,keywords,research',
-    seoTitle: 'Free Keyword Research Tool – Find High Volume Low Competition Keywords',
-    seoDescription: 'Discover free keyword ideas with high search volume and low competition to improve SEO and rank faster.',
+    seoTitle: 'Free Keyword Research Tool: Find High Volume, Low-Competition Keywords',
+    seoDescription: 'Discover thousands of profitable keyword ideas with search volume trends and competition data. Find long-tail keywords that rank #1 on Google and AI search.',
     placeholder: 'Enter niche or seed keyword (e.g., "vegan dog food" or "SaaS marketing")'
   },
   {
@@ -153,8 +153,8 @@ export const TOOLS: Tool[] = [
     icon: 'PenTool',
     slug: 'free-ai-content-optimization-tool',
     keywords: 'content,writing,optimization,internal linking,seo writing',
-    seoTitle: 'Best AI Content Optimization Tool – Improve SEO & Readability',
-    seoDescription: 'Optimize your content for free using AI. Improve readability, keyword usage, and internal linking for better SEO.',
+    seoTitle: 'AI Content Optimizer: Improve SEO Writing, Semantic Density & Readability',
+    seoDescription: 'Boost your content quality for Google & AI Search. Our AI Content Optimizer analyzes semantic density, readability, and keyword placement to help you rank #1.',
     placeholder: 'Paste your content or enter URL to optimize (e.g., "Our mission is...")'
   },
   {
@@ -165,8 +165,8 @@ export const TOOLS: Tool[] = [
     icon: 'FileSearch',
     slug: 'free-content-analysis-seo-tool',
     keywords: 'content,analysis,readability,density,optimization',
-    seoTitle: 'Free Content Analysis Tool – Readability & Keyword Density Checker',
-    seoDescription: 'Analyze your content for readability, keyword density, and SEO quality. Get AI-powered suggestions to improve content rankings.',
+    seoTitle: 'Free Content Analysis Tool – Deep Readability & SEO Audit',
+    seoDescription: 'Get a professional audit of your content style, readability, and keyword density. Our AI identifies exactly what to fix to rank your content higher.',
     placeholder: 'Paste content or enter URL for detailed analysis...'
   },
   {
@@ -177,8 +177,8 @@ export const TOOLS: Tool[] = [
     icon: 'Tag',
     slug: 'free-hashtag-generator-tool',
     keywords: 'hashtag,social,trending',
-    seoTitle: 'Free Hashtag Generator Tool – Trending Tags for Social Media',
-    seoDescription: 'Generate free trending hashtags for YouTube, Instagram, and TikTok to boost reach and engagement.',
+    seoTitle: 'Hashtag Generator: Viral Tags for YouTube, IG & TikTok',
+    seoDescription: 'Find trending social media hashtags for free. Boost your reach and engagement on YouTube, Instagram, and TikTok with AI-generated tag suggestions.',
     placeholder: 'Enter topic or description (e.g., "Morning coffee routine" or "Tech review")'
   },
   {
@@ -189,8 +189,8 @@ export const TOOLS: Tool[] = [
     icon: 'ScrollText',
     slug: 'free-meta-tag-generator',
     keywords: 'code,meta,tags',
-    seoTitle: 'Free Meta Tag Generator – Create High CTR SEO Titles & Descriptions',
-    seoDescription: 'Generate SEO-friendly meta titles and descriptions for free to improve click-through rate and visibility.',
+    seoTitle: 'Free AI Meta Tag Generator (2026) – Create High-CTR Titles & Descriptions',
+    seoDescription: 'Boost your search rankings with our AI Meta Tag Generator. Create SEO-optimized meta titles, descriptions, and previews for free to maximize your Google CTR instantly.',
     placeholder: 'Enter page title, description, and optional product details like price/reviews (e.g., "Best Running Shoes - $99, 4.5 stars")'
   },
   {
@@ -201,8 +201,8 @@ export const TOOLS: Tool[] = [
     icon: 'MonitorPlay',
     slug: 'free-serp-preview-tool',
     keywords: 'preview,google,serp',
-    seoTitle: 'Advanced Google SERP Preview Tool – Optimize Title & Description',
-    seoDescription: 'Preview your website in Google search results for free. Optimize titles and meta descriptions for better CTR.',
+    seoTitle: 'Google SERP Preview Tool: Optimize Search Result Appearance',
+    seoDescription: 'See exactly how your website looks in Google Search. Tweak your titles and descriptions in our SERP simulator to maximize clicks and rankings.',
     placeholder: 'Enter Title and Description to preview (e.g., "SEO Score | AI Tools")'
   },
   {
@@ -213,8 +213,8 @@ export const TOOLS: Tool[] = [
     icon: 'Share2',
     slug: 'free-open-graph-preview-tool',
     keywords: 'social,share,preview',
-    seoTitle: 'Free Open Graph Preview Tool – Social Media Share Preview',
-    seoDescription: 'Preview your content on social media for free. Optimize Open Graph tags for better sharing and engagement.',
+    seoTitle: 'Open Graph Preview Tool: Optimize Social Media Share Cards',
+    seoDescription: 'Preview how your links appear on Facebook, Twitter, and LinkedIn. Perfect your OG tags for higher engagement and professional-looking social shares.',
     placeholder: 'Enter URL or Page Info (e.g., https://example.com/blog/post-1)'
   },
   {
@@ -225,8 +225,8 @@ export const TOOLS: Tool[] = [
     icon: 'CodeXml',
     slug: 'free-schema-markup-generator',
     keywords: 'schema,json,structured',
-    seoTitle: 'Best Schema Markup Generator – JSON-LD Structured Data Tool',
-    seoDescription: 'Generate JSON-LD schema markup for free. Improve rich snippets and search visibility easily.',
+    seoTitle: 'Schema Markup Generator: JSON-LD Structured Data Creator',
+    seoDescription: 'Boost rich snippets with our free Schema Generator. Create valid JSON-LD code for items, products, and articles to stand out in Google Search.',
     placeholder: 'Enter entity details (e.g., "iPhone 15 Pro, $999, 4.8 stars")'
   },
   {
@@ -237,8 +237,8 @@ export const TOOLS: Tool[] = [
     icon: 'ImageDown',
     slug: 'free-image-alt-text-generator',
     keywords: 'image,alt,accessibility,seo,generator',
-    seoTitle: 'Free AI Image Alt Text Generator – SEO & Accessibility Tool',
-    seoDescription: 'Create SEO-friendly alt text for images for free. Improve accessibility and search rankings.',
+    seoTitle: 'AI Image Alt Text Generator: Improve Accessibility & Image SEO',
+    seoDescription: 'Instantly generate SEO-friendly alt text for images. Improve website accessibility and get more traffic from Google Image search results for free.',
     placeholder: 'Describe the image or provide an image URL (e.g., "A golden retriever playing in a park" or https://example.com/image.jpg)'
   },
   {
@@ -249,8 +249,8 @@ export const TOOLS: Tool[] = [
     icon: 'FileSymlink',
     slug: 'free-sitemap-robots-txt-generator',
     keywords: 'sitemap,robots,technical',
-    seoTitle: 'Advanced XML Sitemap Generator & Robots.txt Creator',
-    seoDescription: 'Generate sitemap and robots.txt files for free. Improve indexing and crawlability of your website.',
+    seoTitle: 'XML Sitemap & Robots.txt Generator – Fast Technical Setup',
+    seoDescription: 'Generate sitemap and robots.txt files for free. Ensure Google crawls and indexes your website correctly with zero technical knowledge.',
     placeholder: 'Enter website URL (e.g., https://yourwebsite.com)'
   },
   {
@@ -261,8 +261,8 @@ export const TOOLS: Tool[] = [
     icon: 'GitCompare',
     slug: 'free-website-comparison-tool',
     keywords: 'compare,competitor,versus',
-    seoTitle: 'Best Website Comparison Tool – SEO Competitor Analysis',
-    seoDescription: 'Compare websites for free. Analyze competitors, keyword gaps, and backlinks to improve rankings.',
+    seoTitle: 'Website Comparison Tool: Analyze SEO vs Competitors',
+    seoDescription: 'Compare websites for free. Analyze competitors, keyword gaps, and backlinks to help you outrank your competitors.',
     placeholder: 'Enter Your URL vs Competitor URL (e.g., siteA.com vs siteB.com)'
   },
   {
@@ -273,8 +273,8 @@ export const TOOLS: Tool[] = [
     icon: 'MessageCircleMore',
     slug: 'free-ai-seo-assistant',
     keywords: 'chat,ai,assistant',
-    seoTitle: 'Free AI SEO Assistant – Instant SEO Help & Guidance',
-    seoDescription: 'Get free SEO advice instantly with AI. Solve SEO problems and improve your website rankings.',
+    seoTitle: 'AI SEO Assistant: Get Instant Answers to SEO Questions',
+    seoDescription: 'Chat with our expert AI SEO assistant for free. Solve complex search problems, get strategy advice, and learn search engine optimization instantly.',
     placeholder: 'Ask anything about SEO (e.g., "How to improve domain authority?" or "What are Core Web Vitals?")'
   },
   {
@@ -285,8 +285,8 @@ export const TOOLS: Tool[] = [
     icon: 'LayoutGrid',
     slug: 'free-seo-dashboard',
     keywords: 'dashboard,stats,insights',
-    seoTitle: 'Advanced SEO Dashboard – Track Rankings, Reports & Performance',
-    seoDescription: 'Monitor your SEO performance for free. Track rankings, reports, and website growth in one dashboard.',
+    seoTitle: 'Free SEO Dashboard: Track Your Site\'s Search Performance',
+    seoDescription: 'Monitor your search intelligence history and SEO trends in one free dashboard. Track audited URLs and performance improvements over time.',
     placeholder: ''
   }
 ];

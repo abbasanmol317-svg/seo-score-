@@ -423,7 +423,12 @@ export const TOOL_PROMPTS: Record<string, string> = {
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="...">
     <meta name="twitter:description" content="...">
-    \u0060\u0060\u0060 `,
+    \u0060\u0060\u0060 
+    
+    ## 💎 Self-Optimization Suggestion
+    Analyze this very tool ('Meta Tag Generator') and its goal (improving search visibility). 
+    Suggest one "Perfect" Meta Title and Meta Description for THIS page (SEO Score platform) to ensure we are practicing what we preach. 
+    Explain why these are optimized for CTR in 2026.`,
 
   'serp-preview': `Generate a SERP preview.
     Format as a Preview Report with these sections:
